@@ -75,9 +75,9 @@ jobs:
           Write-Host "Godot Export Presets:"
           Get-Content export_presets.cfg
           & "$env:GODOT_EXE" --headless --path "$PWD" --editor --quit-after 1
-          & "$env:GODOT_EXE" --headless --path "$PWD" --import
-          & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions
-          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe"
+          & "$env:GODOT_EXE" --headless --path "$PWD" --import --verbose
+          & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions --verbose
+          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" --verbose
           Write-Host "Exit code export: $LASTEXITCODE"
 
       - name: Verify export output
@@ -88,6 +88,8 @@ jobs:
             if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
             Write-Host "Gefundene EXE/PCK-Dateien:"
             Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
+            Write-Host "Inhalt .godot/exported:"
+            if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
             throw "Windows-Export wurde nicht erzeugt."
           }
 
