@@ -80,9 +80,8 @@ jobs:
           & "$env:GODOT_EXE" --headless --path "$PWD" --editor --quit-after 1
           & "$env:GODOT_EXE" --headless --path "$PWD" --import --verbose
           & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions --verbose
-          & "$env:GODOT_EXE" --headless --path "$PWD" --export-pack "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.pck" --verbose
-          Write-Host "Exit code export-pack: $LASTEXITCODE"
-          Copy-Item "$env:WINDOWS_TEMPLATE_EXE" "$PWD/dist/windows/IFeelDumpQuiz.exe" -Force
+          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose --log-file "$PWD/godot-export.log"
+          Write-Host "Exit code export-release: $LASTEXITCODE"
 
       - name: Verify export output
         shell: pwsh
@@ -94,6 +93,8 @@ jobs:
             Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
             Write-Host "Inhalt .godot/exported:"
             if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
+            Write-Host "godot-export.log:"
+            if (Test-Path "godot-export.log") { Get-Content "godot-export.log" }
             throw "Windows-Build wurde nicht vollstaendig erzeugt."
           }
 
