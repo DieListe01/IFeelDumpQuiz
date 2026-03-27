@@ -48,17 +48,25 @@ jobs:
       - name: Export Windows build
         shell: pwsh
         run: |
-          $godot = Get-Command godot -ErrorAction SilentlyContinue
-          if ($null -eq $godot) { $godot = Get-Command godot4 -ErrorAction SilentlyContinue }
-          if ($null -eq $godot) { throw "Godot CLI wurde im Runner nicht gefunden." }
-          & $godot.Source --headless --path . --import
-          & $godot.Source --headless --path . --build-solutions
-          & $godot.Source --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe"
+          $godotPath = if ($env:GODOT) { $env:GODOT } elseif ($env:GODOT4) { $env:GODOT4 } else { "godot" }
+          Write-Host "Nutze Godot: $godotPath"
+          Write-Host "Export presets vorhanden: $(Test-Path 'export_presets.cfg')"
+          if (Test-Path 'export_presets.cfg') { Get-Content 'export_presets.cfg' | Select-Object -First 40 }
+          & $godotPath --version
+          & $godotPath --headless --path "$PWD" --import --verbose 2>&1 | Tee-Object -FilePath godot-import.log
+          & $godotPath --headless --path "$PWD" --build-solutions --verbose 2>&1 | Tee-Object -FilePath godot-build.log
+          & $godotPath --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose 2>&1 | Tee-Object -FilePath godot-export.log
 
       - name: Debug export output
         if: always()
         shell: pwsh
         run: |
+          Write-Host "Import log:"
+          if (Test-Path "godot-import.log") { Get-Content "godot-import.log" }
+          Write-Host "Build log:"
+          if (Test-Path "godot-build.log") { Get-Content "godot-build.log" }
+          Write-Host "Export log:"
+          if (Test-Path "godot-export.log") { Get-Content "godot-export.log" }
           Write-Host "Inhalt dist/windows:"
           if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
           Write-Host "Inhalt Projektwurzel (relevante EXE/PCK):"
