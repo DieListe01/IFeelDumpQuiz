@@ -44,12 +44,15 @@ jobs:
           7z x "$env:RUNNER_TEMP/godot/templates.tpz" "-o$env:RUNNER_TEMP/godot/templates" -y
           $godotExe = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/exe" -Filter "Godot*.exe" | Where-Object { $_.Name -notlike "*_console.exe" } | Select-Object -First 1
           if ($null -eq $godotExe) { throw "Godot EXE wurde nicht gefunden." }
+          $windowsTemplate = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/templates" -Filter "windows_release_x86_64.exe" | Select-Object -First 1
+          if ($null -eq $windowsTemplate) { throw "Windows Release Template wurde nicht gefunden." }
           $templatesSource = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/templates" -Directory | Where-Object { $_.Name -eq "templates" } | Select-Object -First 1
           if ($null -eq $templatesSource) { throw "Export-Templates wurden nicht gefunden." }
           $templatesTarget = Join-Path $env:APPDATA "Godot\export_templates\4.6.1.stable.mono"
           New-Item -ItemType Directory -Force -Path $templatesTarget | Out-Null
           Copy-Item -Path (Join-Path $templatesSource.FullName "*") -Destination $templatesTarget -Recurse -Force
           "GODOT_EXE=$($godotExe.FullName)" >> $env:GITHUB_ENV
+          "WINDOWS_TEMPLATE_EXE=$($windowsTemplate.FullName)" >> $env:GITHUB_ENV
 
       - name: Restore NuGet packages
         run: dotnet restore "IFeelDumpQuiz.csproj"
@@ -77,20 +80,21 @@ jobs:
           & "$env:GODOT_EXE" --headless --path "$PWD" --editor --quit-after 1
           & "$env:GODOT_EXE" --headless --path "$PWD" --import --verbose
           & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions --verbose
-          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" --verbose
-          Write-Host "Exit code export: $LASTEXITCODE"
+          & "$env:GODOT_EXE" --headless --path "$PWD" --export-pack "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.pck" --verbose
+          Write-Host "Exit code export-pack: $LASTEXITCODE"
+          Copy-Item "$env:WINDOWS_TEMPLATE_EXE" "$PWD/dist/windows/IFeelDumpQuiz.exe" -Force
 
       - name: Verify export output
         shell: pwsh
         run: |
-          if (-not (Test-Path "dist/windows/IFeelDumpQuiz.exe")) {
+          if (-not (Test-Path "dist/windows/IFeelDumpQuiz.exe") -or -not (Test-Path "dist/windows/IFeelDumpQuiz.pck")) {
             Write-Host "Inhalt dist/windows:"
             if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
             Write-Host "Gefundene EXE/PCK-Dateien:"
             Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
             Write-Host "Inhalt .godot/exported:"
             if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
-            throw "Windows-Export wurde nicht erzeugt."
+            throw "Windows-Build wurde nicht vollstaendig erzeugt."
           }
 
       - name: Create release zip
