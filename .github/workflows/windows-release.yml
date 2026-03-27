@@ -34,6 +34,10 @@ jobs:
       - name: Build C# project
         run: dotnet build "IFeelDumpQuiz.csproj" -c Release
 
+      - name: Install wget
+        shell: pwsh
+        run: choco install wget -y
+
       - name: Export Windows build with Godot action
         uses: firebelley/godot-export@v7.0.0
         with:
