@@ -66,9 +66,19 @@ jobs:
       - name: Export Windows build
         shell: pwsh
         run: |
+          Write-Host "Verwendete Templates unter: $(Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono')"
+          if (Test-Path (Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono')) {
+            Get-ChildItem -Recurse (Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono') | Select-Object FullName
+          }
+          Write-Host "Projektdateien vor Export:"
+          Get-ChildItem . | Select-Object Name
+          Write-Host "Godot Export Presets:"
+          Get-Content export_presets.cfg
+          & "$env:GODOT_EXE" --headless --path "$PWD" --editor --quit-after 1
           & "$env:GODOT_EXE" --headless --path "$PWD" --import
           & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions
           & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe"
+          Write-Host "Exit code export: $LASTEXITCODE"
 
       - name: Verify export output
         shell: pwsh
