@@ -64,6 +64,20 @@ jobs:
           Write-Host "Inhalt Projektwurzel (relevante EXE/PCK):"
           Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
 
+      - name: Normalize export output
+        shell: pwsh
+        run: |
+          $target = "dist/windows/IFeelDumpQuiz.exe"
+          if (Test-Path $target) { exit 0 }
+
+          $candidates = Get-ChildItem -Recurse . -Include "IFeelDumpQuiz*.exe" |
+            Where-Object { $_.FullName -notmatch "\\.git\\|\\bin\\|\\obj\\|\\.godot\\mono\\temp\\bin" }
+
+          if ($candidates.Count -gt 0) {
+            New-Item -ItemType Directory -Force -Path "dist/windows" | Out-Null
+            Copy-Item $candidates[0].FullName $target -Force
+          }
+
       - name: Verify export output
         shell: pwsh
         run: |
