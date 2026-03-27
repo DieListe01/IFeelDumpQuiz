@@ -28,44 +28,62 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install tooling
+        shell: pwsh
+        run: |
+          choco install wget -y
+          choco install 7zip -y
+
+      - name: Download Godot Mono
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP/godot" | Out-Null
+          wget -nv "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_win64.zip" -O "$env:RUNNER_TEMP/godot/godot.zip"
+          7z x "$env:RUNNER_TEMP/godot/godot.zip" "-o$env:RUNNER_TEMP/godot/exe" -y
+          wget -nv "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_export_templates.tpz" -O "$env:RUNNER_TEMP/godot/templates.tpz"
+          7z x "$env:RUNNER_TEMP/godot/templates.tpz" "-o$env:RUNNER_TEMP/godot/templates" -y
+          $godotExe = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/exe" -Filter "Godot*.exe" | Where-Object { $_.Name -notlike "*_console.exe" } | Select-Object -First 1
+          if ($null -eq $godotExe) { throw "Godot EXE wurde nicht gefunden." }
+          $templatesSource = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/templates" -Directory | Where-Object { $_.Name -eq "templates" } | Select-Object -First 1
+          if ($null -eq $templatesSource) { throw "Export-Templates wurden nicht gefunden." }
+          $templatesTarget = Join-Path $env:APPDATA "Godot\export_templates\4.6.1.stable.mono"
+          New-Item -ItemType Directory -Force -Path $templatesTarget | Out-Null
+          Copy-Item -Path (Join-Path $templatesSource.FullName "*") -Destination $templatesTarget -Recurse -Force
+          "GODOT_EXE=$($godotExe.FullName)" >> $env:GITHUB_ENV
+
       - name: Restore NuGet packages
         run: dotnet restore "IFeelDumpQuiz.csproj"
 
       - name: Build C# project
         run: dotnet build "IFeelDumpQuiz.csproj" -c Release
 
-      - name: Install wget
-        shell: pwsh
-        run: choco install wget -y
-
-      - name: Export Windows build with Godot action
-        uses: firebelley/godot-export@v7.0.0
-        with:
-          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_win64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_export_templates.tpz
-          relative_project_path: ./
-          archive_output: false
-          cache: true
-
-      - name: Prepare release zip
+      - name: Prepare export folders
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path "dist/windows" | Out-Null
           New-Item -ItemType Directory -Force -Path "dist/release" | Out-Null
 
-          $exportedExe = Get-ChildItem -Recurse . -Include "IFeelDumpQuiz.exe" |
-            Where-Object { $_.FullName -notmatch "\\.git\\|\\bin\\|\\obj\\|\\.godot\\mono\\temp\\bin" } |
-            Select-Object -First 1
+      - name: Export Windows build
+        shell: pwsh
+        run: |
+          & "$env:GODOT_EXE" --headless --path "$PWD" --import
+          & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions
+          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe"
 
-          if ($null -eq $exportedExe) {
+      - name: Verify export output
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "dist/windows/IFeelDumpQuiz.exe")) {
+            Write-Host "Inhalt dist/windows:"
+            if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
             Write-Host "Gefundene EXE/PCK-Dateien:"
             Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
-            throw "Kein exportiertes IFeelDumpQuiz.exe gefunden."
+            throw "Windows-Export wurde nicht erzeugt."
           }
 
-          $exportDir = Split-Path $exportedExe.FullName -Parent
-          Copy-Item -Path (Join-Path $exportDir '*') -Destination "dist/windows" -Recurse -Force
-
+      - name: Create release zip
+        shell: pwsh
+        run: |
           $zipPath = "dist/release/IFeelDumpQuiz-win64.zip"
           if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
           Compress-Archive -Path "dist/windows/*" -DestinationPath $zipPath
