@@ -52,10 +52,11 @@ jobs:
           Write-Host "Nutze Godot: $godotPath"
           Write-Host "Export presets vorhanden: $(Test-Path 'export_presets.cfg')"
           if (Test-Path 'export_presets.cfg') { Get-Content 'export_presets.cfg' | Select-Object -First 40 }
-          & $godotPath --version
-          & $godotPath --headless --path "$PWD" --import --verbose 2>&1 | Tee-Object -FilePath godot-import.log
-          & $godotPath --headless --path "$PWD" --build-solutions --verbose 2>&1 | Tee-Object -FilePath godot-build.log
-          & $godotPath --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose 2>&1 | Tee-Object -FilePath godot-export.log
+          $godot = Get-Item $godotPath
+          & $godot.FullName --version
+          & $godot.FullName --headless --path "$PWD" --import --verbose *> godot-import.log
+          & $godot.FullName --headless --path "$PWD" --build-solutions --verbose *> godot-build.log
+          & $godot.FullName --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose *> godot-export.log
 
       - name: Debug export output
         if: always()
