@@ -57,8 +57,8 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore "IFeelDumpQuiz.csproj"
 
-      - name: Build C# project
-        run: dotnet build "IFeelDumpQuiz.csproj" -c Release
+      - name: Build C# project for Godot editor
+        run: dotnet build "IFeelDumpQuiz.csproj" -c Debug
 
       - name: Prepare export folders
         shell: pwsh
