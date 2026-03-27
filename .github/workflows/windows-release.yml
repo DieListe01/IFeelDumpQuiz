@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - name: Read version
         id: version
@@ -26,73 +28,40 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Setup Godot
-        uses: chickensoft-games/setup-godot@v2
-        with:
-          version: 4.6.1
-          include-templates: true
-          use-dotnet: true
-
       - name: Restore NuGet packages
         run: dotnet restore "IFeelDumpQuiz.csproj"
 
       - name: Build C# project
         run: dotnet build "IFeelDumpQuiz.csproj" -c Release
 
-      - name: Prepare export folders
+      - name: Export Windows build with Godot action
+        uses: firebelley/godot-export@v7.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_win64.exe.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export_templates.tpz
+          relative_project_path: ./
+          archive_output: false
+          cache: true
+
+      - name: Prepare release zip
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path "dist/windows" | Out-Null
           New-Item -ItemType Directory -Force -Path "dist/release" | Out-Null
 
-      - name: Export Windows build
-        shell: pwsh
-        run: |
-          $godotPath = if ($env:GODOT) { $env:GODOT } elseif ($env:GODOT4) { $env:GODOT4 } else { "godot" }
-          Write-Host "Nutze Godot: $godotPath"
-          Write-Host "Export presets vorhanden: $(Test-Path 'export_presets.cfg')"
-          if (Test-Path 'export_presets.cfg') { Get-Content 'export_presets.cfg' | Select-Object -First 40 }
-          $godot = Get-Item $godotPath
-          & $godot.FullName --version
-          & $godot.FullName --headless --path "$PWD" --import --verbose
-          & $godot.FullName --headless --path "$PWD" --build-solutions --verbose
-          & $godot.FullName --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose
+          $exportedExe = Get-ChildItem -Recurse . -Include "IFeelDumpQuiz.exe" |
+            Where-Object { $_.FullName -notmatch "\\.git\\|\\bin\\|\\obj\\|\\.godot\\mono\\temp\\bin" } |
+            Select-Object -First 1
 
-      - name: Debug export output
-        if: always()
-        shell: pwsh
-        run: |
-          Write-Host "Inhalt dist/windows:"
-          if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
-          Write-Host "Inhalt Projektwurzel (relevante EXE/PCK):"
-          Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
-          Write-Host "Inhalt .godot/exported:"
-          if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
-
-      - name: Normalize export output
-        shell: pwsh
-        run: |
-          $target = "dist/windows/IFeelDumpQuiz.exe"
-          if (Test-Path $target) { exit 0 }
-
-          $candidates = Get-ChildItem -Recurse . -Include "IFeelDumpQuiz*.exe" |
-            Where-Object { $_.FullName -notmatch "\\.git\\|\\bin\\|\\obj\\|\\.godot\\mono\\temp\\bin" }
-
-          if ($candidates.Count -gt 0) {
-            New-Item -ItemType Directory -Force -Path "dist/windows" | Out-Null
-            Copy-Item $candidates[0].FullName $target -Force
+          if ($null -eq $exportedExe) {
+            Write-Host "Gefundene EXE/PCK-Dateien:"
+            Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
+            throw "Kein exportiertes IFeelDumpQuiz.exe gefunden."
           }
 
-      - name: Verify export output
-        shell: pwsh
-        run: |
-          if (-not (Test-Path "dist/windows/IFeelDumpQuiz.exe")) {
-            throw "Windows-Export wurde nicht erzeugt."
-          }
+          $exportDir = Split-Path $exportedExe.FullName -Parent
+          Copy-Item -Path (Join-Path $exportDir '*') -Destination "dist/windows" -Recurse -Force
 
-      - name: Create release zip
-        shell: pwsh
-        run: |
           $zipPath = "dist/release/IFeelDumpQuiz-win64.zip"
           if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
           Compress-Archive -Path "dist/windows/*" -DestinationPath $zipPath
