@@ -54,24 +54,20 @@ jobs:
           if (Test-Path 'export_presets.cfg') { Get-Content 'export_presets.cfg' | Select-Object -First 40 }
           $godot = Get-Item $godotPath
           & $godot.FullName --version
-          & $godot.FullName --headless --path "$PWD" --import --verbose *> godot-import.log
-          & $godot.FullName --headless --path "$PWD" --build-solutions --verbose *> godot-build.log
-          & $godot.FullName --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose *> godot-export.log
+          & $godot.FullName --headless --path "$PWD" --import --verbose
+          & $godot.FullName --headless --path "$PWD" --build-solutions --verbose
+          & $godot.FullName --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose
 
       - name: Debug export output
         if: always()
         shell: pwsh
         run: |
-          Write-Host "Import log:"
-          if (Test-Path "godot-import.log") { Get-Content "godot-import.log" }
-          Write-Host "Build log:"
-          if (Test-Path "godot-build.log") { Get-Content "godot-build.log" }
-          Write-Host "Export log:"
-          if (Test-Path "godot-export.log") { Get-Content "godot-export.log" }
           Write-Host "Inhalt dist/windows:"
           if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
           Write-Host "Inhalt Projektwurzel (relevante EXE/PCK):"
           Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
+          Write-Host "Inhalt .godot/exported:"
+          if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
 
       - name: Normalize export output
         shell: pwsh
