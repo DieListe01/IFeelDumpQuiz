@@ -48,8 +48,21 @@ jobs:
       - name: Export Windows build
         shell: pwsh
         run: |
-          godot --headless --path . --import
-          godot --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe"
+          $godot = Get-Command godot -ErrorAction SilentlyContinue
+          if ($null -eq $godot) { $godot = Get-Command godot4 -ErrorAction SilentlyContinue }
+          if ($null -eq $godot) { throw "Godot CLI wurde im Runner nicht gefunden." }
+          & $godot.Source --headless --path . --import
+          & $godot.Source --headless --path . --build-solutions
+          & $godot.Source --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe"
+
+      - name: Debug export output
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "Inhalt dist/windows:"
+          if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
+          Write-Host "Inhalt Projektwurzel (relevante EXE/PCK):"
+          Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
 
       - name: Verify export output
         shell: pwsh
