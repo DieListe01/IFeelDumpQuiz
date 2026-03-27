@@ -1,0 +1,9 @@
+IFeelDump Quiz
+
+Dies ist eine vorbereitende Installationsdatei fuer lokale Test- und Release-Builds.
+
+- Publisher: DieListe01
+- Repository: https://github.com/DieListe01/IFeelDumpQuiz
+- Updates erfolgen ueber GitHub Releases.
+
+Vor der Weitergabe sollten Lizenztext, Datenschutz- und Supporthinweise bei Bedarf ergaenzt werden.

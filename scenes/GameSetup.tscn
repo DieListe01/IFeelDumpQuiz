@@ -1,0 +1,150 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxr2ta2xal0gh"]
+
+[ext_resource type="Script" path="res://scripts/GameSetup.cs" id="1_q0n4m"]
+[ext_resource type="Theme" path="res://ui/QuizTheme.tres" id="2_theme"]
+
+[node name="GameSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q0n4m")
+theme = ExtResource("2_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.07, 0.16, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 28.0
+offset_right = -28.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="RootMargin"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="MainPanel" type="PanelContainer" parent="RootMargin/Center"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+
+[node name="MainVBox" type="VBoxContainer" parent="RootMargin/Center/MainPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Lokales Spiel konfigurieren"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Geladene Fragen und letzte Einstellungen"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Lead" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Lege Runde, Kategorie, Zeit und Spieler fest. Die letzten Werte werden automatisch uebernommen."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="FormGrid" type="GridContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+
+[node name="LblPlayerCount" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Anzahl Spieler"
+
+[node name="PlayerCount" type="SpinBox" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+min_value = 1.0
+max_value = 4.0
+value = 2.0
+
+[node name="LblQuestionCount" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Anzahl Fragen"
+
+[node name="QuestionCount" type="SpinBox" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+min_value = 1.0
+max_value = 50.0
+value = 5.0
+
+[node name="LblCategory" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Kategorie"
+
+[node name="CategorySelect" type="OptionButton" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+
+[node name="LblTime" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Zeit pro Spieler (Sekunden)"
+
+[node name="TimePerQuestion" type="SpinBox" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+min_value = 5.0
+max_value = 120.0
+value = 20.0
+
+[node name="PlayersTitle" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Spielernamen"
+
+[node name="PlayersBox" type="VBoxContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Player1" type="LineEdit" parent="RootMargin/Center/MainPanel/MainVBox/PlayersBox"]
+layout_mode = 2
+placeholder_text = "Spieler 1"
+
+[node name="Player2" type="LineEdit" parent="RootMargin/Center/MainPanel/MainVBox/PlayersBox"]
+layout_mode = 2
+placeholder_text = "Spieler 2"
+
+[node name="Player3" type="LineEdit" parent="RootMargin/Center/MainPanel/MainVBox/PlayersBox"]
+layout_mode = 2
+placeholder_text = "Spieler 3"
+
+[node name="Player4" type="LineEdit" parent="RootMargin/Center/MainPanel/MainVBox/PlayersBox"]
+layout_mode = 2
+placeholder_text = "Spieler 4"
+
+[node name="BottomButtons" type="HBoxContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="BtnStart" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/BottomButtons"]
+custom_minimum_size = Vector2(180, 46)
+layout_mode = 2
+text = "Spiel starten"
+
+[node name="BtnBack" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/BottomButtons"]
+custom_minimum_size = Vector2(150, 46)
+layout_mode = 2
+text = "Zurueck"

@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=3 uid="uid://d7e6jwcqowg7y"]
+
+[ext_resource type="Script" path="res://scripts/ResultScene.cs" id="1_d8hmi"]
+[ext_resource type="Theme" path="res://ui/QuizTheme.tres" id="2_theme"]
+
+[node name="ResultScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d8hmi")
+theme = ExtResource("2_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.06, 0.14, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 120.0
+offset_top = 70.0
+offset_right = -120.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="PanelContainer" parent="RootMargin"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MainVBox" type="VBoxContainer" parent="RootMargin/MainPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="RootMargin/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Statistik"
+horizontal_alignment = 1
+
+[node name="Lead" type="Label" parent="RootMargin/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Die Runde ist beendet. Hier sehen Sie das Ergebnis und koennen direkt zur Historie wechseln."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SummaryPanel" type="PanelContainer" parent="RootMargin/MainPanel/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SummaryText" type="RichTextLabel" parent="RootMargin/MainPanel/MainVBox/SummaryPanel"]
+layout_mode = 2
+fit_content = true
+scroll_active = true
+
+[node name="ButtonRow" type="HBoxContainer" parent="RootMargin/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BtnMainMenu" type="Button" parent="RootMargin/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "Hauptmenü"
+
+[node name="BtnHistory" type="Button" parent="RootMargin/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "Spielhistorie"

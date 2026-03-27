@@ -1,0 +1,498 @@
+[gd_scene load_steps=12 format=3 uid="uid://dupe1xwfij4j7"]
+
+[ext_resource type="Script" path="res://scripts/GameScene.cs" id="1_ry32a"]
+[ext_resource type="Theme" path="res://ui/QuizTheme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.07, 0.09, 0.2, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.45, 0.95, 0.7)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 14
+shadow_offset = Vector2(0, 6)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_normal"]
+bg_color = Color(0.04, 0.2, 0.63, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 12
+border_color = Color(1, 0.72, 0.18, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 18
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_hover"]
+bg_color = Color(0.08, 0.3, 0.8, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 14
+border_color = Color(1, 0.84, 0.35, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 20
+shadow_offset = Vector2(0, 10)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_pressed"]
+bg_color = Color(0.03, 0.14, 0.48, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 6
+border_color = Color(1, 0.72, 0.18, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_active_player"]
+bg_color = Color(0.34, 0.18, 0.04, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 6
+border_color = Color(1, 0.78, 0.31, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+shadow_color = Color(0.32, 0.16, 0.02, 0.45)
+shadow_size = 14
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top_highlight"]
+bg_color = Color(0.11, 0.1, 0.18, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 3
+border_color = Color(1, 0.72, 0.18, 0.8)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_locked"]
+bg_color = Color(0.085, 0.12, 0.28, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 6
+border_color = Color(0.42, 0.5, 0.78, 0.6)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_correct"]
+bg_color = Color(0.07, 0.32, 0.21, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 10
+border_color = Color(0.95, 0.81, 0.35, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0.0, 0.3, 0.14, 0.45)
+shadow_size = 16
+shadow_offset = Vector2(0, 7)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_answer_wrong"]
+bg_color = Color(0.26, 0.08, 0.11, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 8
+border_color = Color(0.78, 0.31, 0.31, 0.95)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 74.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_side_panel"]
+bg_color = Color(0.065, 0.08, 0.17, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.34, 0.74, 0.45)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.22)
+shadow_size = 8
+shadow_offset = Vector2(0, 3)
+
+[node name="GameScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ry32a")
+theme = ExtResource("2_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.05, 0.12, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainVBox" type="VBoxContainer" parent="RootMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopPanel" type="PanelContainer" parent="RootMargin/MainVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top_highlight")
+
+[node name="TopVBox" type="VBoxContainer" parent="RootMargin/MainVBox/TopPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="RootMargin/MainVBox/TopPanel/TopVBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="QuestionCounter" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Frage 1 / 1"
+
+[node name="CategoryLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Kategorie"
+
+[node name="PhaseLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Phase"
+
+[node name="TimerLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Zeit"
+
+[node name="SubInfoLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Die Antworten bleiben verdeckt, bis der Moderator aufloest."
+autowrap_mode = 3
+theme_override_colors/font_color = Color(1, 0.9, 0.72, 1)
+
+[node name="QuestionPanel" type="PanelContainer" parent="RootMargin/MainVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="QuestionVBox" type="VBoxContainer" parent="RootMargin/MainVBox/QuestionPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ShuffleLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "Startspieler wird ausgelost"
+
+[node name="QuestionText" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Frage"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AnswerHintLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Bitte jetzt genau eine Antwort auswaehlen."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="KeyboardHintLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Tastatur: 1 = oben links   2 = oben rechts   3 = unten links   4 = unten rechts"
+horizontal_alignment = 1
+autowrap_mode = 3
+theme_override_colors/font_color = Color(1, 0.84, 0.54, 1)
+
+[node name="CurrentPlayerBanner" type="PanelContainer" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_active_player")
+
+[node name="CurrentPlayerLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox/CurrentPlayerBanner"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.98, 0.93, 1)
+text = "Jetzt antwortet ..."
+horizontal_alignment = 1
+
+[node name="TurnOrderLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Reihenfolge"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AnswersGrid" type="GridContainer" parent="RootMargin/MainVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+
+[node name="Answer1" type="Button" parent="RootMargin/MainVBox/AnswersGrid"]
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_answer_hover")
+alignment = 0
+text = "Antwort 1"
+
+[node name="KeyBadge" type="Label" parent="RootMargin/MainVBox/AnswersGrid/Answer1"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -14.0
+offset_right = 54.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 20
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Answer2" type="Button" parent="RootMargin/MainVBox/AnswersGrid"]
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_answer_hover")
+alignment = 0
+text = "Antwort 2"
+
+[node name="KeyBadge" type="Label" parent="RootMargin/MainVBox/AnswersGrid/Answer2"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -14.0
+offset_right = 54.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 20
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Answer3" type="Button" parent="RootMargin/MainVBox/AnswersGrid"]
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_answer_hover")
+alignment = 0
+text = "Antwort 3"
+
+[node name="KeyBadge" type="Label" parent="RootMargin/MainVBox/AnswersGrid/Answer3"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -14.0
+offset_right = 54.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 20
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Answer4" type="Button" parent="RootMargin/MainVBox/AnswersGrid"]
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_answer_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_answer_hover")
+alignment = 0
+text = "Antwort 4"
+
+[node name="KeyBadge" type="Label" parent="RootMargin/MainVBox/AnswersGrid/Answer4"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -14.0
+offset_right = 54.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 20
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="BottomRow" type="HBoxContainer" parent="RootMargin/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ModeratorPanel" type="PanelContainer" parent="RootMargin/MainVBox/BottomRow"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_side_panel")
+
+[node name="ModeratorVBox" type="VBoxContainer" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ModeratorTitle" type="Label" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Moderatorbereich"
+
+[node name="ResultLabel" type="Label" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 15
+text = "Hier erscheint die Aufloesung der Frage."
+autowrap_mode = 3
+
+[node name="ModeratorRow" type="HBoxContainer" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnResolve" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Aufloesen"
+
+[node name="BtnNext" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Naechste Frage"
+
+[node name="BtnAbort" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Abbrechen"
+
+[node name="ScorePanel" type="PanelContainer" parent="RootMargin/MainVBox/BottomRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_side_panel")
+
+[node name="ScoreVBox" type="VBoxContainer" parent="RootMargin/MainVBox/BottomRow/ScorePanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ScoreTitle" type="Label" parent="RootMargin/MainVBox/BottomRow/ScorePanel/ScoreVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Punktestand"
+
+[node name="Scoreboard" type="RichTextLabel" parent="RootMargin/MainVBox/BottomRow/ScorePanel/ScoreVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+fit_content = false
+scroll_active = true
+
+[node name="QuestionTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ShuffleTimer" type="Timer" parent="."]
+wait_time = 0.08
+
+[node name="CountdownPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -8.0

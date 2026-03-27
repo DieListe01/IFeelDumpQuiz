@@ -1,0 +1,21 @@
+.godot/
+.mono/
+bin/
+obj/
+.vs/
+.vscode/
+dist/
+*.user
+*.suo
+*.tmp
+*.pdb
+*.mdb
+*.opendb
+*.DotSettings.user
+
+# Godot imports and caches
+*.translation
+
+# OS files
+Thumbs.db
+Desktop.ini

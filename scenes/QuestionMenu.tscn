@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/QuestionMenu.cs" id="1_qmenu"]
+[ext_resource type="Theme" path="res://ui/QuizTheme.tres" id="2_theme"]
+
+[node name="QuestionMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qmenu")
+theme = ExtResource("2_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.07, 0.16, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="RootMargin"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="MainPanel" type="PanelContainer" parent="RootMargin/Center"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+
+[node name="MainVBox" type="VBoxContainer" parent="RootMargin/Center/MainPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Fragen verwalten"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Import, Export und CSV-Vorlage"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="FormGrid" type="GridContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+
+[node name="LblCategory" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Export-Kategorie"
+
+[node name="CategorySelect" type="OptionButton" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+
+[node name="ExportCategoryOnly" type="CheckBox" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+text = "Beim Export nur die ausgewaehlte Kategorie verwenden"
+
+[node name="ButtonRow" type="HBoxContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BtnImportCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(170, 44)
+layout_mode = 2
+text = "CSV importieren"
+
+[node name="BtnExportCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(170, 44)
+layout_mode = 2
+text = "CSV exportieren"
+
+[node name="BtnTemplateCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+text = "Vorlage herunterladen"
+
+[node name="BtnBack" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
+custom_minimum_size = Vector2(140, 44)
+layout_mode = 2
+text = "Zurueck"

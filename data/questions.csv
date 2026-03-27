@@ -1,0 +1,41 @@
+question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation
+Welcher Planet ist der Sonne am naechsten?;Merkur;Venus;Erde;Mars;0;Allgemeinwissen;Merkur ist der innerste Planet unseres Sonnensystems.
+Wie viele Tage hat ein Schaltjahr?;364;365;366;367;2;Allgemeinwissen;Ein Schaltjahr hat 366 Tage.
+Welche Farbe entsteht aus Blau und Gelb?;Gruen;Orange;Lila;Rot;0;Allgemeinwissen;Blau und Gelb ergeben zusammen Gruen.
+Welches Meer liegt zwischen Europa und Afrika?;Nordsee;Mittelmeer;Schwarzes Meer;Kaspisches Meer;1;Allgemeinwissen;Das Mittelmeer trennt Europa und Afrika.
+Wie viele Minuten hat eine Stunde?;50;60;70;100;1;Allgemeinwissen;Eine Stunde besteht aus 60 Minuten.
+Welches Tier gilt als groesstes an Land lebendes Saeugetier?;Nashorn;Giraffe;Elefant;Flusspferd;2;Allgemeinwissen;Der Elefant ist das groesste Landsaeugetier.
+In welcher Jahreszeit fallen in Mitteleuropa typischerweise die meisten Blaetter?;Fruehling;Sommer;Herbst;Winter;2;Allgemeinwissen;Im Herbst verlieren viele Baeume ihre Blaetter.
+Wie heisst die Hauptstadt von Italien?;Mailand;Rom;Neapel;Turin;1;Allgemeinwissen;Rom ist die Hauptstadt von Italien.
+Welches Metall hat das chemische Symbol Au?;Silber;Kupfer;Gold;Eisen;2;Allgemeinwissen;Au steht fuer Gold.
+Wie viele Kontinente gibt es nach gaengiger Zaehweise?;5;6;7;8;2;Allgemeinwissen;In der gaengigen Zaehweise gibt es sieben Kontinente.
+Wofuer steht die Abkuerzung CPU?;Central Program Unit;Central Processing Unit;Computer Power Unit;Core Processing Utility;1;Technik;CPU steht fuer Central Processing Unit.
+Welches Geraet leitet Datenpakete in Netzwerken weiter?;Router;Monitor;Scanner;Beamer;0;Technik;Ein Router verbindet Netzwerke und leitet Daten weiter.
+Wofuer wird ein USB-Stick hauptsaechlich verwendet?;Zur Datenspeicherung;Zum Drucken;Zum Telefonieren;Zum Kuehlen;0;Technik;Ein USB-Stick dient in erster Linie als mobiler Speicher.
+Welcher dieser Begriffe bezeichnet einen Webbrowser?;Excel;Firefox;Photoshop;Outlook;1;Technik;Firefox ist ein Webbrowser.
+Welche Einheit wird haeufig fuer Datenmengen verwendet?;Volt;Watt;Byte;Meter;2;Technik;Byte ist eine grundlegende Einheit fuer Datenmengen.
+Welche Eingabe erfolgt typischerweise mit einer Tastatur?;Text;Lautstaerke;Bildhelligkeit;Stromversorgung;0;Technik;Mit einer Tastatur gibt man vor allem Text und Befehle ein.
+Wofuer steht WLAN im Alltag?;Kabellose Netzwerkverbindung;Ein Druckertreiber;Eine Festplattenart;Ein Bildschirmkabel;0;Technik;WLAN bezeichnet eine drahtlose Netzwerkverbindung.
+Welches Bauteil zeigt Bilder auf einem Computer an?;Maus;Monitor;Router;Tastatur;1;Technik;Der Monitor ist das Ausgabegeraet fuer Bildinhalte.
+Was ist ein Passwort?;Ein Sicherheitsmerkmal zum Anmelden;Ein neues Betriebssystem;Ein Kabeltyp;Ein Dateiformat;0;Technik;Passwoerter schuetzen Konten und Systeme vor unbefugtem Zugriff.
+Welche Taste wird oft genutzt, um eine Zeile zu bestaetigen?;Esc;Shift;Enter;Alt;2;Technik;Mit Enter bestaetigt man haeufig Eingaben.
+Wie viele Spieler stehen pro Fussballmannschaft regulaer auf dem Feld?;9;10;11;12;2;Sport;Eine Fussballmannschaft spielt regulaer mit elf Spielern.
+In welcher Sportart versucht man einen Ball in einen Korb zu werfen?;Tennis;Basketball;Handball;Golf;1;Sport;Beim Basketball wird auf Koerbe gespielt.
+Wie heisst das Turnier um die Fussball-Weltmeisterschaft?;Champions Cup;Europa Liga;FIFA WM;Bundespokal;2;Sport;Die FIFA WM ist die Weltmeisterschaft im Fussball.
+Welche Sportart wird auf einem Eisfeld mit Schlaeger und Puck gespielt?;Curling;Eishockey;Fechten;Rudern;1;Sport;Eishockey wird mit Puck und Schlaegern auf Eis gespielt.
+Wie viele Minuten dauert ein normales Fussballspiel ohne Nachspielzeit?;80;90;100;120;1;Sport;Ein regulaeres Spiel dauert 90 Minuten.
+Bei welcher Sportart spielt man typischerweise Saetze und Spiele?;Tennis;Boxen;Ringen;Biathlon;0;Sport;Im Tennis wird in Spielen und Saetzen gezaehlt.
+Welche Farbe hat eine gelbe Karte im Fussball?;Rot;Gruen;Gelb;Blau;2;Sport;Die Verwarnungskarte ist gelb.
+Welche Disziplin gehoert zur Leichtathletik?;100-Meter-Lauf;Schwimmen;Surfen;Skispringen;0;Sport;Der 100-Meter-Lauf ist eine klassische Leichtathletikdisziplin.
+Wie nennt man den Bereich vor dem Tor im Fussball, in dem der Torwart haeufig agiert?;Mittelkreis;Strafraum;Einwurffeld;Laufbahn;1;Sport;Der Torwart bewegt sich vor allem im Strafraum.
+Welche Sportart nutzt ein Fahrrad im Wettkampf?;Radsport;Judo;Volleyball;Tauchen;0;Sport;Im Radsport ist das Fahrrad das zentrale Sportgeraet.
+Wie heisst der Zauberlehrling mit der blitzfoermigen Narbe?;Harry Potter;Frodo Beutlin;Percy Jackson;Bilbo Beutlin;0;Filme;Harry Potter ist an seiner Narbe auf der Stirn erkennbar.
+Welche Figur sagt oft Ich bin dein Vater in einem bekannten Science-Fiction-Film?;Yoda;Darth Vader;Han Solo;Obi-Wan Kenobi;1;Filme;Diese Zeile wird mit Darth Vader aus Star Wars verbunden.
+In welchem Film reist eine Gruppe mit einem Ring nach Mordor?;Narnia;Willow;Der Herr der Ringe;Die unendliche Geschichte;2;Filme;Die Reise nach Mordor ist Teil von Der Herr der Ringe.
+Welche Animationsfilmfigur ist eine sprechende Spielzeug-Cowboypuppe?;Buzz;Woody;Shrek;Olaf;1;Filme;Woody ist der Cowboy aus Toy Story.
+Wie heisst das Schiff im Film Titanic?;Britannic;Queen Mary;Titanic;Olympic Star;2;Filme;Der Film Titanic handelt von der Titanic.
+Welche Figur lebt in einer Ananas ganz tief im Meer?;Patrick Star;SpongeBob Schwammkopf;Plankton;Thaddaeus;1;Filme;SpongeBob wohnt in einer Ananas unter Wasser.
+Welcher Film handelt von Dinosauriern in einem Freizeitpark?;Ice Age;King Kong;Jurassic Park;Jumanji;2;Filme;Jurassic Park zeigt einen Park mit wiederbelebten Dinosauriern.
+Welche Eiskoenigin ist eine Hauptfigur in einem Disney-Film?;Elsa;Arielle;Vaiana;Belle;0;Filme;Elsa ist die Eiskoenigin aus Frozen.
+Wie heisst der gruene Oger aus den gleichnamigen Filmen?;Hulk;Shrek;Grinch;Yoda;1;Filme;Shrek ist der gruene Oger der Filmreihe.
+Welche Rennwagen-Figur traegt die Startnummer 95?;Hook;Francesco;Lightning McQueen;Doc Hudson;2;Filme;Lightning McQueen ist in Cars mit der Nummer 95 unterwegs.
