@@ -68,7 +68,7 @@ public static class GameSession
         }
     }
 
-    public static void RecordAnswer(string playerName, int questionId, int selectedIndex, bool isCorrect)
+    public static void RecordAnswer(string playerName, int questionId, int selectedIndex, bool isCorrect, long answerDurationMs)
     {
         var player = Players.FirstOrDefault(p => string.Equals(p.Name, playerName, StringComparison.OrdinalIgnoreCase));
         if (player == null)
@@ -82,8 +82,11 @@ public static class GameSession
             QuestionId = questionId,
             SelectedIndex = selectedIndex,
             IsCorrect = isCorrect,
+            AnswerDurationMs = answerDurationMs,
             AnsweredAt = DateTime.UtcNow
         });
+
+        player.TotalAnswerTimeMs += Math.Max(0, answerDurationMs);
 
         if (isCorrect)
         {
@@ -105,6 +108,12 @@ public static class GameSession
     {
         var total = player.CorrectAnswers + player.WrongAnswers;
         return total == 0 ? 0 : (double)player.CorrectAnswers / total * 100.0;
+    }
+
+    public static double GetAverageAnswerTimeSeconds(PlayerState player)
+    {
+        var total = player.CorrectAnswers + player.WrongAnswers;
+        return total == 0 ? 0 : (double)player.TotalAnswerTimeMs / total / 1000.0;
     }
 
     public static List<string> GetCategories()

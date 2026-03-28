@@ -29,7 +29,8 @@ public static class AppState
         {
             QuestionCount = (int)configFile.GetValue("setup", "question_count", 5),
             Category = configFile.GetValue("setup", "category", "Alle").AsString(),
-            TimePerQuestionSeconds = (int)configFile.GetValue("setup", "time_per_question_seconds", 20)
+            TimePerQuestionSeconds = (int)configFile.GetValue("setup", "time_per_question_seconds", 20),
+            AnswerMode = configFile.GetValue("setup", "answer_mode", GameModes.Simultaneous).AsString()
         };
 
         var playerCount = (int)configFile.GetValue("setup", "player_count", 2);
@@ -55,7 +56,8 @@ public static class AppState
             PlayerNames = new List<string>(config.PlayerNames),
             QuestionCount = config.QuestionCount,
             Category = config.Category,
-            TimePerQuestionSeconds = config.TimePerQuestionSeconds
+            TimePerQuestionSeconds = config.TimePerQuestionSeconds,
+            AnswerMode = config.AnswerMode
         };
 
         LastPlayerNames = new List<string>(playerNames);
@@ -69,6 +71,7 @@ public static class AppState
         configFile.SetValue("setup", "question_count", config.QuestionCount);
         configFile.SetValue("setup", "category", config.Category);
         configFile.SetValue("setup", "time_per_question_seconds", config.TimePerQuestionSeconds);
+        configFile.SetValue("setup", "answer_mode", config.AnswerMode);
 
         for (var i = 0; i < 4; i++)
         {

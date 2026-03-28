@@ -27,11 +27,12 @@
 
 - Workflow-Datei: `.github/workflows/windows-release.yml`
 - Der Workflow liest die Version aus `VERSION`.
-- Der Workflow installiert Godot 4.6.1 inklusive Export-Templates automatisch.
-- Der Workflow baut zuerst das C#-Projekt und fuehrt dann den Windows-Export per Godot CLI aus.
+- Der Workflow laeuft auf `ubuntu-latest`.
+- Er installiert Godot 4.6.1 inklusive Export-Templates automatisch.
+- Er baut zuerst das C#-Projekt und fuehrt dann den Windows-Export per Godot CLI aus.
 - Der Workflow erstellt aus `dist/windows` das Release-ZIP `IFeelDumpQuiz-win64.zip`.
 - Bei Tags wie `v0.1.0` wird das ZIP direkt an den GitHub Release angehaengt.
-- Damit ist der Windows-Build in GitHub Actions deutlich automatisierter.
+- Das ist fuer Godot-Exports in CI robuster als ein Windows-Runner.
 
 ## Update-Ablauf in der App
 

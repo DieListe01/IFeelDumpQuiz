@@ -30,37 +30,45 @@ public partial class GameScene : Control
     private RichTextLabel _scoreboard = null!;
     private Button _btnResolve = null!;
     private Button _btnNext = null!;
+    private HBoxContainer _playerButtonsRow = null!;
     private readonly List<Button> _answerButtons = new();
-    private readonly Dictionary<Button, Vector2> _answerBaseScales = new();
+    private readonly List<Button> _playerButtons = new();
     private Godot.Timer _questionTimer = null!;
     private Godot.Timer _shuffleTimer = null!;
     private AudioStreamPlayer _countdownPlayer = null!;
     private AudioStreamGeneratorPlayback? _countdownPlayback;
 
     private readonly Dictionary<string, int> _answersByPlayer = new();
+    private readonly Dictionary<string, long> _answerDurationsByPlayer = new();
     private List<int> _turnOrder = new();
     private int _turnIndex;
     private int _shuffleStep;
     private int _shuffleCyclesRemaining;
     private int _lastBeepSecond = -1;
+    private int _selectedSimultaneousPlayerIndex = -1;
     private bool _isResolved;
     private bool _isShuffleRunning;
     private QuestionData? _question;
+    private DateTime _turnStartedAtUtc;
+    private DateTime _simultaneousStartedAtUtc;
+
+    private bool IsSimultaneousMode => GameSession.Config.AnswerMode == GameModes.Simultaneous;
 
     public override void _Ready()
     {
-        _questionCounter = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow/QuestionCounter");
-        _categoryLabel = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow/CategoryLabel");
-        _phaseLabel = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow/PhaseLabel");
-        _timerLabel = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow/TimerLabel");
-        _subInfoLabel = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/SubInfoLabel");
+        _questionCounter = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow/QuestionCounter");
+        _categoryLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow/CategoryLabel");
+        _phaseLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow/PhaseLabel");
+        _timerLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow/TimerPanel/TimerLabel");
+        _subInfoLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/SubInfoLabel");
         _shuffleLabel = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/ShuffleLabel");
         _questionText = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/QuestionText");
-        _answerHintLabel = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/AnswerHintLabel");
-        _keyboardHintLabel = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/KeyboardHintLabel");
-        _currentPlayerBanner = GetNode<PanelContainer>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/CurrentPlayerBanner");
-        _currentPlayerLabel = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/CurrentPlayerBanner/CurrentPlayerLabel");
-        _turnOrderLabel = GetNode<Label>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/TurnOrderLabel");
+        _answerHintLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/AnswerHintLabel");
+        _keyboardHintLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/KeyboardHintLabel");
+        _currentPlayerBanner = GetNode<PanelContainer>("RootMargin/MainVBox/TopPanel/TopVBox/CurrentPlayerBanner");
+        _currentPlayerLabel = GetNode<Label>("RootMargin/MainVBox/TopPanel/TopVBox/CurrentPlayerBanner/CurrentPlayerLabel");
+        _playerButtonsRow = GetNode<HBoxContainer>("RootMargin/MainVBox/QuestionPanel/QuestionVBox/PlayerButtonsRow");
+        _turnOrderLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/TurnOrderLabel");
         _resultLabel = GetNode<Label>("RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ResultLabel");
         _scoreboard = GetNode<RichTextLabel>("RootMargin/MainVBox/BottomRow/ScorePanel/ScoreVBox/Scoreboard");
         _btnResolve = GetNode<Button>("RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow/BtnResolve");
@@ -82,7 +90,6 @@ public partial class GameScene : Control
             _answerButtons[i].MouseExited += () => OnAnswerHoverChanged(_answerButtons[i], false);
             _answerButtons[i].FocusEntered += () => OnAnswerHoverChanged(_answerButtons[i], true);
             _answerButtons[i].FocusExited += () => OnAnswerHoverChanged(_answerButtons[i], false);
-            _answerBaseScales[_answerButtons[i]] = _answerButtons[i].Scale;
         }
 
         _btnResolve.Pressed += OnResolvePressed;
@@ -92,6 +99,7 @@ public partial class GameScene : Control
         _shuffleTimer.Timeout += OnShuffleTick;
 
         ConfigureCountdownAudio();
+        RebuildPlayerButtons();
         LoadCurrentQuestion();
     }
 
@@ -99,20 +107,28 @@ public partial class GameScene : Control
     {
         if (!_questionTimer.IsStopped())
         {
-            var currentPlayerName = _turnIndex < _turnOrder.Count && !_isShuffleRunning
-                ? GameSession.Players[_turnOrder[_turnIndex]].Name
-                : "bereit";
+            var currentLabel = IsSimultaneousMode
+                ? $"Alle · {Mathf.CeilToInt((float)_questionTimer.TimeLeft)}s"
+                : (_turnIndex < _turnOrder.Count ? $"{GameSession.Players[_turnOrder[_turnIndex]].Name} · {Mathf.CeilToInt((float)_questionTimer.TimeLeft)}s" : "bereit");
             var secondsLeft = Mathf.CeilToInt((float)_questionTimer.TimeLeft);
-            _timerLabel.Text = $"{currentPlayerName} · {secondsLeft}s";
+            _timerLabel.Text = currentLabel;
+            _timerLabel.Modulate = secondsLeft switch
+            {
+                <= 3 => new Color(1f, 0.55f, 0.55f, 1f),
+                <= 6 => new Color(1f, 0.82f, 0.42f, 1f),
+                _ => Colors.White
+            };
             TryPlayCountdownBeep(secondsLeft);
         }
         else if (_isShuffleRunning)
         {
             _timerLabel.Text = "Auslosung";
+            _timerLabel.Modulate = Colors.White;
         }
         else
         {
             _lastBeepSecond = -1;
+            _timerLabel.Modulate = Colors.White;
         }
     }
 
@@ -149,6 +165,29 @@ public partial class GameScene : Control
         }
     }
 
+    private void RebuildPlayerButtons()
+    {
+        foreach (var child in _playerButtonsRow.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        _playerButtons.Clear();
+        for (var i = 0; i < GameSession.Players.Count; i++)
+        {
+            var index = i;
+            var button = new Button
+            {
+                Text = GameSession.Players[i].Name,
+                CustomMinimumSize = new Vector2(120, 34),
+                Visible = false
+            };
+            button.Pressed += () => SelectSimultaneousPlayer(index);
+            _playerButtonsRow.AddChild(button);
+            _playerButtons.Add(button);
+        }
+    }
+
     private void LoadCurrentQuestion()
     {
         _question = GameSession.CurrentQuestion;
@@ -160,37 +199,52 @@ public partial class GameScene : Control
         }
 
         _answersByPlayer.Clear();
+        _answerDurationsByPlayer.Clear();
         _isResolved = false;
         _isShuffleRunning = false;
         _turnIndex = 0;
+        _selectedSimultaneousPlayerIndex = -1;
         _questionTimer.Stop();
         _shuffleTimer.Stop();
         _turnOrder = GameSession.GetQuestionOrder(GameSession.GetNextStartPlayerIndex()).ToList();
 
-        _questionCounter.Text = $"Frage {GameSession.CurrentQuestionIndex + 1} / {GameSession.ActiveQuestions.Count}";
+        _questionCounter.Text = $"Frage {GameSession.CurrentQuestionIndex + 1}/{GameSession.ActiveQuestions.Count}";
         _categoryLabel.Text = _question.Category;
-        _phaseLabel.Text = "Frage";
-        _timerLabel.Text = $"{GameSession.Config.TimePerQuestionSeconds}s pro Spieler";
-        _subInfoLabel.Text = "Verdeckt bis zur Aufloesung.";
+        _phaseLabel.Text = IsSimultaneousMode ? "Simultan" : "Reihum";
+        _timerLabel.Text = IsSimultaneousMode ? $"ALLE · {GameSession.Config.TimePerQuestionSeconds}s" : $"{GameSession.Config.TimePerQuestionSeconds}s";
+        _subInfoLabel.Text = IsSimultaneousMode ? "Alle denken gleichzeitig nach." : "Antworten nacheinander und verdeckt.";
         _questionText.Text = _question.Text;
         _answerHintLabel.Text = "Startspieler wird ausgelost.";
         _keyboardHintLabel.Text = "Tasten: 1  2  3  4";
-        _resultLabel.Text = "Nach allen Antworten folgt die Aufloesung.";
+        _resultLabel.Text = IsSimultaneousMode ? "Moderator erfasst danach die Antworten." : "Nach allen Antworten folgt die Aufloesung.";
         _shuffleLabel.Text = "Startspieler wird ausgelost ...";
-        _currentPlayerLabel.Text = "AM ZUG: wird ausgelost";
+        _currentPlayerLabel.Text = "Auslosung";
 
         for (var i = 0; i < _answerButtons.Count; i++)
         {
             _answerButtons[i].Text = _question.Answers[i];
-            _answerButtons[i].Modulate = Colors.White;
             _answerButtons[i].Disabled = true;
             ApplyAnswerVisualState(i, AnswerVisualState.Neutral);
         }
 
+        UpdatePlayerButtonsVisibility();
         RefreshTurnOrderLabel();
         RefreshScoreboard();
         UpdateModeratorButtons();
         StartShuffleAnimation();
+    }
+
+    private void UpdatePlayerButtonsVisibility()
+    {
+        foreach (var button in _playerButtons)
+        {
+            button.Visible = IsSimultaneousMode;
+        }
+
+        if (IsSimultaneousMode)
+        {
+            UpdatePlayerButtonStates();
+        }
     }
 
     private void StartShuffleAnimation()
@@ -199,7 +253,7 @@ public partial class GameScene : Control
         _shuffleStep = 0;
         _shuffleCyclesRemaining = GameSession.Players.Count * 4 + 6;
         _phaseLabel.Text = "Auslosung";
-        _currentPlayerLabel.Text = "AM ZUG: Auswahl laeuft";
+        _currentPlayerLabel.Text = "Auslosung";
         _answerHintLabel.Text = "Bitte kurz warten.";
         PulseCurrentPlayerBanner();
         _shuffleTimer.Start();
@@ -224,13 +278,28 @@ public partial class GameScene : Control
 
         _shuffleTimer.Stop();
         _isShuffleRunning = false;
-        _phaseLabel.Text = "Antworten";
         _shuffleLabel.Text = $"Startspieler: {GameSession.Players[_turnOrder[0]].Name}";
-        _subInfoLabel.Text = "Jeder Spieler hat die volle Zeit.";
-        SetAnswerButtonsEnabled(true);
-        StartCurrentPlayerTurn();
+
+        if (IsSimultaneousMode)
+        {
+            StartSimultaneousRound();
+        }
+        else
+        {
+            StartTurnBasedRound();
+        }
+
         RefreshTurnOrderLabel();
         UpdateModeratorButtons();
+    }
+
+    private void StartTurnBasedRound()
+    {
+        _phaseLabel.Text = "Reihum";
+        _subInfoLabel.Text = "Jeder Spieler antwortet der Reihe nach.";
+        _playerButtonsRow.Visible = false;
+        SetAnswerButtonsEnabled(true);
+        StartCurrentPlayerTurn();
     }
 
     private void StartCurrentPlayerTurn()
@@ -240,23 +309,96 @@ public partial class GameScene : Control
             return;
         }
 
+        _turnStartedAtUtc = DateTime.UtcNow;
         _questionTimer.Stop();
         _questionTimer.WaitTime = GameSession.Config.TimePerQuestionSeconds;
         _questionTimer.Start();
 
         var player = GameSession.Players[_turnOrder[_turnIndex]];
-        _currentPlayerLabel.Text = $"AM ZUG: {player.Name}";
+        _currentPlayerLabel.Text = player.Name;
         _answerHintLabel.Text = $"{player.Name} waehlt jetzt eine Antwort.";
         PulseCurrentPlayerBanner();
-        for (var i = 0; i < _answerButtons.Count; i++)
+    }
+
+    private void StartSimultaneousRound()
+    {
+        _phaseLabel.Text = "Simultan";
+        _subInfoLabel.Text = "Alle antworten gleichzeitig, Moderator erfasst.";
+        _playerButtonsRow.Visible = true;
+        _simultaneousStartedAtUtc = DateTime.UtcNow;
+        _questionTimer.Stop();
+        _questionTimer.WaitTime = GameSession.Config.TimePerQuestionSeconds;
+        _questionTimer.Start();
+        SetAnswerButtonsEnabled(true);
+        _currentPlayerLabel.Text = "Moderator";
+        _answerHintLabel.Text = "Spieler auswaehlen und Antwort eintragen.";
+        SelectNextUnansweredPlayer();
+        PulseCurrentPlayerBanner();
+    }
+
+    private void SelectSimultaneousPlayer(int index)
+    {
+        if (!IsSimultaneousMode || _answersByPlayer.ContainsKey(GameSession.Players[index].Name))
         {
-            ApplyAnswerVisualState(i, AnswerVisualState.Neutral);
+            return;
+        }
+
+        _selectedSimultaneousPlayerIndex = index;
+        UpdatePlayerButtonStates();
+        _currentPlayerLabel.Text = GameSession.Players[index].Name;
+        _answerHintLabel.Text = "Antwortkachel klicken oder 1-4 druecken.";
+        PulseCurrentPlayerBanner();
+    }
+
+    private void SelectNextUnansweredPlayer()
+    {
+        var nextIndex = _turnOrder.FirstOrDefault(index => !_answersByPlayer.ContainsKey(GameSession.Players[index].Name));
+        if (_turnOrder.Any(index => !_answersByPlayer.ContainsKey(GameSession.Players[index].Name)))
+        {
+            SelectSimultaneousPlayer(nextIndex);
+        }
+        else
+        {
+            _selectedSimultaneousPlayerIndex = -1;
+            UpdatePlayerButtonStates();
+        }
+    }
+
+    private void UpdatePlayerButtonStates()
+    {
+        for (var i = 0; i < _playerButtons.Count; i++)
+        {
+            var name = GameSession.Players[i].Name;
+            var button = _playerButtons[i];
+            var answered = _answersByPlayer.ContainsKey(name);
+            button.Disabled = answered;
+            button.Text = answered ? $"{name}  ok" : name;
+            button.Modulate = answered
+                ? new Color(0.65f, 0.9f, 0.7f, 1f)
+                : i == _selectedSimultaneousPlayerIndex ? new Color(1f, 0.86f, 0.62f, 1f) : Colors.White;
         }
     }
 
     private void OnAnswerPressed(int answerIndex)
     {
-        if (_question == null || _isResolved || _isShuffleRunning || _turnIndex >= _turnOrder.Count)
+        if (_question == null || _isResolved || _isShuffleRunning)
+        {
+            return;
+        }
+
+        if (IsSimultaneousMode)
+        {
+            HandleSimultaneousAnswer(answerIndex);
+        }
+        else
+        {
+            HandleTurnBasedAnswer(answerIndex);
+        }
+    }
+
+    private void HandleTurnBasedAnswer(int answerIndex)
+    {
+        if (_turnIndex >= _turnOrder.Count)
         {
             return;
         }
@@ -268,18 +410,13 @@ public partial class GameScene : Control
         }
 
         _answersByPlayer[player.Name] = answerIndex;
+        _answerDurationsByPlayer[player.Name] = (long)Math.Max(0, (DateTime.UtcNow - _turnStartedAtUtc).TotalMilliseconds);
         _shuffleLabel.Text = $"Antwort von {player.Name} gespeichert";
         _turnIndex++;
 
         if (_turnIndex >= _turnOrder.Count)
         {
-            _phaseLabel.Text = "Moderation";
-            _currentPlayerLabel.Text = "AUFLOESUNG DURCH MODERATOR";
-            _answerHintLabel.Text = "Alle Antworten liegen vor.";
-            _questionTimer.Stop();
-            SetAnswerButtonsEnabled(false);
-            SetAllAnswersLocked();
-            PulseCurrentPlayerBanner();
+            MoveToModeratorPhase("Alle Antworten liegen vor.");
         }
         else
         {
@@ -290,35 +427,88 @@ public partial class GameScene : Control
         UpdateModeratorButtons();
     }
 
-    private void OnQuestionTimeout()
+    private void HandleSimultaneousAnswer(int answerIndex)
     {
-        if (_question == null || _isResolved || _turnIndex >= _turnOrder.Count)
+        if (_selectedSimultaneousPlayerIndex < 0)
         {
             return;
         }
 
-        var player = GameSession.Players[_turnOrder[_turnIndex]];
-        _answersByPlayer[player.Name] = -1;
-        _shuffleLabel.Text = $"Zeit fuer {player.Name} abgelaufen";
-        _turnIndex++;
-
-        if (_turnIndex >= _turnOrder.Count)
+        var player = GameSession.Players[_selectedSimultaneousPlayerIndex];
+        if (_answersByPlayer.ContainsKey(player.Name))
         {
-            _phaseLabel.Text = "Moderation";
-            _currentPlayerLabel.Text = "AUFLOESUNG DURCH MODERATOR";
-            _answerHintLabel.Text = "Zeit abgelaufen.";
-            _questionTimer.Stop();
-            SetAnswerButtonsEnabled(false);
-            SetAllAnswersLocked();
-            PulseCurrentPlayerBanner();
+            return;
+        }
+
+        _answersByPlayer[player.Name] = answerIndex;
+        _answerDurationsByPlayer[player.Name] = (long)Math.Max(0, (DateTime.UtcNow - _simultaneousStartedAtUtc).TotalMilliseconds);
+        _shuffleLabel.Text = $"Antwort fuer {player.Name} gespeichert";
+        UpdatePlayerButtonStates();
+
+        if (_answersByPlayer.Count >= GameSession.Players.Count)
+        {
+            MoveToModeratorPhase("Alle Antworten liegen vor.");
         }
         else
         {
-            StartCurrentPlayerTurn();
+            SelectNextUnansweredPlayer();
         }
 
         RefreshTurnOrderLabel();
         UpdateModeratorButtons();
+    }
+
+    private void OnQuestionTimeout()
+    {
+        if (_question == null || _isResolved)
+        {
+            return;
+        }
+
+        if (IsSimultaneousMode)
+        {
+            foreach (var player in GameSession.Players.Where(player => !_answersByPlayer.ContainsKey(player.Name)))
+            {
+                _answersByPlayer[player.Name] = -1;
+                _answerDurationsByPlayer[player.Name] = GameSession.Config.TimePerQuestionSeconds * 1000L;
+            }
+            UpdatePlayerButtonStates();
+            MoveToModeratorPhase("Zeit abgelaufen.");
+        }
+        else
+        {
+            if (_turnIndex < _turnOrder.Count)
+            {
+                var player = GameSession.Players[_turnOrder[_turnIndex]];
+                _answersByPlayer[player.Name] = -1;
+                _answerDurationsByPlayer[player.Name] = GameSession.Config.TimePerQuestionSeconds * 1000L;
+                _shuffleLabel.Text = $"Zeit fuer {player.Name} abgelaufen";
+                _turnIndex++;
+            }
+
+            if (_turnIndex >= _turnOrder.Count)
+            {
+                MoveToModeratorPhase("Zeit abgelaufen.");
+            }
+            else
+            {
+                StartCurrentPlayerTurn();
+            }
+        }
+
+        RefreshTurnOrderLabel();
+        UpdateModeratorButtons();
+    }
+
+    private void MoveToModeratorPhase(string hint)
+    {
+        _phaseLabel.Text = "Moderation";
+        _currentPlayerLabel.Text = "Moderator";
+        _answerHintLabel.Text = hint;
+        _questionTimer.Stop();
+        SetAnswerButtonsEnabled(false);
+        SetAllAnswersLocked();
+        PulseCurrentPlayerBanner();
     }
 
     private void OnResolvePressed()
@@ -341,7 +531,8 @@ public partial class GameScene : Control
         {
             var selectedIndex = _answersByPlayer.GetValueOrDefault(player.Name, -1);
             var isCorrect = selectedIndex == _question.CorrectIndex;
-            GameSession.RecordAnswer(player.Name, _question.Id, selectedIndex, isCorrect);
+            var duration = _answerDurationsByPlayer.GetValueOrDefault(player.Name, GameSession.Config.TimePerQuestionSeconds * 1000L);
+            GameSession.RecordAnswer(player.Name, _question.Id, selectedIndex, isCorrect, duration);
             if (isCorrect)
             {
                 correctPlayers.Add(player.Name);
@@ -359,10 +550,10 @@ public partial class GameScene : Control
             _answerButtons[i].Text = i == _question.CorrectIndex ? $"Richtige Antwort: {_question.Answers[i]}" : _question.Answers[i];
         }
 
-        var correctPlayerText = correctPlayers.Count > 0 ? string.Join(", ", correctPlayers) : "niemand";
-        var wrongPlayerText = wrongPlayers.Count > 0 ? string.Join(", ", wrongPlayers) : "niemand";
-        _resultLabel.Text = $"Richtige Antwort: {_question.Answers[_question.CorrectIndex]}\nRichtig: {correctPlayerText}\nFalsch: {wrongPlayerText}\n\nErklaerung: {_question.Explanation}";
-        _currentPlayerLabel.Text = "AUFLOESUNG DURCH MODERATOR";
+        var correctText = correctPlayers.Count > 0 ? string.Join(", ", correctPlayers) : "niemand";
+        var wrongText = wrongPlayers.Count > 0 ? string.Join(", ", wrongPlayers) : "niemand";
+        _resultLabel.Text = $"Richtige Antwort: {_question.Answers[_question.CorrectIndex]}\nRichtig: {correctText}\nFalsch: {wrongText}\n\nErklaerung: {_question.Explanation}";
+        _currentPlayerLabel.Text = "Moderator";
         PulseCurrentPlayerBanner();
         RefreshScoreboard();
         UpdateModeratorButtons();
@@ -393,15 +584,22 @@ public partial class GameScene : Control
 
     private void RefreshTurnOrderLabel()
     {
-        var parts = new List<string>();
+        if (IsSimultaneousMode)
+        {
+            var parts = GameSession.Players.Select(player => _answersByPlayer.ContainsKey(player.Name) ? $"[x] {player.Name}" : $"[ ] {player.Name}");
+        _turnOrderLabel.Text = $"Status: {string.Join("  |  ", parts)}";
+            return;
+        }
+
+        var ordered = new List<string>();
         for (var i = 0; i < _turnOrder.Count; i++)
         {
             var player = GameSession.Players[_turnOrder[i]].Name;
             var marker = i < _turnIndex ? "[x]" : i == _turnIndex && !_isResolved && !_isShuffleRunning ? "[>]" : "[ ]";
-            parts.Add($"{marker} {player}");
+            ordered.Add($"{marker} {player}");
         }
 
-        _turnOrderLabel.Text = $"Reihenfolge: {string.Join("  |  ", parts)}";
+        _turnOrderLabel.Text = $"Reihenfolge: {string.Join("  |  ", ordered)}";
     }
 
     private void RefreshScoreboard()
@@ -409,7 +607,8 @@ public partial class GameScene : Control
         _scoreboard.Clear();
         foreach (var player in GameSession.Players.OrderByDescending(player => player.Score).ThenBy(player => player.Name))
         {
-            _scoreboard.AppendText($"{player.Name}: {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers}\n");
+            var avg = GameSession.GetAverageAnswerTimeSeconds(player);
+            _scoreboard.AppendText($"{player.Name}: {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Ø Zeit: {avg:0.0}s\n");
         }
     }
 
@@ -440,7 +639,6 @@ public partial class GameScene : Control
     private void ApplyAnswerVisualState(int index, AnswerVisualState state)
     {
         var button = _answerButtons[index];
-        button.Modulate = Colors.White;
         var style = CreateAnswerStyle(state);
         button.AddThemeStyleboxOverride("normal", style);
         button.AddThemeStyleboxOverride("hover", state == AnswerVisualState.Neutral ? CreateAnswerStyle(AnswerVisualState.Locked, true) : style);

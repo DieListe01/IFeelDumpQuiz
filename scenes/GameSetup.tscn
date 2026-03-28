@@ -109,6 +109,13 @@ min_value = 5.0
 max_value = 120.0
 value = 20.0
 
+[node name="LblMode" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+text = "Antwortmodus"
+
+[node name="ModeSelect" type="OptionButton" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+layout_mode = 2
+
 [node name="PlayersTitle" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18

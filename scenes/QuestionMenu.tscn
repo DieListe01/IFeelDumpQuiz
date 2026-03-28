@@ -27,76 +27,547 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = -32.0
-offset_bottom = -32.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Center" type="CenterContainer" parent="RootMargin"]
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
 
-[node name="MainPanel" type="PanelContainer" parent="RootMargin/Center"]
-custom_minimum_size = Vector2(760, 0)
+[node name="TopBar" type="PanelContainer" parent="RootMargin/RootVBox"]
 layout_mode = 2
 
-[node name="MainVBox" type="VBoxContainer" parent="RootMargin/Center/MainPanel"]
+[node name="TopBarMargin" type="MarginContainer" parent="RootMargin/RootVBox/TopBar"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
 
-[node name="Title" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+[node name="TopBarHBox" type="HBoxContainer" parent="RootMargin/RootVBox/TopBar/TopBarMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblTitle" type="Label" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Fragen verwalten"
-horizontal_alignment = 1
+text = "Fragenverwaltung"
 
-[node name="StatusLabel" type="Label" parent="RootMargin/Center/MainPanel/MainVBox"]
+[node name="TopSpacer" type="Control" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "Import, Export und CSV-Vorlage"
-horizontal_alignment = 1
-autowrap_mode = 3
+size_flags_horizontal = 3
 
-[node name="FormGrid" type="GridContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
+[node name="BtnImport" type="Button" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
+custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
-columns = 2
-theme_override_constants/h_separation = 16
-theme_override_constants/v_separation = 12
+text = "Import"
 
-[node name="LblCategory" type="Label" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+[node name="BtnExport" type="Button" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
+custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
-text = "Export-Kategorie"
+text = "Export"
 
-[node name="CategorySelect" type="OptionButton" parent="RootMargin/Center/MainPanel/MainVBox/FormGrid"]
+[node name="BtnTemplate" type="Button" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
+custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
+text = "Vorlage"
 
-[node name="ExportCategoryOnly" type="CheckBox" parent="RootMargin/Center/MainPanel/MainVBox"]
-layout_mode = 2
-text = "Beim Export nur die ausgewaehlte Kategorie verwenden"
-
-[node name="ButtonRow" type="HBoxContainer" parent="RootMargin/Center/MainPanel/MainVBox"]
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="BtnImportCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
-custom_minimum_size = Vector2(170, 44)
-layout_mode = 2
-text = "CSV importieren"
-
-[node name="BtnExportCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
-custom_minimum_size = Vector2(170, 44)
-layout_mode = 2
-text = "CSV exportieren"
-
-[node name="BtnTemplateCsv" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
-custom_minimum_size = Vector2(200, 44)
-layout_mode = 2
-text = "Vorlage herunterladen"
-
-[node name="BtnBack" type="Button" parent="RootMargin/Center/MainPanel/MainVBox/ButtonRow"]
-custom_minimum_size = Vector2(140, 44)
+[node name="BtnBack" type="Button" parent="RootMargin/RootVBox/TopBar/TopBarMargin/TopBarHBox"]
+custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
 text = "Zurueck"
+
+[node name="MainContent" type="HBoxContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="CategoryPanel" type="PanelContainer" parent="RootMargin/RootVBox/MainContent"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CategoryMargin" type="MarginContainer" parent="RootMargin/RootVBox/MainContent/CategoryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="CategoryVBox" type="VBoxContainer" parent="RootMargin/RootVBox/MainContent/CategoryPanel/CategoryMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="LblCategories" type="Label" parent="RootMargin/RootVBox/MainContent/CategoryPanel/CategoryMargin/CategoryVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Kategorien"
+
+[node name="CategoryList" type="ItemList" parent="RootMargin/RootVBox/MainContent/CategoryPanel/CategoryMargin/CategoryVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+select_mode = 0
+same_column_width = true
+max_text_lines = 1
+
+[node name="QuestionPanel" type="PanelContainer" parent="RootMargin/RootVBox/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="QuestionMargin" type="MarginContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="QuestionVBox" type="VBoxContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SearchRow" type="HBoxContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TxtSearch" type="LineEdit" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/SearchRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Frage suchen..."
+
+[node name="BtnClearSearch" type="Button" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/SearchRow"]
+custom_minimum_size = Vector2(80, 36)
+layout_mode = 2
+text = "Leeren"
+
+[node name="ActionRow" type="HBoxContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnNewQuestion" type="Button" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/ActionRow"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+text = "+ Neue Frage"
+
+[node name="ActionSpacer" type="Control" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblQuestionCount" type="Label" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/ActionRow"]
+layout_mode = 2
+text = "0 Fragen"
+
+[node name="QuestionListScroll" type="ScrollContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="QuestionRows" type="VBoxContainer" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox/QuestionListScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="StatusLabel" type="Label" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Bitte links eine Kategorie waehlen oder rechts eine neue Frage anlegen."
+
+[node name="EditorOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="OverlayDim" type="ColorRect" parent="EditorOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="PopupCenter" type="CenterContainer" parent="EditorOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PopupPanel" type="PanelContainer" parent="EditorOverlay/PopupCenter"]
+custom_minimum_size = Vector2(980, 640)
+layout_mode = 2
+
+[node name="PopupMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PopupVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="PopupHeader" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblPopupTitle" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Neue Frage"
+
+[node name="PopupHeaderSpacer" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnClosePopup" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupHeader"]
+custom_minimum_size = Vector2(110, 38)
+layout_mode = 2
+text = "Schliessen"
+
+[node name="PopupTabs" type="TabContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Allgemein" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs"]
+layout_mode = 2
+
+[node name="ScrollAllgemein" type="ScrollContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AllgemeinMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="AllgemeinVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="MetaGrid" type="GridContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+
+[node name="LblCategoryEdit" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+text = "Kategorie"
+
+[node name="TxtCategory" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+
+[node name="LblCorrect" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+text = "Richtige Antwort"
+
+[node name="CorrectSelect" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+
+[node name="LblQuestionEdit" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
+layout_mode = 2
+text = "Frage"
+
+[node name="TxtQuestion" type="TextEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="AnswersGrid" type="GridContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+
+[node name="LblAnswerA" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+text = "Antwort A"
+
+[node name="TxtAnswerA" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+
+[node name="LblAnswerB" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+text = "Antwort B"
+
+[node name="TxtAnswerB" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+
+[node name="LblAnswerC" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+text = "Antwort C"
+
+[node name="TxtAnswerC" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+
+[node name="LblAnswerD" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+text = "Antwort D"
+
+[node name="TxtAnswerD" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+layout_mode = 2
+
+[node name="Erklaerung" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollErklaerung" type="ScrollContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ErklaerungMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung/ScrollErklaerung"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ErklaerungVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung/ScrollErklaerung/ErklaerungMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="LblExplanation" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung/ScrollErklaerung/ErklaerungMargin/ErklaerungVBox"]
+layout_mode = 2
+text = "Erklaerung / Aufloesung"
+
+[node name="TxtExplanation" type="TextEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung/ScrollErklaerung/ErklaerungMargin/ErklaerungVBox"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="Medien" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollMedien" type="ScrollContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MedienMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="MedienVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="MediaHint" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Medien werden nach Auswahl ins interne Dateisystem kopiert (user://media/...). Es werden keine absoluten Quellpfade gespeichert."
+
+[node name="MediaSlot1" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
+layout_mode = 2
+
+[node name="MediaSlot1Margin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MediaSlot1VBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LblMedia1" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+text = "Medium 1"
+
+[node name="Media1Grid" type="GridContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+
+[node name="LblMediaType1" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid"]
+layout_mode = 2
+text = "Typ"
+
+[node name="MediaType1" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid"]
+layout_mode = 2
+
+[node name="LblMediaTiming1" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid"]
+layout_mode = 2
+text = "Zeitpunkt"
+
+[node name="MediaTiming1" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid"]
+layout_mode = 2
+
+[node name="MediaPath1" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+editable = false
+placeholder_text = "Keine Datei ausgewaehlt"
+
+[node name="MediaButtons1" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnChooseMedia1" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaButtons1"]
+layout_mode = 2
+text = "Datei waehlen"
+
+[node name="BtnClearMedia1" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaButtons1"]
+layout_mode = 2
+text = "Entfernen"
+
+[node name="MediaInfo1" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Noch kein Medium hinterlegt."
+
+[node name="MediaSlot2" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
+layout_mode = 2
+
+[node name="MediaSlot2Margin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MediaSlot2VBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LblMedia2" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+text = "Medium 2"
+
+[node name="Media2Grid" type="GridContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+
+[node name="LblMediaType2" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid"]
+layout_mode = 2
+text = "Typ"
+
+[node name="MediaType2" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid"]
+layout_mode = 2
+
+[node name="LblMediaTiming2" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid"]
+layout_mode = 2
+text = "Zeitpunkt"
+
+[node name="MediaTiming2" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid"]
+layout_mode = 2
+
+[node name="MediaPath2" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+editable = false
+placeholder_text = "Keine Datei ausgewaehlt"
+
+[node name="MediaButtons2" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnChooseMedia2" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaButtons2"]
+layout_mode = 2
+text = "Datei waehlen"
+
+[node name="BtnClearMedia2" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaButtons2"]
+layout_mode = 2
+text = "Entfernen"
+
+[node name="MediaInfo2" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Noch kein Medium hinterlegt."
+
+[node name="PopupFooter" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnSave" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Speichern"
+
+[node name="BtnDuplicate" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Duplizieren"
+
+[node name="BtnDelete" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Loeschen"
+
+[node name="BtnReset" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Verwerfen"
+
+[node name="FooterSpacer" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PopupStatus" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="ImportDialog" type="FileDialog" parent="."]
+access = 2
+file_mode = 0
+title = "CSV-Datei importieren"
+filters = PackedStringArray("*.csv ; CSV-Dateien")
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+access = 2
+file_mode = 4
+title = "CSV speichern"
+filters = PackedStringArray("*.csv ; CSV-Dateien")
+
+[node name="MediaDialog" type="FileDialog" parent="."]
+access = 2
+file_mode = 0
+title = "Mediendatei auswaehlen"
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.webp, *.mp3, *.wav, *.ogg ; Medien")

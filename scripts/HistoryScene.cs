@@ -70,6 +70,7 @@ public partial class HistoryScene : Control
         _detailsText.Clear();
         _detailsText.AppendText($"Spiel vom {entry.CreatedAt:dd.MM.yyyy} um {entry.CreatedAt:HH:mm:ss}\n\n");
         _detailsText.AppendText($"Kategorie: {entry.Category}\n");
+        _detailsText.AppendText($"Modus: {entry.Mode}\n");
         _detailsText.AppendText($"Fragen: {entry.QuestionCount}\n");
         _detailsText.AppendText($"Zeit pro Spieler: {entry.TimePerQuestionSeconds}s\n");
         _detailsText.AppendText($"Gesamtdauer: {TimeSpan.FromSeconds(entry.DurationSeconds):mm\\:ss}\n\n");
@@ -77,7 +78,7 @@ public partial class HistoryScene : Control
 
         foreach (var player in entry.Players.OrderByDescending(player => player.Score).ThenBy(player => player.Name))
         {
-            _detailsText.AppendText($"- {player.Name}: {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Trefferquote: {player.Accuracy:0.0}%\n");
+            _detailsText.AppendText($"- {player.Name}: {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Trefferquote: {player.Accuracy:0.0}% | Ø Zeit: {player.AvgAnswerTimeSeconds:0.0}s\n");
         }
     }
 

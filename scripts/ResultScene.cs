@@ -22,8 +22,9 @@ public partial class ResultScene : Control
         foreach (var player in ranking)
         {
             var accuracy = GameSession.GetAccuracy(player);
+            var avgAnswerTime = GameSession.GetAverageAnswerTimeSeconds(player);
             summary.AppendText($"{place}. {player.Name}\n");
-            summary.AppendText($"   {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Trefferquote: {accuracy:0.0}%\n\n");
+            summary.AppendText($"   {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Trefferquote: {accuracy:0.0}% | Ø Zeit: {avgAnswerTime:0.0}s\n\n");
             place++;
         }
 

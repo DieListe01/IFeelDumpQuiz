@@ -9,6 +9,7 @@ public partial class GameSetup : Control
     private SpinBox _questionCount = null!;
     private SpinBox _timePerQuestion = null!;
     private OptionButton _category = null!;
+    private OptionButton _mode = null!;
     private Label _statusLabel = null!;
     private Button _startButton = null!;
     private readonly List<LineEdit> _nameInputs = new();
@@ -22,6 +23,7 @@ public partial class GameSetup : Control
         _questionCount = GetNode<SpinBox>("RootMargin/Center/MainPanel/MainVBox/FormGrid/QuestionCount");
         _timePerQuestion = GetNode<SpinBox>("RootMargin/Center/MainPanel/MainVBox/FormGrid/TimePerQuestion");
         _category = GetNode<OptionButton>("RootMargin/Center/MainPanel/MainVBox/FormGrid/CategorySelect");
+        _mode = GetNode<OptionButton>("RootMargin/Center/MainPanel/MainVBox/FormGrid/ModeSelect");
         _statusLabel = GetNode<Label>("RootMargin/Center/MainPanel/MainVBox/StatusLabel");
         _startButton = GetNode<Button>("RootMargin/Center/MainPanel/MainVBox/BottomButtons/BtnStart");
 
@@ -34,9 +36,17 @@ public partial class GameSetup : Control
         GetNode<Button>("RootMargin/Center/MainPanel/MainVBox/BottomButtons/BtnBack").Pressed += OnBackPressed;
         _playerCount.ValueChanged += _ => RefreshPlayerInputs();
 
+        FillModes();
         ApplySavedSetup();
         ReloadQuestions();
         RefreshPlayerInputs();
+    }
+
+    private void FillModes()
+    {
+        _mode.Clear();
+        _mode.AddItem(GameModes.Simultaneous);
+        _mode.AddItem(GameModes.TurnBased);
     }
 
     private void ApplySavedSetup()
@@ -45,6 +55,7 @@ public partial class GameSetup : Control
         _playerCount.Value = savedPlayerCount;
         _questionCount.Value = Mathf.Max(1, AppState.LastGameConfig.QuestionCount);
         _timePerQuestion.Value = Mathf.Clamp(AppState.LastGameConfig.TimePerQuestionSeconds, 5, 120);
+        _mode.Select(AppState.LastGameConfig.AnswerMode == GameModes.TurnBased ? 1 : 0);
 
         for (var i = 0; i < _nameInputs.Count; i++)
         {
@@ -142,7 +153,8 @@ public partial class GameSetup : Control
             PlayerNames = visibleNames,
             QuestionCount = (int)_questionCount.Value,
             Category = selectedCategory,
-            TimePerQuestionSeconds = (int)_timePerQuestion.Value
+            TimePerQuestionSeconds = (int)_timePerQuestion.Value,
+            AnswerMode = _mode.GetItemText(_mode.Selected)
         };
 
         AppState.SaveSetup(config, allNames);

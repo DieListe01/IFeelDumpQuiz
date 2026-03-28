@@ -8,7 +8,11 @@ on:
 
 jobs:
   package:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout
@@ -18,92 +22,55 @@ jobs:
 
       - name: Read version
         id: version
-        shell: pwsh
-        run: |
-          $version = (Get-Content VERSION -Raw).Trim()
-          "version=$version" >> $env:GITHUB_OUTPUT
+        run: echo "version=$(tr -d '\r\n' < VERSION)" >> "$GITHUB_OUTPUT"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install tooling
-        shell: pwsh
-        run: |
-          choco install wget -y
-          choco install 7zip -y
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.6.1
+          include-templates: true
+          use-dotnet: true
 
-      - name: Download Godot Mono
-        shell: pwsh
+      - name: Verify toolchain
         run: |
-          New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP/godot" | Out-Null
-          wget -nv "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_win64.zip" -O "$env:RUNNER_TEMP/godot/godot.zip"
-          7z x "$env:RUNNER_TEMP/godot/godot.zip" "-o$env:RUNNER_TEMP/godot/exe" -y
-          wget -nv "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_mono_export_templates.tpz" -O "$env:RUNNER_TEMP/godot/templates.tpz"
-          7z x "$env:RUNNER_TEMP/godot/templates.tpz" "-o$env:RUNNER_TEMP/godot/templates" -y
-          $godotExe = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/exe" -Filter "Godot*.exe" | Where-Object { $_.Name -notlike "*_console.exe" } | Select-Object -First 1
-          if ($null -eq $godotExe) { throw "Godot EXE wurde nicht gefunden." }
-          $windowsTemplate = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/templates" -Filter "windows_release_x86_64.exe" | Select-Object -First 1
-          if ($null -eq $windowsTemplate) { throw "Windows Release Template wurde nicht gefunden." }
-          $templatesSource = Get-ChildItem -Recurse "$env:RUNNER_TEMP/godot/templates" -Directory | Where-Object { $_.Name -eq "templates" } | Select-Object -First 1
-          if ($null -eq $templatesSource) { throw "Export-Templates wurden nicht gefunden." }
-          $templatesTarget = Join-Path $env:APPDATA "Godot\export_templates\4.6.1.stable.mono"
-          New-Item -ItemType Directory -Force -Path $templatesTarget | Out-Null
-          Copy-Item -Path (Join-Path $templatesSource.FullName "*") -Destination $templatesTarget -Recurse -Force
-          "GODOT_EXE=$($godotExe.FullName)" >> $env:GITHUB_ENV
-          "WINDOWS_TEMPLATE_EXE=$($windowsTemplate.FullName)" >> $env:GITHUB_ENV
+          godot --version
+          dotnet --info
 
       - name: Restore NuGet packages
-        run: dotnet restore "IFeelDumpQuiz.csproj"
+        run: dotnet restore IFeelDumpQuiz.csproj
 
-      - name: Build C# project for Godot editor
-        run: dotnet build "IFeelDumpQuiz.csproj" -c Debug
+      - name: Build C# project for Godot
+        run: dotnet build IFeelDumpQuiz.csproj -c Debug
 
       - name: Prepare export folders
-        shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path "dist/windows" | Out-Null
-          New-Item -ItemType Directory -Force -Path "dist/release" | Out-Null
+          mkdir -p dist/windows
+          mkdir -p dist/release
+
+      - name: Import project
+        run: godot --headless --path . --import --verbose
+
+      - name: Build Godot C# solutions
+        run: godot --headless --path . --build-solutions --verbose
 
       - name: Export Windows build
-        shell: pwsh
-        run: |
-          Write-Host "Verwendete Templates unter: $(Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono')"
-          if (Test-Path (Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono')) {
-            Get-ChildItem -Recurse (Join-Path $env:APPDATA 'Godot/export_templates/4.6.1.stable.mono') | Select-Object FullName
-          }
-          Write-Host "Projektdateien vor Export:"
-          Get-ChildItem . | Select-Object Name
-          Write-Host "Godot Export Presets:"
-          Get-Content export_presets.cfg
-          & "$env:GODOT_EXE" --headless --path "$PWD" --editor --quit-after 1
-          & "$env:GODOT_EXE" --headless --path "$PWD" --import --verbose
-          & "$env:GODOT_EXE" --headless --path "$PWD" --build-solutions --verbose
-          & "$env:GODOT_EXE" --headless --path "$PWD" --export-release "Windows Desktop" "$PWD/dist/windows/IFeelDumpQuiz.exe" --verbose --log-file "$PWD/godot-export.log"
-          Write-Host "Exit code export-release: $LASTEXITCODE"
+        run: godot --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe" --verbose
 
       - name: Verify export output
-        shell: pwsh
         run: |
-          if (-not (Test-Path "dist/windows/IFeelDumpQuiz.exe") -or -not (Test-Path "dist/windows/IFeelDumpQuiz.pck")) {
-            Write-Host "Inhalt dist/windows:"
-            if (Test-Path "dist/windows") { Get-ChildItem -Recurse "dist/windows" | Select-Object FullName }
-            Write-Host "Gefundene EXE/PCK-Dateien:"
-            Get-ChildItem -Recurse . -Include *.exe,*.pck | Select-Object FullName
-            Write-Host "Inhalt .godot/exported:"
-            if (Test-Path ".godot/exported") { Get-ChildItem -Recurse ".godot/exported" | Select-Object FullName }
-            Write-Host "godot-export.log:"
-            if (Test-Path "godot-export.log") { Get-Content "godot-export.log" }
-            throw "Windows-Build wurde nicht vollstaendig erzeugt."
-          }
+          test -f dist/windows/IFeelDumpQuiz.exe
+          test -f dist/windows/IFeelDumpQuiz.pck
+          ls -la dist/windows
 
       - name: Create release zip
-        shell: pwsh
         run: |
-          $zipPath = "dist/release/IFeelDumpQuiz-win64.zip"
-          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-          Compress-Archive -Path "dist/windows/*" -DestinationPath $zipPath
+          cd dist/windows
+          zip -r ../release/IFeelDumpQuiz-win64.zip .
 
       - name: Upload zip artifact
         uses: actions/upload-artifact@v4

@@ -216,38 +216,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_top_highlight")
 
 [node name="TopVBox" type="VBoxContainer" parent="RootMargin/MainVBox/TopPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
 
-[node name="HeaderRow" type="HBoxContainer" parent="RootMargin/MainVBox/TopPanel/TopVBox"]
+[node name="CurrentPlayerBanner" type="PanelContainer" parent="RootMargin/MainVBox/TopPanel/TopVBox"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_styles/panel = SubResource("StyleBoxFlat_active_player")
 
-[node name="QuestionCounter" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
+[node name="CurrentPlayerLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/CurrentPlayerBanner"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Frage 1 / 1"
-
-[node name="CategoryLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Kategorie"
-
-[node name="PhaseLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Phase"
-
-[node name="TimerLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox/HeaderRow"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Zeit"
-
-[node name="SubInfoLabel" type="Label" parent="RootMargin/MainVBox/TopPanel/TopVBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "Die Antworten bleiben verdeckt, bis der Moderator aufloest."
-autowrap_mode = 3
-theme_override_colors/font_color = Color(1, 0.9, 0.72, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.98, 0.93, 1)
+text = "AM ZUG"
+horizontal_alignment = 1
 
 [node name="QuestionPanel" type="PanelContainer" parent="RootMargin/MainVBox"]
 layout_mode = 2
@@ -259,55 +239,93 @@ theme_override_constants/separation = 12
 
 [node name="ShuffleLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 text = "Startspieler wird ausgelost"
 
 [node name="QuestionText" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(1, 0.96, 0.9, 1)
 text = "Frage"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="AnswerHintLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
+[node name="PlayerButtonsRow" type="HBoxContainer" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "Bitte jetzt genau eine Antwort auswaehlen."
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="KeyboardHintLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Tastatur: 1 = oben links   2 = oben rechts   3 = unten links   4 = unten rechts"
-horizontal_alignment = 1
-autowrap_mode = 3
-theme_override_colors/font_color = Color(1, 0.84, 0.54, 1)
-
-[node name="CurrentPlayerBanner" type="PanelContainer" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_active_player")
-
-[node name="CurrentPlayerLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox/CurrentPlayerBanner"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(1, 0.98, 0.93, 1)
-text = "Jetzt antwortet ..."
-horizontal_alignment = 1
-
-[node name="TurnOrderLabel" type="Label" parent="RootMargin/MainVBox/QuestionPanel/QuestionVBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Reihenfolge"
-horizontal_alignment = 1
-autowrap_mode = 3
+theme_override_constants/separation = 8
+alignment = 1
 
 [node name="AnswersGrid" type="GridContainer" parent="RootMargin/MainVBox"]
 layout_mode = 2
 columns = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
+
+[node name="InfoPanel" type="PanelContainer" parent="RootMargin/MainVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_side_panel")
+
+[node name="InfoVBox" type="VBoxContainer" parent="RootMargin/MainVBox/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MetaRow" type="HBoxContainer" parent="RootMargin/MainVBox/InfoPanel/InfoVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="QuestionCounter" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Frage 1 / 1"
+
+[node name="CategoryLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Kategorie"
+
+[node name="PhaseLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Phase"
+
+[node name="TimerPanel" type="PanelContainer" parent="RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_active_player")
+
+[node name="TimerLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox/MetaRow/TimerPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.98, 0.93, 1)
+text = "Zeit"
+horizontal_alignment = 1
+
+[node name="SubInfoLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Info"
+autowrap_mode = 3
+theme_override_colors/font_color = Color(1, 0.9, 0.72, 1)
+
+[node name="AnswerHintLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Hinweis"
+autowrap_mode = 3
+
+[node name="KeyboardHintLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Tasten: 1 2 3 4"
+autowrap_mode = 3
+theme_override_colors/font_color = Color(1, 0.84, 0.54, 1)
+
+[node name="TurnOrderLabel" type="Label" parent="RootMargin/MainVBox/InfoPanel/InfoVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Status"
+autowrap_mode = 3
 
 [node name="Answer1" type="Button" parent="RootMargin/MainVBox/AnswersGrid"]
 custom_minimum_size = Vector2(0, 94)
