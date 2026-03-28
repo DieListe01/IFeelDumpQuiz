@@ -53,13 +53,13 @@ jobs:
           mkdir -p dist/release
 
       - name: Import project
-        run: godot --headless --path . --import --verbose
+        run: godot --headless --path . --import --quit --verbose
 
       - name: Build Godot C# solutions
-        run: godot --headless --path . --build-solutions --verbose
+        run: godot --headless --path . --build-solutions --quit --verbose
 
       - name: Export Windows build
-        run: godot --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe" --verbose
+        run: godot --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe" --quit --verbose
 
       - name: Verify export output
         run: |
