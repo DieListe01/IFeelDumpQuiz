@@ -1,22 +1,23 @@
 using Godot;
-using System.IO;
 
 public partial class MainMenu : Control
 {
     public MainMenu()
     {
-        File.WriteAllText("test.txt", "Constructor called");
+        GD.Print("MainMenu constructor called");
+        throw new Exception("Test exception from constructor");
     }
 
     public override void _EnterTree()
     {
-        File.WriteAllText("test.txt", "EnterTree called");
+        GD.Print("MainMenu._EnterTree called");
         base._EnterTree();
     }
 
     public override void _Ready()
     {
-        File.WriteAllText("test.txt", "Ready called");
+        GD.Print("MainMenu._Ready: Hello World!");
+        // Quit the application immediately to test if the scene loads
         GetTree().Quit();
     }
 }
