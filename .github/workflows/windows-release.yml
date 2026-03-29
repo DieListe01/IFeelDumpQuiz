@@ -68,6 +68,7 @@ jobs:
         run: |
           test -f dist/windows/IFeelDumpQuiz.exe
           test -f dist/windows/IFeelDumpQuiz.pck
+          cp VERSION dist/windows/VERSION
           ls -la dist/windows
 
       - name: Create release zip

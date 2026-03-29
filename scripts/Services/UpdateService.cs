@@ -74,6 +74,7 @@ public sealed class UpdateService
         var installDir = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         var exePath = Path.Combine(installDir, AppMetadata.WindowsExecutableName);
         var scriptPath = Path.Combine(Path.GetTempPath(), "IFeelDumpQuiz", "run-update.ps1");
+        var logPath = Path.Combine(Path.GetTempPath(), "IFeelDumpQuiz", "update.log");
         Directory.CreateDirectory(Path.GetDirectoryName(scriptPath)!);
         File.WriteAllText(scriptPath, BuildUpdaterScript());
 
@@ -90,6 +91,8 @@ public sealed class UpdateService
             installDir,
             "-ExecutablePath",
             exePath,
+            "-LogPath",
+            logPath,
             "-ProcessId",
             pid.ToString()
         });
@@ -105,17 +108,29 @@ public sealed class UpdateService
 
     private static string BuildUpdaterScript()
     {
-        return "param([string]$ZipPath,[string]$InstallDir,[string]$ExecutablePath,[int]$ProcessId)\n" +
+        return "param([string]$ZipPath,[string]$InstallDir,[string]$ExecutablePath,[string]$LogPath,[int]$ProcessId)\n" +
                "$ErrorActionPreference = 'Stop'\n" +
-               "try { Wait-Process -Id $ProcessId -Timeout 30 -ErrorAction SilentlyContinue } catch {}\n" +
-               "$extractDir = Join-Path ([System.IO.Path]::GetDirectoryName($ZipPath)) 'extracted'\n" +
-               "if (Test-Path $extractDir) { Remove-Item $extractDir -Recurse -Force }\n" +
-               "Expand-Archive -Path $ZipPath -DestinationPath $extractDir -Force\n" +
-               "$sourceDir = $extractDir\n" +
-               "$entries = Get-ChildItem -Path $extractDir\n" +
-               "if ($entries.Count -eq 1 -and $entries[0].PSIsContainer) { $sourceDir = $entries[0].FullName }\n" +
-               "Copy-Item -Path (Join-Path $sourceDir '*') -Destination $InstallDir -Recurse -Force\n" +
-               "Start-Process -FilePath $ExecutablePath\n";
+               "function Write-Log($msg) { Add-Content -Path $LogPath -Value ((Get-Date -Format s) + ' ' + $msg) }\n" +
+               "try {\n" +
+               "  if (Test-Path $LogPath) { Remove-Item $LogPath -Force }\n" +
+               "  Write-Log 'Updater gestartet'\n" +
+               "  try { Wait-Process -Id $ProcessId -Timeout 30 -ErrorAction SilentlyContinue } catch {}\n" +
+               "  Write-Log 'Wartephase beendet'\n" +
+               "  $extractDir = Join-Path ([System.IO.Path]::GetDirectoryName($ZipPath)) 'extracted'\n" +
+               "  if (Test-Path $extractDir) { Remove-Item $extractDir -Recurse -Force }\n" +
+               "  Expand-Archive -Path $ZipPath -DestinationPath $extractDir -Force\n" +
+               "  Write-Log 'ZIP entpackt'\n" +
+               "  $sourceDir = $extractDir\n" +
+               "  $entries = Get-ChildItem -Path $extractDir\n" +
+               "  if ($entries.Count -eq 1 -and $entries[0].PSIsContainer) { $sourceDir = $entries[0].FullName }\n" +
+               "  Copy-Item -Path (Join-Path $sourceDir '*') -Destination $InstallDir -Recurse -Force\n" +
+               "  Write-Log ('Dateien kopiert nach ' + $InstallDir)\n" +
+               "  Start-Process -FilePath $ExecutablePath -WorkingDirectory $InstallDir\n" +
+               "  Write-Log ('Neustart gestartet: ' + $ExecutablePath)\n" +
+               "} catch {\n" +
+               "  Write-Log ('FEHLER: ' + $_.Exception.Message)\n" +
+               "  throw\n" +
+               "}\n";
     }
 }
 
