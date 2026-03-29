@@ -11,15 +11,82 @@ public partial class MainMenu : Control
     private AcceptDialog _infoDialog = null!;
     private UpdateInfo? _pendingUpdate;
 
+    public MainMenu()
+    {
+        GD.Print("MainMenu constructor");
+    }
+
+    public override void _EnterTree()
+    {
+        GD.Print("MainMenu._EnterTree");
+        base._EnterTree();
+    }
+
     public override void _Ready()
     {
         GD.Print("MainMenu._Ready start");
-        _updateService = new UpdateService();
-        _updateStatus = GetNode<Label>("RootMargin/Center/MenuPanel/MainVBox/UpdateBanner/UpdateStatus");
-        GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnLocalGame").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/GameSetup.tscn");
-        GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnQuestionMenu").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/QuestionMenu.tscn");
-        GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnHistory").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/HistoryScene.tscn");
-        GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnExit").Pressed += () => GetTree().Quit();
+        try
+        {
+            _updateService = new UpdateService();
+            GD.Print("UpdateService created");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to create UpdateService: {ex}");
+            // To avoid later null reference, we still assign but it will cause issues if used.
+            // For now, we let it be null and check later.
+            _updateService = null!;
+        }
+
+        try
+        {
+            _updateStatus = GetNode<Label>("RootMargin/Center/MenuPanel/MainVBox/UpdateBanner/UpdateStatus");
+            GD.Print("UpdateStatus node found");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to get UpdateStatus node: {ex}");
+        }
+
+        try
+        {
+            GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnLocalGame").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/GameSetup.tscn");
+            GD.Print("BtnLocalGame subscribed");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to subscribe BtnLocalGame: {ex}");
+        }
+
+        try
+        {
+            GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnQuestionMenu").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/QuestionMenu.tscn");
+            GD.Print("BtnQuestionMenu subscribed");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to subscribe BtnQuestionMenu: {ex}");
+        }
+
+        try
+        {
+            GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnHistory").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/HistoryScene.tscn");
+            GD.Print("BtnHistory subscribed");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to subscribe BtnHistory: {ex}");
+        }
+
+        try
+        {
+            GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnExit").Pressed += () => GetTree().Quit();
+            GD.Print("BtnExit subscribed");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to subscribe BtnExit: {ex}");
+        }
 
         CreateDialogs();
         if (!AppMetadata.IsPackagedBuild || OS.HasFeature("editor"))
