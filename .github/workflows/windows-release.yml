@@ -73,6 +73,8 @@ jobs:
           test -f dist/windows/IFeelDumpQuiz.exe
           test -f dist/windows/IFeelDumpQuiz.pck
           cp -r dist/publish/* dist/windows/
+          if [ -f .godot/mono/temp/bin/Debug/GodotSharp.dll ]; then cp .godot/mono/temp/bin/Debug/GodotSharp.dll dist/windows/; fi
+          if [ -d .godot/mono/temp/bin/Debug/GodotSharp ]; then cp -r .godot/mono/temp/bin/Debug/GodotSharp dist/windows/; fi
           cp VERSION dist/windows/VERSION
           ls -la dist/windows
 
