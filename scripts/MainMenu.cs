@@ -20,6 +20,12 @@ public partial class MainMenu : Control
         GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnExit").Pressed += () => GetTree().Quit();
 
         CreateDialogs();
+        if (!AppMetadata.IsPackagedBuild || OS.HasFeature("editor"))
+        {
+            _updateStatus.Text = $"Version {AppMetadata.Version} - Entwicklungsmodus";
+            return;
+        }
+
         _updateStatus.Text = $"Version {AppMetadata.Version} - pruefe Updates ...";
         _ = CheckForUpdatesAsync();
     }
