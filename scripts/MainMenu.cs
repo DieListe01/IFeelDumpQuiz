@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 public partial class MainMenu : Control
 {
-    private readonly UpdateService _updateService = new();
+    private UpdateService _updateService = null!;
     private Label _updateStatus = null!;
     private ConfirmationDialog _updateDialog = null!;
     private AcceptDialog _infoDialog = null!;
@@ -13,6 +13,7 @@ public partial class MainMenu : Control
 
     public override void _Ready()
     {
+        _updateService = new UpdateService();
         _updateStatus = GetNode<Label>("RootMargin/Center/MenuPanel/MainVBox/UpdateBanner/UpdateStatus");
         GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnLocalGame").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/GameSetup.tscn");
         GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnQuestionMenu").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/QuestionMenu.tscn");
