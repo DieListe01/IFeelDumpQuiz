@@ -13,6 +13,7 @@ public partial class MainMenu : Control
 
     public override void _Ready()
     {
+        GD.Print("MainMenu._Ready start");
         _updateService = new UpdateService();
         _updateStatus = GetNode<Label>("RootMargin/Center/MenuPanel/MainVBox/UpdateBanner/UpdateStatus");
         GetNode<Button>("RootMargin/Center/MenuPanel/MainVBox/Buttons/BtnLocalGame").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/GameSetup.tscn");
