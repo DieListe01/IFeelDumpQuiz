@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+      - 'feature/**'
+      - 'fix/**'
+      - 'hotfix/**'
+    tags-ignore:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: .NET 8 einrichten
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Artefakt-Ordner vorbereiten
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+
+      - name: Projektstruktur validieren
+        shell: pwsh
+        run: |
+          $requiredFiles = @(
+            'project.godot',
+            'export_presets.cfg',
+            'IFeelDumpQuiz.sln',
+            'IFeelDumpQuiz.csproj',
+            'VERSION'
+          )
+
+          foreach ($file in $requiredFiles) {
+            if (-not (Test-Path $file)) {
+              throw "Pflichtdatei fehlt: $file"
+            }
+          }
+
+          $version = (Get-Content VERSION -Raw).Trim()
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "VERSION muss das Format Major.Minor.Patch haben. Aktuell: $version"
+          }
+
+          $exportPresets = Get-Content export_presets.cfg -Raw
+          if ($exportPresets -notmatch 'name="Windows Desktop"') {
+            throw 'Export-Preset "Windows Desktop" wurde in export_presets.cfg nicht gefunden.'
+          }
+
+      - name: Restore
+        shell: pwsh
+        run: dotnet restore IFeelDumpQuiz.sln
+
+      - name: C# Loesung bauen
+        shell: pwsh
+        run: dotnet build IFeelDumpQuiz.sln -c Release --no-restore -bl:artifacts/build.binlog
+
+      - name: Tests ausfuehren, falls vorhanden
+        shell: pwsh
+        run: |
+          $tests = Get-ChildItem -Path . -Recurse -Filter *.csproj |
+            Where-Object { $_.Name -match 'Test' -or $_.DirectoryName -match 'Test' }
+
+          if (-not $tests) {
+            Write-Host 'Keine Testprojekte gefunden.'
+            exit 0
+          }
+
+          foreach ($test in $tests) {
+            Write-Host "Teste $($test.FullName)"
+            dotnet test $test.FullName -c Release --no-build --verbosity normal
+          }
+
+      - name: CI-Artefakte hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-${{ github.run_number }}
+          path: |
+            artifacts/build.binlog
+            VERSION
+            BUILD

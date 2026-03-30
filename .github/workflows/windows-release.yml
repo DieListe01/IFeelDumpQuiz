@@ -1,97 +1,283 @@
-name: windows-release
+name: Windows Release
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Explizite Versionsnummer, z. B. 0.2.5'
+        required: false
+        type: string
+      bump:
+        description: 'Version automatisch hochzaehlen'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - none
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: 'Release als Pre-Release markieren'
+        required: true
+        default: false
+        type: boolean
+      draft:
+        description: 'Release als Draft anlegen'
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
-jobs:
-  package:
-    runs-on: ubuntu-latest
+concurrency:
+  group: windows-release-${{ github.ref_name }}
+  cancel-in-progress: false
 
-    defaults:
-      run:
-        shell: bash
+env:
+  GODOT_VERSION: 4.6.1-stable
+  GODOT_EDITOR_ZIP: Godot_v4.6.1-stable_mono_win64.zip
+  GODOT_TEMPLATES_TPZ: Godot_v4.6.1-stable_mono_export_templates.tpz
+  GODOT_TEMPLATES_DIR: 4.6.1.stable.mono
+  EXPORT_PRESET_NAME: Windows Desktop
+
+jobs:
+  build-release:
+    runs-on: windows-2022
 
     steps:
-      - name: Checkout
+      - name: Repository auschecken
         uses: actions/checkout@v4
         with:
-          lfs: true
+          fetch-depth: 0
 
-      - name: Read version
-        id: version
-        run: echo "version=$(tr -d '\r\n' < VERSION)" >> "$GITHUB_OUTPUT"
+      - name: Git konfigurieren
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup .NET
+      - name: .NET 8 einrichten
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Setup Godot
-        uses: chickensoft-games/setup-godot@v2
-        with:
-          version: 4.6.1
-          include-templates: true
-          use-dotnet: true
-
-      - name: Verify toolchain
+      - name: Release-Kontext aufloesen
+        id: release_context
+        shell: pwsh
         run: |
-          godot --version
-          dotnet --info
+          $eventName = '${{ github.event_name }}'
+          $build = '${{ github.run_number }}'
+          $version = ''
+          $tag = ''
+          $prerelease = 'false'
+          $draft = 'false'
 
-      - name: Restore NuGet packages
-        run: dotnet restore IFeelDumpQuiz.csproj
+          if ($eventName -eq 'workflow_dispatch') {
+            $prerelease = '${{ inputs.prerelease }}'.ToLowerInvariant()
+            $draft = '${{ inputs.draft }}'.ToLowerInvariant()
 
-      - name: Build C# project for Godot
-        run: dotnet build IFeelDumpQuiz.csproj -c Debug
+            ./scripts/release/Resolve-Version.ps1 `
+              -VersionOverride "${{ inputs.version }}" `
+              -Bump "${{ inputs.bump }}" `
+              -BuildNumber "$build"
 
-      - name: Prepare export folders
+            $version = (Get-Content VERSION -Raw).Trim()
+            $tag = "v$version"
+
+            if ($version -notmatch '^\d+\.\d+\.\d+$') {
+              throw "Ungueltige Version nach Resolve-Version.ps1: $version"
+            }
+
+            git fetch --tags origin
+            $remoteTag = git ls-remote --tags origin "refs/tags/$tag"
+            if ($remoteTag) {
+              throw "Tag $tag existiert bereits auf origin. Bitte eine neue Version verwenden."
+            }
+
+            git add VERSION
+            git diff --cached --quiet
+            if ($LASTEXITCODE -ne 0) {
+              git commit -m "chore: release $version"
+              git push origin "HEAD:${{ github.ref_name }}"
+            }
+            else {
+              Write-Host 'VERSION unveraendert, kein Commit notwendig.'
+            }
+
+            git tag -a $tag -m "Release $version"
+            git push origin $tag
+          }
+          else {
+            $tag = '${{ github.ref_name }}'
+            $version = $tag.TrimStart('v', 'V')
+
+            if ($version -notmatch '^\d+\.\d+\.\d+$') {
+              throw "Tag $tag enthaelt keine gueltige SemVer-Version. Erwartet: vMajor.Minor.Patch"
+            }
+
+            Set-Content -Path VERSION -Value $version -NoNewline
+            Set-Content -Path BUILD -Value $build -NoNewline
+          }
+
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "build=$build" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "tag=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "prerelease=$prerelease" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "draft=$draft" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Export-Metadaten synchronisieren
+        shell: pwsh
         run: |
-          mkdir -p dist/windows
-          mkdir -p dist/release
+          ./scripts/release/Sync-ExportVersions.ps1 -Version '${{ steps.release_context.outputs.version }}'
 
-      - name: Prepare .NET runtime files
+      - name: Godot .NET Editor herunterladen
+        shell: pwsh
         run: |
-          dotnet publish IFeelDumpQuiz.csproj -c Debug -o dist/publish
+          $url = "https://github.com/godotengine/godot-builds/releases/download/${env:GODOT_VERSION}/${env:GODOT_EDITOR_ZIP}"
+          Invoke-WebRequest -Uri $url -OutFile $env:GODOT_EDITOR_ZIP
 
-      - name: Import project
-        run: godot --headless --path . --import --quit --verbose
-
-      - name: Build Godot C# solutions
-        run: godot --headless --path . --build-solutions --quit --verbose
-
-      - name: Export Windows build
-        run: godot --headless --path . --export-release "Windows Desktop" "dist/windows/IFeelDumpQuiz.exe" --quit --verbose
-
-      - name: Verify export output
+      - name: Godot Export Templates herunterladen
+        shell: pwsh
         run: |
-          test -f dist/windows/IFeelDumpQuiz.exe
-          test -f dist/windows/IFeelDumpQuiz.pck
-          cp -r dist/publish/* dist/windows/
-          if [ -f .godot/mono/temp/bin/Debug/GodotSharp.dll ]; then cp .godot/mono/temp/bin/Debug/GodotSharp.dll dist/windows/; fi
-          if [ -d .godot/mono/temp/bin/Debug/GodotSharp ]; then cp -r .godot/mono/temp/bin/Debug/GodotSharp dist/windows/; fi
-          cp VERSION dist/windows/VERSION
-          ls -la dist/windows
+          $url = "https://github.com/godotengine/godot-builds/releases/download/${env:GODOT_VERSION}/${env:GODOT_TEMPLATES_TPZ}"
+          Invoke-WebRequest -Uri $url -OutFile $env:GODOT_TEMPLATES_TPZ
 
-      - name: Create release zip
+      - name: Godot entpacken
+        shell: pwsh
         run: |
-          cd dist/windows
-          zip -r ../release/IFeelDumpQuiz-win64.zip .
+          Expand-Archive -Path $env:GODOT_EDITOR_ZIP -DestinationPath godot-editor -Force
 
-      - name: Upload zip artifact
+      - name: Export Templates installieren
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:APPDATA "Godot\export_templates\$env:GODOT_TEMPLATES_DIR"
+          $tempRoot = Join-Path $pwd 'godot-templates'
+          $zipPath = Join-Path $tempRoot 'templates.zip'
+          $expandedPath = Join-Path $tempRoot 'expanded'
+
+          New-Item -ItemType Directory -Force -Path $tempRoot | Out-Null
+          Copy-Item $env:GODOT_TEMPLATES_TPZ $zipPath -Force
+          Expand-Archive -Path $zipPath -DestinationPath $expandedPath -Force
+
+          New-Item -ItemType Directory -Force -Path $target | Out-Null
+
+          $sourceDir = $expandedPath
+          $templatesDir = Join-Path $expandedPath 'templates'
+          if (Test-Path $templatesDir) {
+            $sourceDir = $templatesDir
+          }
+
+          Copy-Item -Path (Join-Path $sourceDir '*') -Destination $target -Recurse -Force
+
+          Write-Host "Installierte Templates in: $target"
+          Get-ChildItem -Path $target | Select-Object FullName
+
+      - name: Restore
+        shell: pwsh
+        run: dotnet restore IFeelDumpQuiz.sln
+
+      - name: C# Loesung bauen
+        shell: pwsh
+        run: dotnet build IFeelDumpQuiz.sln -c Release --no-restore
+
+      - name: Dist-Verzeichnisse vorbereiten
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist\windows | Out-Null
+          New-Item -ItemType Directory -Force -Path dist\installer | Out-Null
+
+      - name: Godot Export ausfuehren
+        shell: pwsh
+        run: |
+          $godotExe = Get-ChildItem -Path .\godot-editor -Recurse -Filter 'Godot_v*_mono_win64.exe' | Select-Object -First 1
+          if (-not $godotExe) {
+            throw 'Godot Editor EXE nicht gefunden.'
+          }
+
+          & $godotExe.FullName --headless --path . --build-solutions --export-release "$env:EXPORT_PRESET_NAME" "dist/windows/IFeelDumpQuiz.exe"
+
+      - name: VERSION und BUILD zum Export kopieren
+        shell: pwsh
+        run: |
+          Copy-Item VERSION dist\windows\VERSION -Force
+          Copy-Item BUILD dist\windows\BUILD -Force
+
+      - name: Portable ZIP bauen
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist\windows\* -DestinationPath dist\IFeelDumpQuiz-win64.zip -Force
+
+      - name: Inno Setup installieren
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Installer bauen
+        shell: pwsh
+        run: ./build-installer.ps1
+
+      - name: Release Notes erzeugen
+        shell: pwsh
+        run: |
+          $notes = @"
+          IFeelDump Quiz ${{ steps.release_context.outputs.version }}
+
+          Build: ${{ steps.release_context.outputs.build }}
+          Tag:   ${{ steps.release_context.outputs.tag }}
+
+          Dateien:
+          - IFeelDumpQuiz-win64.zip
+          - IFeelDump-Setup-${{ steps.release_context.outputs.version }}.exe
+          "@
+
+          Set-Content -Path dist/release-notes.md -Value $notes
+
+      - name: GitHub Release anlegen oder aktualisieren
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ steps.release_context.outputs.tag }}'
+          $version = '${{ steps.release_context.outputs.version }}'
+          $zip = 'dist/IFeelDumpQuiz-win64.zip'
+          $setup = "dist/installer/IFeelDump-Setup-$version.exe"
+          $title = "IFeelDump Quiz $version"
+
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            $args = @(
+              'release','create',$tag,
+              $zip,
+              $setup,
+              '--title',$title,
+              '--notes-file','dist/release-notes.md'
+            )
+
+            if ('${{ steps.release_context.outputs.prerelease }}' -eq 'true') {
+              $args += '--prerelease'
+            }
+            if ('${{ steps.release_context.outputs.draft }}' -eq 'true') {
+              $args += '--draft'
+            }
+
+            gh @args
+          }
+          else {
+            gh release upload $tag $zip $setup --clobber
+            gh release edit $tag --title $title --notes-file dist/release-notes.md
+          }
+
+      - name: Build-Artefakte hochladen
         uses: actions/upload-artifact@v4
         with:
-          name: IFeelDumpQuiz-win64
-          path: dist/release/IFeelDumpQuiz-win64.zip
-
-      - name: Publish GitHub release asset
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/release/IFeelDumpQuiz-win64.zip
-          name: IFeelDump Quiz v${{ steps.version.outputs.version }}
+          name: windows-release-${{ steps.release_context.outputs.version }}
+          path: |
+            dist/IFeelDumpQuiz-win64.zip
+            dist/installer/IFeelDump-Setup-${{ steps.release_context.outputs.version }}.exe
+            dist/release-notes.md
+            VERSION
+            BUILD
