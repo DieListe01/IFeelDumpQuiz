@@ -18,21 +18,21 @@
 ## Installer bauen
 
 1. Inno Setup installieren.
-2. `installer/IFeelDumpQuiz.iss` oeffnen.
-3. Installer kompilieren.
-4. Ergebnis liegt in `dist/installer/IFeelDumpQuiz-Setup.exe`.
-5. Der Installer kann laufende Instanzen von `IFeelDumpQuiz.exe` automatisch schliessen.
+2. `build-installer.ps1` starten.
+3. Ergebnis liegt in `dist/installer/IFeelDump-Setup-<VERSION>.exe`.
+4. Der Installer kann laufende Instanzen von `IFeelDumpQuiz.exe` automatisch schliessen.
 
 ## GitHub Actions
 
-- Workflow-Datei: `.github/workflows/windows-release.yml`
-- Der Workflow liest die Version aus `VERSION`.
-- Der Workflow laeuft auf `ubuntu-latest`.
-- Er installiert Godot 4.6.1 inklusive Export-Templates automatisch.
-- Er baut zuerst das C#-Projekt und fuehrt dann den Windows-Export per Godot CLI aus.
-- Der Workflow erstellt aus `dist/windows` das Release-ZIP `IFeelDumpQuiz-win64.zip`.
-- Bei Tags wie `v0.1.0` wird das ZIP direkt an den GitHub Release angehaengt.
-- Das ist fuer Godot-Exports in CI robuster als ein Windows-Runner.
+- CI: `.github/workflows/ci.yml`
+- Release: `.github/workflows/windows-release.yml`
+- Beide Workflows laufen auf `windows-2022`.
+- Der Release-Workflow kann manuell gestartet werden oder automatisch bei Tags wie `v0.2.5` laufen.
+- Der Workflow installiert Godot 4.6.1 Mono inklusive Export Templates automatisch.
+- Danach folgen `dotnet restore`, `dotnet build`, Windows-Export, ZIP-Erzeugung und Inno-Setup-Build.
+- Das GitHub Release bekommt diese Assets:
+  - `IFeelDumpQuiz-win64.zip`
+  - `IFeelDump-Setup-<VERSION>.exe`
 
 ## Update-Ablauf in der App
 

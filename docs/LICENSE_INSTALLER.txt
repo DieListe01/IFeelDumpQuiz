@@ -1,9 +1,15 @@
 IFeelDump Quiz
 
-Dies ist eine vorbereitende Installationsdatei fuer lokale Test- und Release-Builds.
+Willkommen zur Installationsdatei fuer lokale Test- und Release-Builds.
+
+Speziell fuer Nick:
+Zum Spielen, Raten, Besserwissen und fuer den Moment, in dem man feststellt, dass man doch nicht so schlau war wie gedacht.
 
 - Publisher: DieListe01
 - Repository: https://github.com/DieListe01/IFeelDumpQuiz
-- Updates erfolgen ueber GitHub Releases.
+- Updates laufen ueber GitHub Releases
 
-Vor der Weitergabe sollten Lizenztext, Datenschutz- und Supporthinweise bei Bedarf ergaenzt werden.
+Vor einer Weitergabe koennen bei Bedarf noch Lizenztext, Datenschutz- und Supporthinweise ergaenzt werden.
+
+Viel Spass beim Installieren.
+Und noch mehr Spass dabei, andere im Quiz alt aussehen zu lassen.
