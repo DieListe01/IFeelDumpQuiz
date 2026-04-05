@@ -3,6 +3,9 @@ $ErrorActionPreference = 'Stop'
 $issPath = Join-Path $PSScriptRoot 'installer\IFeelDumpQuiz.iss'
 $versionFile = Join-Path $PSScriptRoot 'VERSION'
 $buildFile = Join-Path $PSScriptRoot 'BUILD'
+$windowsDistDir = Join-Path $PSScriptRoot 'dist\windows'
+$appExePath = Join-Path $windowsDistDir 'IFeelDumpQuiz.exe'
+$appPckPath = Join-Path $windowsDistDir 'IFeelDumpQuiz.pck'
 
 if (-not (Test-Path $issPath)) {
     throw "Installer-Skript nicht gefunden: $issPath"
@@ -10,6 +13,14 @@ if (-not (Test-Path $issPath)) {
 
 if (-not (Test-Path $versionFile)) {
     throw "VERSION-Datei nicht gefunden: $versionFile"
+}
+
+if (-not (Test-Path $appExePath)) {
+    throw "Exportierte EXE fehlt vor dem Installer-Build: $appExePath"
+}
+
+if (-not (Test-Path $appPckPath)) {
+    throw "Exportierte PCK fehlt vor dem Installer-Build: $appPckPath"
 }
 
 $version = (Get-Content $versionFile -Raw).Trim()

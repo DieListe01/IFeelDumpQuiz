@@ -201,6 +201,53 @@ jobs:
 
           & $godotExe.FullName --headless --path . --build-solutions --export-release "$env:EXPORT_PRESET_NAME" "dist/windows/IFeelDumpQuiz.exe"
 
+          $exePath = Join-Path $pwd 'dist\windows\IFeelDumpQuiz.exe'
+          $pckPath = Join-Path $pwd 'dist\windows\IFeelDumpQuiz.pck'
+          if (-not (Test-Path $exePath) -or -not (Test-Path $pckPath)) {
+            Write-Host 'Standardexport hat keine vollstaendigen Windows-Dateien erzeugt. Versuche Windows-Fallback.'
+
+            $templateExe = Join-Path $env:APPDATA "Godot\export_templates\$env:GODOT_TEMPLATES_DIR\windows_release_x86_64.exe"
+            if (-not (Test-Path $templateExe)) {
+              throw "Windows Release Template nicht gefunden: $templateExe"
+            }
+
+            Copy-Item $templateExe $exePath -Force
+            & $godotExe.FullName --headless --path . --export-pack "$env:EXPORT_PRESET_NAME" $pckPath
+          }
+
+      - name: Export pruefen und .NET Dateien kopieren
+        shell: pwsh
+        run: |
+          $distDir = Join-Path $pwd 'dist\windows'
+          $exePath = Join-Path $distDir 'IFeelDumpQuiz.exe'
+          $pckPath = Join-Path $distDir 'IFeelDumpQuiz.pck'
+
+          if (-not (Test-Path $exePath)) {
+            throw "Exportierte EXE fehlt: $exePath"
+          }
+
+          if (-not (Test-Path $pckPath)) {
+            throw "Exportierte PCK fehlt: $pckPath"
+          }
+
+          $buildOutputDir = Join-Path $pwd '.godot\mono\temp\bin\Debug'
+          foreach ($fileName in @('IFeelDumpQuiz.dll', 'IFeelDumpQuiz.deps.json', 'IFeelDumpQuiz.runtimeconfig.json', 'GodotSharp.dll', 'GodotSharpEditor.dll')) {
+            $source = Join-Path $buildOutputDir $fileName
+            if (Test-Path $source) {
+              Copy-Item $source $distDir -Force
+            }
+          }
+
+          foreach ($directoryName in @('GodotSharp', 'runtimes')) {
+            $sourceDir = Join-Path $buildOutputDir $directoryName
+            if (Test-Path $sourceDir) {
+              Copy-Item $sourceDir $distDir -Recurse -Force
+            }
+          }
+
+          Write-Host 'Exportinhalt dist/windows:'
+          Get-ChildItem $distDir | Select-Object Name, Length
+
       - name: VERSION und BUILD zum Export kopieren
         shell: pwsh
         run: |
