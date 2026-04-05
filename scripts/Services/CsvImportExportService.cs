@@ -17,7 +17,13 @@ public static class CsvImportExportService
 
     public static bool TryImportQuestions(string sourcePath, out int importedCount, out string message)
     {
+        return TryImportQuestions(sourcePath, true, out importedCount, out _, out message);
+    }
+
+    public static bool TryImportQuestions(string sourcePath, bool replaceExisting, out int importedCount, out int skippedCount, out string message)
+    {
         importedCount = 0;
+        skippedCount = 0;
         if (!TryLoadQuestionsFromAbsolutePath(sourcePath, out var questions, out var errorMessage))
         {
             message = errorMessage;
@@ -25,13 +31,26 @@ public static class CsvImportExportService
         }
 
         var repository = new QuestionDataRepository();
-        if (!repository.ReplaceQuestions(questions, out message))
+        List<QuestionData> questionsToStore;
+        if (replaceExisting)
+        {
+            questionsToStore = questions;
+        }
+        else
+        {
+            var existingQuestions = repository.LoadActiveQuestions();
+            questionsToStore = MergeQuestions(existingQuestions, questions, out skippedCount);
+        }
+
+        if (!repository.ReplaceQuestions(questionsToStore, out message))
         {
             return false;
         }
 
-        importedCount = questions.Count;
-        message = $"{importedCount} Frage(n) aus CSV importiert.";
+        importedCount = questions.Count - skippedCount;
+        message = replaceExisting
+            ? $"{importedCount} Frage(n) aus CSV importiert und Bestand ersetzt."
+            : $"{importedCount} Frage(n) importiert, {skippedCount} Dublette(n) uebersprungen.";
         return true;
     }
 
@@ -85,6 +104,72 @@ public static class CsvImportExportService
 
         message = "Kein Legacy-CSV fuer den Erstimport gefunden.";
         return false;
+    }
+
+    private static List<QuestionData> MergeQuestions(List<QuestionData> existingQuestions, List<QuestionData> importedQuestions, out int skippedCount)
+    {
+        var mergedQuestions = existingQuestions
+            .Select(CloneQuestion)
+            .ToList();
+        var knownKeys = new HashSet<string>(mergedQuestions.Select(BuildQuestionKey), StringComparer.Ordinal);
+        skippedCount = 0;
+
+        foreach (var importedQuestion in importedQuestions)
+        {
+            var key = BuildQuestionKey(importedQuestion);
+            if (!knownKeys.Add(key))
+            {
+                skippedCount++;
+                continue;
+            }
+
+            mergedQuestions.Add(CloneQuestion(importedQuestion));
+        }
+
+        return mergedQuestions;
+    }
+
+    private static QuestionData CloneQuestion(QuestionData question)
+    {
+        return new QuestionData
+        {
+            Id = question.Id,
+            Category = question.Category,
+            Text = question.Text,
+            Answers = question.Answers.ToList(),
+            CorrectIndex = question.CorrectIndex,
+            Explanation = question.Explanation,
+            Media = question.Media.Select(media => new QuestionMediaData
+            {
+                Id = media.Id,
+                QuestionId = media.QuestionId,
+                MediaType = media.MediaType,
+                Timing = media.Timing,
+                StoredPath = media.StoredPath,
+                OriginalFileName = media.OriginalFileName
+            }).ToList()
+        };
+    }
+
+    private static string BuildQuestionKey(QuestionData question)
+    {
+        var answers = question.Answers
+            .Take(4)
+            .Concat(Enumerable.Repeat(string.Empty, 4))
+            .Take(4)
+            .Select(NormalizeKeyPart);
+
+        return string.Join("|", new[]
+        {
+            NormalizeKeyPart(question.Category),
+            NormalizeKeyPart(question.Text),
+            NormalizeKeyPart(question.CorrectIndex.ToString(CultureInfo.InvariantCulture))
+        }.Concat(answers));
+    }
+
+    private static string NormalizeKeyPart(string? value)
+    {
+        return (value ?? string.Empty).Trim().ToUpperInvariant();
     }
 
     private static bool TryLoadQuestionsFromGodotPath(string godotPath, out List<QuestionData> questions, out string errorMessage)

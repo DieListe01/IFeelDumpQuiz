@@ -44,6 +44,23 @@
 6. Dateien werden ins Installationsverzeichnis kopiert.
 7. Die neue EXE wird automatisch neu gestartet.
 
+## End-to-End Test fuer Setup und Update
+
+1. Release bauen, sodass diese Dateien vorliegen:
+   - `IFeelDumpQuiz-win64.zip`
+   - `IFeelDump-Setup-<VERSION>.exe`
+2. Setup ausfuehren und die App installieren.
+3. Die installierte App einmal starten und pruefen, ob sie normal ins Hauptmenue kommt.
+4. Fuer einen Update-Test eine neuere Version als GitHub Release veroeffentlichen.
+5. Die installierte App erneut starten.
+6. Die App muss beim Start automatisch auf GitHub pruefen.
+7. Bei bestaetigtem Update laeuft der Download im Hintergrund.
+8. Danach schliesst sich die App, ersetzt ihre Dateien und startet mit der neuen Version neu.
+9. Abschliessend pruefen:
+   - neue Versionsanzeige im Hauptmenue
+   - App startet weiterhin normal
+   - `VERSION` im Installationsordner entspricht dem neuen Release
+
 ## Wichtige Hinweise
 
 - Die Update-Funktion ist fuer Windows ausgelegt.

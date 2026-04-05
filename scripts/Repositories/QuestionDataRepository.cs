@@ -33,7 +33,9 @@ SELECT
     COALESCE(qm.media_type, ''),
     COALESCE(qm.timing, ''),
     COALESCE(qm.stored_path, ''),
-    COALESCE(qm.original_filename, '')
+    COALESCE(qm.original_filename, ''),
+    COALESCE(qm.mime_type, ''),
+    qm.media_blob
 FROM questions q
 LEFT JOIN categories c ON c.id = q.category_id
 LEFT JOIN question_media qm ON qm.question_id = q.id
@@ -71,7 +73,9 @@ ORDER BY c.sort_order, c.name, q.id, qm.sort_order, qm.id;";
                     MediaType = reader.GetString(10),
                     Timing = reader.GetString(11),
                     StoredPath = reader.GetString(12),
-                    OriginalFileName = reader.GetString(13)
+                    OriginalFileName = reader.GetString(13),
+                    MimeType = reader.GetString(14),
+                    BinaryData = reader.IsDBNull(15) ? Array.Empty<byte>() : (byte[])reader[15]
                 });
             }
         }

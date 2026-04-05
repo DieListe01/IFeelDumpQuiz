@@ -20,8 +20,10 @@ public class QuestionMediaData
     public int QuestionId { get; set; }
     public string MediaType { get; set; } = string.Empty; // image | audio
     public string Timing { get; set; } = string.Empty; // before_question | during_question | on_reveal
-    public string StoredPath { get; set; } = string.Empty; // user://...
+    public string StoredPath { get; set; } = string.Empty;
     public string OriginalFileName { get; set; } = string.Empty;
+    public string MimeType { get; set; } = string.Empty;
+    public byte[] BinaryData { get; set; } = System.Array.Empty<byte>();
 }
 
 public class PlayerState

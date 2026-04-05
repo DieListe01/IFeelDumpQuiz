@@ -6,36 +6,27 @@ namespace IFeelDumpQuiz.Services;
 
 public static class MediaStorageService
 {
-    public static string ImportQuestionMedia(int questionId, string sourcePath, string preferredFileName)
+    public static QuestionMediaData ImportQuestionMedia(string sourcePath, string mediaType)
     {
-        var questionDir = ProjectSettings.GlobalizePath($"user://media/questions/{questionId}");
-        Directory.CreateDirectory(questionDir);
-
-        var extension = Path.GetExtension(sourcePath);
-        var baseName = SanitizeFileName(preferredFileName);
-        if (string.IsNullOrWhiteSpace(baseName))
+        if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
         {
-            baseName = Guid.NewGuid().ToString("N");
+            throw new FileNotFoundException("Mediendatei nicht gefunden.", sourcePath);
         }
 
-        var fileName = baseName + extension;
-        var destinationAbsolutePath = Path.Combine(questionDir, fileName);
-        File.Copy(sourcePath, destinationAbsolutePath, true);
-        return $"user://media/questions/{questionId}/{fileName}";
-    }
-
-    public static void DeleteStoredMedia(string storedPath)
-    {
-        if (string.IsNullOrWhiteSpace(storedPath))
+        var originalFileName = SanitizeFileName(Path.GetFileName(sourcePath));
+        if (string.IsNullOrWhiteSpace(originalFileName))
         {
-            return;
+            originalFileName = Guid.NewGuid().ToString("N");
         }
 
-        var absolute = ProjectSettings.GlobalizePath(storedPath);
-        if (File.Exists(absolute))
+        return new QuestionMediaData
         {
-            File.Delete(absolute);
-        }
+            MediaType = mediaType,
+            OriginalFileName = originalFileName,
+            MimeType = GetMimeType(sourcePath, mediaType),
+            BinaryData = File.ReadAllBytes(sourcePath),
+            StoredPath = string.Empty
+        };
     }
 
     private static string SanitizeFileName(string name)
@@ -46,5 +37,22 @@ public static class MediaStorageService
         }
 
         return name.Trim();
+    }
+
+    private static string GetMimeType(string sourcePath, string mediaType)
+    {
+        var extension = Path.GetExtension(sourcePath).ToLowerInvariant();
+        return (mediaType, extension) switch
+        {
+            ("image", ".png") => "image/png",
+            ("image", ".jpg") => "image/jpeg",
+            ("image", ".jpeg") => "image/jpeg",
+            ("image", ".webp") => "image/webp",
+            ("audio", ".mp3") => "audio/mpeg",
+            ("audio", ".wav") => "audio/wav",
+            ("audio", ".ogg") => "audio/ogg",
+            ("audio", _) => "audio/*",
+            _ => "image/*"
+        };
     }
 }

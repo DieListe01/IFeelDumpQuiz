@@ -14,7 +14,7 @@ public sealed class UpdateService
 {
     private static readonly System.Net.Http.HttpClient Client = CreateClient();
 
-    public async Task<UpdateInfo?> CheckForUpdateAsync()
+    public async Task<UpdateInfo?> CheckForUpdateAsync(string? currentVersionOverride = null)
     {
         using var response = await Client.GetAsync(AppMetadata.ReleaseApiUrl);
         if (!response.IsSuccessStatusCode)
@@ -28,7 +28,8 @@ public sealed class UpdateService
 
         var tag = root.GetProperty("tag_name").GetString() ?? string.Empty;
         var normalizedTag = tag.Trim().TrimStart('v', 'V');
-        if (!Version.TryParse(normalizedTag, out var latestVersion) || !Version.TryParse(AppMetadata.Version, out var currentVersion))
+        var currentVersionText = string.IsNullOrWhiteSpace(currentVersionOverride) ? AppMetadata.Version : currentVersionOverride.Trim();
+        if (!Version.TryParse(normalizedTag, out var latestVersion) || !Version.TryParse(currentVersionText, out var currentVersion))
         {
             return null;
         }
@@ -67,6 +68,19 @@ public sealed class UpdateService
         await using var target = File.Create(zipPath);
         await source.CopyToAsync(target);
         return zipPath;
+    }
+
+    public string ExtractUpdateToTestDirectory(string zipPath, string version)
+    {
+        var testRoot = Path.Combine(Path.GetTempPath(), "IFeelDumpQuiz", "extract-test", version);
+        if (Directory.Exists(testRoot))
+        {
+            Directory.Delete(testRoot, true);
+        }
+
+        Directory.CreateDirectory(testRoot);
+        ZipFile.ExtractToDirectory(zipPath, testRoot, true);
+        return testRoot;
     }
 
     public void StartWindowsUpdater(string zipPath)

@@ -9,6 +9,9 @@ using System.Linq;
 
 public partial class QuestionMenu : Control
 {
+    private const string ImportModeMergeAction = "merge";
+    private const string ExportFolderName = "exports";
+
     private enum SaveDialogAction
     {
         None,
@@ -51,6 +54,7 @@ public partial class QuestionMenu : Control
     private FileDialog _importDialog = null!;
     private FileDialog _saveDialog = null!;
     private FileDialog _mediaDialog = null!;
+    private ConfirmationDialog _importModeDialog = null!;
 
     private SaveDialogAction _pendingSaveAction;
     private MediaTargetSlot _pendingMediaSlot;
@@ -59,6 +63,9 @@ public partial class QuestionMenu : Control
     private QuestionData? _editingQuestion;
     private QuestionData? _originalQuestionSnapshot;
     private string _selectedCategory = "Alle";
+    private string _pendingImportPath = string.Empty;
+    private QuestionMediaData? _slot1Media;
+    private QuestionMediaData? _slot2Media;
 
     public override void _Ready()
     {
@@ -90,10 +97,26 @@ public partial class QuestionMenu : Control
         _importDialog = GetNode<FileDialog>("ImportDialog");
         _saveDialog = GetNode<FileDialog>("SaveDialog");
         _mediaDialog = GetNode<FileDialog>("MediaDialog");
+        _importModeDialog = CreateImportModeDialog();
 
         ConfigureSelectors();
+        ConfigureFileDialogs();
         WireEvents();
         ReloadQuestions();
+    }
+
+    private void ConfigureFileDialogs()
+    {
+        var exportDirectory = EnsureExportDirectory();
+        _saveDialog.CurrentDir = exportDirectory;
+        _importDialog.CurrentDir = exportDirectory;
+    }
+
+    private static string EnsureExportDirectory()
+    {
+        var exportDirectory = ProjectSettings.GlobalizePath($"user://data/{ExportFolderName}");
+        Directory.CreateDirectory(exportDirectory);
+        return exportDirectory;
     }
 
     private void ConfigureSelectors()
@@ -150,6 +173,7 @@ public partial class QuestionMenu : Control
         _importDialog.FileSelected += OnImportFileSelected;
         _saveDialog.FileSelected += OnSaveFileSelected;
         _mediaDialog.FileSelected += OnMediaFileSelected;
+        GetWindow().FilesDropped += OnFilesDropped;
     }
 
     private void ReloadQuestions()
@@ -397,6 +421,8 @@ public partial class QuestionMenu : Control
         var path = GetMediaPathControl(slot);
         var info = GetMediaInfoControl(slot);
 
+        SetSlotMedia(slot, media == null ? null : CloneMedia(media));
+
         if (media == null)
         {
             type.Select(0);
@@ -413,8 +439,8 @@ public partial class QuestionMenu : Control
             "on_reveal" => 2,
             _ => 0
         });
-        path.Text = media.StoredPath;
-        info.Text = $"Gespeichert: {media.OriginalFileName}";
+        path.Text = media.OriginalFileName;
+        info.Text = $"In Datenbank gespeichert: {media.OriginalFileName}";
     }
 
     private void SaveCurrentQuestion()
@@ -565,13 +591,12 @@ public partial class QuestionMenu : Control
     {
         message = string.Empty;
         var type = GetMediaTypeControl(slot).Selected;
-        var path = GetMediaPathControl(slot).Text?.Trim() ?? string.Empty;
         if (type == 0)
         {
             return true;
         }
 
-        if (string.IsNullOrWhiteSpace(path))
+        if (GetSlotMedia(slot) == null)
         {
             message = slot == MediaTargetSlot.Slot1 ? "Bitte fuer Medium 1 eine Datei auswaehlen." : "Bitte fuer Medium 2 eine Datei auswaehlen.";
             return false;
@@ -607,22 +632,18 @@ public partial class QuestionMenu : Control
     private void AddMediaFromSlot(MediaTargetSlot slot, int questionId, List<QuestionMediaData> target, int mediaId)
     {
         var typeControl = GetMediaTypeControl(slot);
-        var pathControl = GetMediaPathControl(slot);
-        var storedPath = pathControl.Text?.Trim() ?? string.Empty;
-        if (typeControl.Selected == 0 || string.IsNullOrWhiteSpace(storedPath))
+        var media = GetSlotMedia(slot);
+        if (typeControl.Selected == 0 || media == null)
         {
             return;
         }
 
-        target.Add(new QuestionMediaData
-        {
-            Id = mediaId,
-            QuestionId = questionId,
-            MediaType = typeControl.Selected == 2 ? "audio" : "image",
-            Timing = GetTimingValue(GetMediaTimingControl(slot).Selected),
-            StoredPath = storedPath,
-            OriginalFileName = Path.GetFileName(storedPath)
-        });
+        var copy = CloneMedia(media);
+        copy.Id = mediaId;
+        copy.QuestionId = questionId;
+        copy.MediaType = typeControl.Selected == 2 ? "audio" : "image";
+        copy.Timing = GetTimingValue(GetMediaTimingControl(slot).Selected);
+        target.Add(copy);
     }
 
     private static string GetTimingValue(int selectedIndex)
@@ -643,6 +664,7 @@ public partial class QuestionMenu : Control
     private void OnExportCsvPressed()
     {
         _pendingSaveAction = SaveDialogAction.ExportQuestions;
+        _saveDialog.CurrentDir = EnsureExportDirectory();
         _saveDialog.CurrentFile = "questions_export.csv";
         _saveDialog.PopupCenteredRatio(0.75f);
     }
@@ -650,16 +672,58 @@ public partial class QuestionMenu : Control
     private void OnTemplateCsvPressed()
     {
         _pendingSaveAction = SaveDialogAction.ExportTemplate;
+        _saveDialog.CurrentDir = EnsureExportDirectory();
         _saveDialog.CurrentFile = "questions_template.csv";
         _saveDialog.PopupCenteredRatio(0.75f);
     }
 
     private void OnImportFileSelected(string path)
     {
-        if (CsvImportExportService.TryImportQuestions(path, out var importedCount, out var message))
+        _pendingImportPath = path;
+        _importModeDialog.DialogText = "Wie sollen die Fragen importiert werden?\n\nErsetzen: bestehende Fragen werden vollstaendig geloescht und durch die CSV ersetzt.\n\nZusammenfuehren: neue Fragen werden hinzugefuegt, erkannte Dubletten werden uebersprungen.";
+        _importModeDialog.PopupCentered();
+    }
+
+    private ConfirmationDialog CreateImportModeDialog()
+    {
+        var dialog = new ConfirmationDialog
+        {
+            Title = "CSV-Import",
+            OkButtonText = "Ersetzen"
+        };
+        dialog.GetCancelButton().Text = "Abbrechen";
+        dialog.AddButton("Zusammenfuehren", true, ImportModeMergeAction);
+        dialog.Confirmed += () => ExecuteImport(true);
+        dialog.CustomAction += OnImportModeCustomAction;
+        AddChild(dialog);
+        return dialog;
+    }
+
+    private void OnImportModeCustomAction(StringName action)
+    {
+        if (action == ImportModeMergeAction)
+        {
+            ExecuteImport(false);
+        }
+    }
+
+    private void ExecuteImport(bool replaceExisting)
+    {
+        if (string.IsNullOrWhiteSpace(_pendingImportPath))
+        {
+            _statusLabel.Text = "Es wurde keine CSV-Datei fuer den Import ausgewaehlt.";
+            return;
+        }
+
+        var importPath = _pendingImportPath;
+        _pendingImportPath = string.Empty;
+
+        if (CsvImportExportService.TryImportQuestions(importPath, replaceExisting, out var importedCount, out var skippedCount, out var message))
         {
             ReloadQuestions();
-            _statusLabel.Text = $"{message} ({importedCount} importiert)";
+            _statusLabel.Text = skippedCount > 0
+                ? $"{message} ({importedCount} neu, {skippedCount} uebersprungen)"
+                : $"{message} ({importedCount} importiert)";
             return;
         }
 
@@ -703,11 +767,7 @@ public partial class QuestionMenu : Control
 
         try
         {
-            var questionId = _editingQuestion?.Id ?? GetNextQuestionId();
-            var slotName = _pendingMediaSlot == MediaTargetSlot.Slot1 ? "media_1" : "media_2";
-            var storedPath = MediaStorageService.ImportQuestionMedia(questionId, sourcePath, slotName);
-            GetMediaPathControl(_pendingMediaSlot).Text = storedPath;
-            GetMediaInfoControl(_pendingMediaSlot).Text = $"Intern gespeichert: {storedPath}";
+            ApplyImportedMedia(_pendingMediaSlot, sourcePath);
             _popupStatus.Text = "Mediendatei wurde importiert.";
         }
         catch (Exception ex)
@@ -722,16 +782,103 @@ public partial class QuestionMenu : Control
 
     private void ClearMedia(MediaTargetSlot slot)
     {
-        var storedPath = GetMediaPathControl(slot).Text?.Trim() ?? string.Empty;
-        if (!string.IsNullOrWhiteSpace(storedPath))
-        {
-            MediaStorageService.DeleteStoredMedia(storedPath);
-        }
-
+        SetSlotMedia(slot, null);
         GetMediaTypeControl(slot).Select(0);
         GetMediaTimingControl(slot).Select(0);
         GetMediaPathControl(slot).Text = string.Empty;
         GetMediaInfoControl(slot).Text = "Noch kein Medium hinterlegt.";
+    }
+
+    private void ApplyImportedMedia(MediaTargetSlot slot, string sourcePath)
+    {
+        var mediaType = IsAudioFile(sourcePath) ? "audio" : "image";
+        var media = MediaStorageService.ImportQuestionMedia(sourcePath, mediaType);
+        SetSlotMedia(slot, media);
+        GetMediaTypeControl(slot).Select(mediaType == "audio" ? 2 : 1);
+        GetMediaPathControl(slot).Text = media.OriginalFileName;
+        GetMediaInfoControl(slot).Text = $"In Datenbank gespeichert: {media.OriginalFileName}";
+    }
+
+    private void OnFilesDropped(string[] files)
+    {
+        if (!_editorOverlay.Visible || files.Length == 0)
+        {
+            return;
+        }
+
+        var firstFile = files[0];
+        if (!IsSupportedMediaFile(firstFile))
+        {
+            _popupStatus.Text = "Nur PNG, JPG, WEBP, MP3, WAV und OGG koennen abgelegt werden.";
+            return;
+        }
+
+        var slot = ResolveDropTargetSlot(firstFile);
+        try
+        {
+            ApplyImportedMedia(slot, firstFile);
+            _popupTabs.CurrentTab = 2;
+            _popupStatus.Text = $"Mediendatei per Drag-and-Drop in {(slot == MediaTargetSlot.Slot1 ? "Medium 1" : "Medium 2")} uebernommen.";
+        }
+        catch (Exception ex)
+        {
+            _popupStatus.Text = $"Drag-and-Drop fehlgeschlagen: {ex.Message}";
+        }
+    }
+
+    private MediaTargetSlot ResolveDropTargetSlot(string sourcePath)
+    {
+        var focusOwner = GetViewport().GuiGetFocusOwner();
+        if (focusOwner == _mediaPath1)
+        {
+            return MediaTargetSlot.Slot1;
+        }
+
+        if (focusOwner == _mediaPath2)
+        {
+            return MediaTargetSlot.Slot2;
+        }
+
+        var preferredType = IsAudioFile(sourcePath) ? 2 : 1;
+        if (GetMediaTypeControl(MediaTargetSlot.Slot1).Selected == 0 || GetSlotMedia(MediaTargetSlot.Slot1) == null)
+        {
+            return MediaTargetSlot.Slot1;
+        }
+
+        if (GetMediaTypeControl(MediaTargetSlot.Slot2).Selected == 0 || GetSlotMedia(MediaTargetSlot.Slot2) == null)
+        {
+            return MediaTargetSlot.Slot2;
+        }
+
+        return GetMediaTypeControl(MediaTargetSlot.Slot1).Selected == preferredType ? MediaTargetSlot.Slot1 : MediaTargetSlot.Slot2;
+    }
+
+    private static bool IsSupportedMediaFile(string sourcePath)
+    {
+        var extension = Path.GetExtension(sourcePath).ToLowerInvariant();
+        return extension is ".png" or ".jpg" or ".jpeg" or ".webp" or ".mp3" or ".wav" or ".ogg";
+    }
+
+    private static bool IsAudioFile(string sourcePath)
+    {
+        var extension = Path.GetExtension(sourcePath).ToLowerInvariant();
+        return extension is ".mp3" or ".wav" or ".ogg";
+    }
+
+    private QuestionMediaData? GetSlotMedia(MediaTargetSlot slot)
+    {
+        return slot == MediaTargetSlot.Slot1 ? _slot1Media : _slot2Media;
+    }
+
+    private void SetSlotMedia(MediaTargetSlot slot, QuestionMediaData? media)
+    {
+        if (slot == MediaTargetSlot.Slot1)
+        {
+            _slot1Media = media;
+            return;
+        }
+
+        _slot2Media = media;
     }
 
     private OptionButton GetMediaTypeControl(MediaTargetSlot slot)
@@ -797,7 +944,9 @@ public partial class QuestionMenu : Control
             MediaType = source.MediaType,
             Timing = source.Timing,
             StoredPath = source.StoredPath,
-            OriginalFileName = source.OriginalFileName
+            OriginalFileName = source.OriginalFileName,
+            MimeType = source.MimeType,
+            BinaryData = source.BinaryData.ToArray()
         };
     }
 }

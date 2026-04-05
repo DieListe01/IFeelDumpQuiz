@@ -182,7 +182,7 @@ theme_override_constants/separation = 8
 [node name="StatusLabel" type="Label" parent="RootMargin/RootVBox/MainContent/QuestionPanel/QuestionMargin/QuestionVBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Bitte links eine Kategorie waehlen oder rechts eine neue Frage anlegen."
+text = "Fragen werden dauerhaft in der SQLite-Datenbank gespeichert. CSV-Dateien dienen nur fuer Import und Export."
 
 [node name="EditorOverlay" type="Control" parent="."]
 visible = false
@@ -399,7 +399,7 @@ theme_override_constants/separation = 12
 [node name="MediaHint" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Medien werden nach Auswahl ins interne Dateisystem kopiert (user://media/...). Es werden keine absoluten Quellpfade gespeichert."
+text = "Medien werden direkt in der Datenbank gespeichert. Dateien koennen per Auswahl oder per Drag-and-Drop in dieses Fenster uebernommen werden."
 
 [node name="MediaSlot1" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
 layout_mode = 2
