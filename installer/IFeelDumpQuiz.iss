@@ -1,5 +1,7 @@
 #define MyAppName "IFeelDump Quiz"
-#define MyAppVersion Trim(FileRead("VERSION"))
+#ifndef MyAppVersion
+  #define MyAppVersion "0.0.0"
+#endif
 #define MyAppPublisher "DieListe01"
 #define MyAppExeName "IFeelDumpQuiz.exe"
 
