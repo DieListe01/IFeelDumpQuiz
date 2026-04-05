@@ -199,11 +199,6 @@ jobs:
             throw 'Godot Editor EXE nicht gefunden.'
           }
 
-          & $godotExe.FullName --headless --path . --verbose --build-solutions
-          if ($LASTEXITCODE -ne 0) {
-            throw "Godot build-solutions fehlgeschlagen mit Exit-Code $LASTEXITCODE"
-          }
-
           & $godotExe.FullName --headless --path . --verbose --export-release "$env:EXPORT_PRESET_NAME" "dist/windows/IFeelDumpQuiz.exe" --quit
           if ($LASTEXITCODE -ne 0) {
             throw "Godot export-release fehlgeschlagen mit Exit-Code $LASTEXITCODE"
