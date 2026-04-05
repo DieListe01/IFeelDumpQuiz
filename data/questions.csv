@@ -1,51 +1,171 @@
-question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation
-Welcher Planet ist der Sonne am naechsten?;Merkur;Venus;Erde;Mars;0;Allgemeinwissen;Merkur ist der innerste Planet unseres Sonnensystems.
-Wie viele Tage hat ein Schaltjahr?;364;365;366;367;2;Allgemeinwissen;Ein Schaltjahr hat 366 Tage.
-Welche Farbe entsteht aus Blau und Gelb?;Gruen;Orange;Lila;Rot;0;Allgemeinwissen;Blau und Gelb ergeben zusammen Gruen.
-Welches Meer liegt zwischen Europa und Afrika?;Nordsee;Mittelmeer;Schwarzes Meer;Kaspisches Meer;1;Allgemeinwissen;Das Mittelmeer trennt Europa und Afrika.
-Wie viele Minuten hat eine Stunde?;50;60;70;100;1;Allgemeinwissen;Eine Stunde besteht aus 60 Minuten.
-Welches Tier gilt als groesstes an Land lebendes Saeugetier?;Nashorn;Giraffe;Elefant;Flusspferd;2;Allgemeinwissen;Der Elefant ist das groesste Landsaeugetier.
-In welcher Jahreszeit fallen in Mitteleuropa typischerweise die meisten Blaetter?;Fruehling;Sommer;Herbst;Winter;2;Allgemeinwissen;Im Herbst verlieren viele Baeume ihre Blaetter.
-Wie heisst die Hauptstadt von Italien?;Mailand;Rom;Neapel;Turin;1;Allgemeinwissen;Rom ist die Hauptstadt von Italien.
-Welches Metall hat das chemische Symbol Au?;Silber;Kupfer;Gold;Eisen;2;Allgemeinwissen;Au steht fuer Gold.
-Wie viele Kontinente gibt es nach gaengiger Zaehweise?;5;6;7;8;2;Allgemeinwissen;In der gaengigen Zaehweise gibt es sieben Kontinente.
-Welches Organ pumpt Blut durch den menschlichen Koerper?;Leber;Lunge;Herz;Magen;2;Wissenschaft;Das Herz pumpt Blut durch den Koerper.
-Welches Gas brauchen Pflanzen fuer die Photosynthese?;Sauerstoff;Kohlendioxid;Stickstoff;Helium;1;Wissenschaft;Pflanzen nutzen Kohlendioxid fuer die Photosynthese.
-Wie viele Planeten hat unser Sonnensystem nach aktueller Definition?;7;8;9;10;1;Wissenschaft;Seit Pluto als Zwergplanet gilt, sind es acht Planeten.
-Welche Einheit misst elektrische Spannung?;Watt;Volt;Ohm;Tesla;1;Wissenschaft;Spannung wird in Volt gemessen.
-Was ist die chemische Formel von Wasser?;CO2;O2;H2O;NaCl;2;Wissenschaft;Wasser besteht aus zwei Wasserstoff- und einem Sauerstoffatom.
-Welcher Teil einer Pflanze nimmt Wasser aus dem Boden auf?;Bluete;Blatt;Wurzel;Stengel;2;Wissenschaft;Die Wurzeln nehmen Wasser und Naehrstoffe auf.
-Wie nennt man Tiere, die nur Pflanzen fressen?;Carnivoren;Omnivoren;Herbivoren;Insekten;2;Wissenschaft;Pflanzenfresser nennt man Herbivoren.
-Welcher Stern ist von der Erde aus am Tag sichtbar?;Sirius;Polarstern;Sonne;Vega;2;Wissenschaft;Die Sonne ist unser naechster Stern.
-Welche Kraft zieht Gegenstaende zur Erde?;Magnetismus;Reibung;Gravitation;Elektrizitaet;2;Wissenschaft;Die Schwerkraft wird auch Gravitation genannt.
-Welches Blutgefaess fuehrt Blut vom Herzen weg?;Vene;Arterie;Kapillare;Sehne;1;Wissenschaft;Arterien fuehren Blut vom Herzen weg.
-In welchem Jahr fiel die Berliner Mauer?;1987;1988;1989;1990;2;Geschichte;Die Berliner Mauer fiel am 9. November 1989.
-Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?;Willy Brandt;Helmut Kohl;Konrad Adenauer;Ludwig Erhard;2;Geschichte;Konrad Adenauer war der erste Bundeskanzler.
-Welche antike Stadt wurde durch einen Vesuvausbruch verschuettet?;Athen;Pompeji;Sparta;Troja;1;Geschichte;Pompeji wurde im Jahr 79 n. Chr. verschuettet.
-Wie hiess das Schiff, mit dem Christoph Kolumbus 1492 den Atlantik ueberquerte?;Victoria;Santa Maria;Mayflower;Endeavour;1;Geschichte;Die Santa Maria war das bekannteste seiner drei Schiffe.
-Welche Epoche kam in Europa direkt nach dem Mittelalter?;Antike;Renaissance;Barock;Aufklaerung;1;Geschichte;Die Renaissance folgte auf das Mittelalter.
-Wer schrieb die 95 Thesen und loeste die Reformation mit aus?;Martin Luther;Johannes Calvin;Otto von Bismarck;Karl der Grosse;0;Geschichte;Martin Luther veroefentlichte 1517 seine 95 Thesen.
-Welche Stadt war frueher in Ost und West geteilt?;Wien;Berlin;Hamburg;Muenchen;1;Geschichte;Berlin war waehrend des Kalten Krieges geteilt.
-Wie hiess die alte Handelsroute zwischen Europa und Asien?;Bernsteinstrasse;Salzstrasse;Seidenstrasse;Roemerweg;2;Geschichte;Die Seidenstrasse verband Europa mit Asien.
-Welches Reich regierte Julius Caesar mit?;Perserreich;Roemisches Reich;Byzantinisches Reich;Frankenreich;1;Geschichte;Julius Caesar war eine Schluesselfigur des Roemischen Reiches.
-In welchem Jahr begann der Erste Weltkrieg?;1912;1913;1914;1915;2;Geschichte;Der Erste Weltkrieg begann 1914.
-Wie viele Spieler stehen pro Fussballmannschaft regulaer auf dem Feld?;9;10;11;12;2;Sport;Eine Fussballmannschaft spielt regulaer mit elf Spielern.
-In welcher Sportart versucht man einen Ball in einen Korb zu werfen?;Tennis;Basketball;Handball;Golf;1;Sport;Beim Basketball wird auf Koerbe gespielt.
-Wie heisst das Turnier um die Fussball-Weltmeisterschaft?;Champions Cup;Europa Liga;FIFA WM;Bundespokal;2;Sport;Die FIFA WM ist die Weltmeisterschaft im Fussball.
-Welche Sportart wird auf einem Eisfeld mit Schlaeger und Puck gespielt?;Curling;Eishockey;Fechten;Rudern;1;Sport;Eishockey wird mit Puck und Schlaegern auf Eis gespielt.
-Wie viele Minuten dauert ein normales Fussballspiel ohne Nachspielzeit?;80;90;100;120;1;Sport;Ein regulaeres Spiel dauert 90 Minuten.
-Bei welcher Sportart spielt man typischerweise Saetze und Spiele?;Tennis;Boxen;Ringen;Biathlon;0;Sport;Im Tennis wird in Spielen und Saetzen gezaehlt.
-Welche Farbe hat eine gelbe Karte im Fussball?;Rot;Gruen;Gelb;Blau;2;Sport;Die Verwarnungskarte ist gelb.
-Welche Disziplin gehoert zur Leichtathletik?;100-Meter-Lauf;Schwimmen;Surfen;Skispringen;0;Sport;Der 100-Meter-Lauf ist eine klassische Leichtathletikdisziplin.
-Wie nennt man den Bereich vor dem Tor im Fussball, in dem der Torwart haeufig agiert?;Mittelkreis;Strafraum;Einwurffeld;Laufbahn;1;Sport;Der Torwart bewegt sich vor allem im Strafraum.
-Welche Sportart nutzt ein Fahrrad im Wettkampf?;Radsport;Judo;Volleyball;Tauchen;0;Sport;Im Radsport ist das Fahrrad das zentrale Sportgeraet.
-Wie heisst der Zauberlehrling mit der blitzfoermigen Narbe?;Harry Potter;Frodo Beutlin;Percy Jackson;Bilbo Beutlin;0;Filme;Harry Potter ist an seiner Narbe auf der Stirn erkennbar.
-Welche Figur sagt oft Ich bin dein Vater in einem bekannten Science-Fiction-Film?;Yoda;Darth Vader;Han Solo;Obi-Wan Kenobi;1;Filme;Diese Zeile wird mit Darth Vader aus Star Wars verbunden.
-In welchem Film reist eine Gruppe mit einem Ring nach Mordor?;Narnia;Willow;Der Herr der Ringe;Die unendliche Geschichte;2;Filme;Die Reise nach Mordor ist Teil von Der Herr der Ringe.
-Welche Animationsfilmfigur ist eine sprechende Spielzeug-Cowboypuppe?;Buzz;Woody;Shrek;Olaf;1;Filme;Woody ist der Cowboy aus Toy Story.
-Wie heisst das Schiff im Film Titanic?;Britannic;Queen Mary;Titanic;Olympic Star;2;Filme;Der Film Titanic handelt von der Titanic.
-Welche Figur lebt in einer Ananas ganz tief im Meer?;Patrick Star;SpongeBob Schwammkopf;Plankton;Thaddaeus;1;Filme;SpongeBob wohnt in einer Ananas unter Wasser.
-Welcher Film handelt von Dinosauriern in einem Freizeitpark?;Ice Age;King Kong;Jurassic Park;Jumanji;2;Filme;Jurassic Park zeigt einen Park mit wiederbelebten Dinosauriern.
-Welche Eiskoenigin ist eine Hauptfigur in einem Disney-Film?;Elsa;Arielle;Vaiana;Belle;0;Filme;Elsa ist die Eiskoenigin aus Frozen.
-Wie heisst der gruene Oger aus den gleichnamigen Filmen?;Hulk;Shrek;Grinch;Yoda;1;Filme;Shrek ist der gruene Oger der Filmreihe.
-Welche Rennwagen-Figur traegt die Startnummer 95?;Hook;Francesco;Lightning McQueen;Doc Hudson;2;Filme;Lightning McQueen ist in Cars mit der Nummer 95 unterwegs.
+question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation;difficulty
+In welcher Jahreszeit fallen in Mitteleuropa typischerweise die meisten Blaetter?;Fruehling;Sommer;Herbst;Winter;2;Allgemeinwissen;Im Herbst verlieren viele Baeume ihre Blaetter.;2
+Welche Farbe entsteht aus Blau und Gelb?;Gruen;Orange;Lila;Rot;0;Allgemeinwissen;Blau und Gelb ergeben zusammen Gruen.;1
+Welcher Planet ist der Sonne am naechsten?;Merkur;Venus;Erde;Mars;0;Allgemeinwissen;Merkur ist der innerste Planet unseres Sonnensystems.;2
+Welches Meer liegt zwischen Europa und Afrika?;Nordsee;Mittelmeer;Schwarzes Meer;Kaspisches Meer;1;Allgemeinwissen;Das Mittelmeer trennt Europa und Afrika.;2
+Welches Metall hat das chemische Symbol Au?;Silber;Kupfer;Gold;Eisen;2;Allgemeinwissen;Au steht fuer Gold.;2
+Welches Tier gilt als groesstes an Land lebendes Saeugetier?;Nashorn;Giraffe;Elefant;Flusspferd;2;Allgemeinwissen;Der Elefant ist das groesste Landsaeugetier.;1
+Wie heisst die Hauptstadt von Italien?;Mailand;Rom;Neapel;Turin;1;Allgemeinwissen;Rom ist die Hauptstadt von Italien.;1
+Wie viele Kontinente gibt es nach gaengiger Zaehweise?;5;6;7;8;2;Allgemeinwissen;In der gaengigen Zaehweise gibt es sieben Kontinente.;2
+Wie viele Minuten hat eine Stunde?;50;60;70;100;1;Allgemeinwissen;Eine Stunde besteht aus 60 Minuten.;1
+Wie viele Tage hat ein Schaltjahr?;364;365;366;367;2;Allgemeinwissen;Ein Schaltjahr hat 366 Tage.;2
+In welchem Film reist eine Gruppe mit einem Ring nach Mordor?;Narnia;Willow;Der Herr der Ringe;Die unendliche Geschichte;2;Filme;Die Reise nach Mordor ist Teil von Der Herr der Ringe.;2
+Welche Animationsfilmfigur ist eine sprechende Spielzeug-Cowboypuppe?;Buzz;Woody;Shrek;Olaf;1;Filme;Woody ist der Cowboy aus Toy Story.;1
+Welche Eiskoenigin ist eine Hauptfigur in einem Disney-Film?;Elsa;Arielle;Vaiana;Belle;0;Filme;Elsa ist die Eiskoenigin aus Frozen.;1
+Welche Figur lebt in einer Ananas ganz tief im Meer?;Patrick Star;SpongeBob Schwammkopf;Plankton;Thaddaeus;1;Filme;SpongeBob wohnt in einer Ananas unter Wasser.;1
+Welche Figur sagt oft Ich bin dein Vater in einem bekannten Science-Fiction-Film?;Yoda;Darth Vader;Han Solo;Obi-Wan Kenobi;1;Filme;Diese Zeile wird mit Darth Vader aus Star Wars verbunden.;2
+Welche Rennwagen-Figur traegt die Startnummer 95?;Hook;Francesco;Lightning McQueen;Doc Hudson;2;Filme;Lightning McQueen ist in Cars mit der Nummer 95 unterwegs.;1
+Welcher Film handelt von Dinosauriern in einem Freizeitpark?;Ice Age;King Kong;Jurassic Park;Jumanji;2;Filme;Jurassic Park zeigt einen Park mit wiederbelebten Dinosauriern.;2
+Wie heisst das Schiff im Film Titanic?;Britannic;Queen Mary;Titanic;Olympic Star;2;Filme;Der Film Titanic handelt von der Titanic.;1
+Wie heisst der gruene Oger aus den gleichnamigen Filmen?;Hulk;Shrek;Grinch;Yoda;1;Filme;Shrek ist der gruene Oger der Filmreihe.;1
+Wie heisst der Zauberlehrling mit der blitzfoermigen Narbe?;Harry Potter;Frodo Beutlin;Percy Jackson;Bilbo Beutlin;0;Filme;Harry Potter ist an seiner Narbe auf der Stirn erkennbar.;1
+In welchem Jahr begann der Erste Weltkrieg?;1912;1913;1914;1915;2;Geschichte;Der Erste Weltkrieg begann 1914.;3
+In welchem Jahr fiel die Berliner Mauer?;1987;1988;1989;1990;2;Geschichte;Die Berliner Mauer fiel am 9. November 1989.;2
+Welche antike Stadt wurde durch einen Vesuvausbruch verschuettet?;Athen;Pompeji;Sparta;Troja;1;Geschichte;Pompeji wurde im Jahr 79 n. Chr. verschuettet.;2
+Welche Epoche kam in Europa direkt nach dem Mittelalter?;Antike;Renaissance;Barock;Aufklaerung;1;Geschichte;Die Renaissance folgte auf das Mittelalter.;3
+Welche Stadt war frueher in Ost und West geteilt?;Wien;Berlin;Hamburg;Muenchen;1;Geschichte;Berlin war waehrend des Kalten Krieges geteilt.;2
+Welches Reich regierte Julius Caesar mit?;Perserreich;Roemisches Reich;Byzantinisches Reich;Frankenreich;1;Geschichte;Julius Caesar war eine Schluesselfigur des Roemischen Reiches.;3
+Wer schrieb die 95 Thesen und loeste die Reformation mit aus?;Martin Luther;Johannes Calvin;Otto von Bismarck;Karl der Grosse;0;Geschichte;Martin Luther veroefentlichte 1517 seine 95 Thesen.;3
+Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?;Willy Brandt;Helmut Kohl;Konrad Adenauer;Ludwig Erhard;2;Geschichte;Konrad Adenauer war der erste Bundeskanzler.;3
+Wie hiess das Schiff, mit dem Christoph Kolumbus 1492 den Atlantik ueberquerte?;Victoria;Santa Maria;Mayflower;Endeavour;1;Geschichte;Die Santa Maria war das bekannteste seiner drei Schiffe.;3
+Wie hiess die alte Handelsroute zwischen Europa und Asien?;Bernsteinstrasse;Salzstrasse;Seidenstrasse;Roemerweg;2;Geschichte;Die Seidenstrasse verband Europa mit Asien.;3
+Bei welcher Sportart spielt man typischerweise Saetze und Spiele?;Tennis;Boxen;Ringen;Biathlon;0;Sport;Im Tennis wird in Spielen und Saetzen gezaehlt.;2
+In welcher Sportart versucht man einen Ball in einen Korb zu werfen?;Tennis;Basketball;Handball;Golf;1;Sport;Beim Basketball wird auf Koerbe gespielt.;1
+Welche Disziplin gehoert zur Leichtathletik?;100-Meter-Lauf;Schwimmen;Surfen;Skispringen;0;Sport;Der 100-Meter-Lauf ist eine klassische Leichtathletikdisziplin.;2
+Welche Farbe hat eine gelbe Karte im Fussball?;Rot;Gruen;Gelb;Blau;2;Sport;Die Verwarnungskarte ist gelb.;1
+Welche Sportart nutzt ein Fahrrad im Wettkampf?;Radsport;Judo;Volleyball;Tauchen;0;Sport;Im Radsport ist das Fahrrad das zentrale Sportgeraet.;1
+Welche Sportart wird auf einem Eisfeld mit Schlaeger und Puck gespielt?;Curling;Eishockey;Fechten;Rudern;1;Sport;Eishockey wird mit Puck und Schlaegern auf Eis gespielt.;2
+Wie heisst das Turnier um die Fussball-Weltmeisterschaft?;Champions Cup;Europa Liga;FIFA WM;Bundespokal;2;Sport;Die FIFA WM ist die Weltmeisterschaft im Fussball.;2
+Wie nennt man den Bereich vor dem Tor im Fussball, in dem der Torwart haeufig agiert?;Mittelkreis;Strafraum;Einwurffeld;Laufbahn;1;Sport;Der Torwart bewegt sich vor allem im Strafraum.;2
+Wie viele Minuten dauert ein normales Fussballspiel ohne Nachspielzeit?;80;90;100;120;1;Sport;Ein regulaeres Spiel dauert 90 Minuten.;1
+Wie viele Spieler stehen pro Fussballmannschaft regulaer auf dem Feld?;9;10;11;12;2;Sport;Eine Fussballmannschaft spielt regulaer mit elf Spielern.;2
+Was ist die chemische Formel von Wasser?;CO2;O2;H2O;NaCl;2;Wissenschaft;Wasser besteht aus zwei Wasserstoff- und einem Sauerstoffatom.;2
+Welche Einheit misst elektrische Spannung?;Watt;Volt;Ohm;Tesla;1;Wissenschaft;Spannung wird in Volt gemessen.;2
+Welche Kraft zieht Gegenstaende zur Erde?;Magnetismus;Reibung;Gravitation;Elektrizitaet;2;Wissenschaft;Die Schwerkraft wird auch Gravitation genannt.;2
+Welcher Stern ist von der Erde aus am Tag sichtbar?;Sirius;Polarstern;Sonne;Vega;2;Wissenschaft;Die Sonne ist unser naechster Stern.;1
+Welcher Teil einer Pflanze nimmt Wasser aus dem Boden auf?;Bluete;Blatt;Wurzel;Stengel;2;Wissenschaft;Die Wurzeln nehmen Wasser und Naehrstoffe auf.;1
+Welches Blutgefaess fuehrt Blut vom Herzen weg?;Vene;Arterie;Kapillare;Sehne;1;Wissenschaft;Arterien fuehren Blut vom Herzen weg.;3
+Welches Gas brauchen Pflanzen fuer die Photosynthese?;Sauerstoff;Kohlendioxid;Stickstoff;Helium;1;Wissenschaft;Pflanzen nutzen Kohlendioxid fuer die Photosynthese.;2
+Welches Organ pumpt Blut durch den menschlichen Koerper?;Leber;Lunge;Herz;Magen;2;Wissenschaft;Das Herz pumpt Blut durch den Koerper.;1
+Wie nennt man Tiere, die nur Pflanzen fressen?;Carnivoren;Omnivoren;Herbivoren;Insekten;2;Wissenschaft;Pflanzenfresser nennt man Herbivoren.;2
+Wie viele Planeten hat unser Sonnensystem nach aktueller Definition?;7;8;9;10;1;Wissenschaft;Seit Pluto als Zwergplanet gilt, sind es acht Planeten.;3
+"Welches Tier sagt typischerweise ""Miau""?";Hund;Katze;Kuh;Schaf;1;Kinder - Tiere;Eine Katze wird oft mit dem Laut Miau verbunden.;1
+Welches Tier legt Eier?;Hase;Pferd;Huhn;Hund;2;Kinder - Tiere;Ein Huhn legt Eier.;1
+Welches Tier ist fuer seine langen Ohren bekannt?;Hase;Pinguin;Fisch;Igel;0;Kinder - Tiere;Hasen und Kaninchen sind fuer ihre langen Ohren bekannt.;1
+Welches Tier lebt typischerweise im Wasser?;Delfin;Katze;Esel;Huhn;0;Kinder - Tiere;Der Delfin lebt im Wasser.;1
+Welches Tier traegt oft sein Haus auf dem Ruecken?;Schnecke;Maus;Ente;Ziege;0;Kinder - Tiere;Die Schnecke traegt ein Haus auf ihrem Ruecken.;1
+Welches Tier ist schwarz-weiss und lebt am Nordpol nicht, sondern in der Antarktis?;Eisbaer;Pinguin;Walross;Robbe;1;Kinder - Tiere;Pinguine leben natuerlich in der Suedhalbkugel und viele Arten in der Antarktis.;2
+"Welches Tier gibt Milch und sagt oft ""Muh""?";Kuh;Ziege;Pferd;Ente;0;Kinder - Tiere;Die Kuh sagt Muh und gibt Milch.;1
+Welches Tier kann als Vogel besonders gut fliegen?;Strauss;Adler;Pinguin;Kiwi;1;Kinder - Tiere;Ein Adler ist ein kraeftiger fliegender Vogel.;2
+Welches Tier ist fuer seinen langen Hals bekannt?;Igel;Giraffe;Biber;Fuchs;1;Kinder - Tiere;Die Giraffe hat einen sehr langen Hals.;1
+Welches Tier liebt Bambus besonders gern?;Panda;Wolf;Loewe;Kamel;0;Kinder - Tiere;Pandas sind fuer ihre Bambusnahrung bekannt.;2
+Wer traegt in einem bekannten Maerchen ein rotes Kaepchen?;Schneewittchen;Rotkaeppchen;Rapunzel;Aschenputtel;1;Kinder - Maerchen;Die Figur heisst bereits Rotkaeppchen.;1
+Welche Figur hat sehr lange Haare im Turm?;Rapunzel;Elsa;Arielle;Mulan;0;Kinder - Maerchen;Rapunzel ist fuer ihre langen Haare bekannt.;1
+Wer verliert auf dem Ball einen Schuh?;Dornroeschen;Aschenputtel;Frau Holle;Belle;1;Kinder - Maerchen;Aschenputtel verliert ihren Schuh.;1
+Wie viele Zwerge leben mit Schneewittchen zusammen?;5;6;7;8;2;Kinder - Maerchen;Schneewittchen lebt bei den sieben Zwergen.;1
+Wer legt Brotkrumen in den Wald?;Max und Moritz;Hansel und Gretel;Pinocchio und Gepetto;Biene Maja und Willi;1;Kinder - Maerchen;Hansel und Gretel streuen Brotkrumen.;2
+Welche Holzfigur moechte ein echter Junge werden?;Tarzan;Pinocchio;Peter Pan;Dumbo;1;Kinder - Maerchen;Pinocchio ist die Holzpuppe mit diesem Wunsch.;2
+Wer schlaeft in einem Maerchen sehr lange und wird durch einen Kuss geweckt?;Dornroeschen;Pippi Langstrumpf;Heidi;Vaiana;0;Kinder - Maerchen;Dornroeschen wird durch einen Kuss geweckt.;2
+Wer hilft im Maerchen oft mit Zauberei bei Aschenputtel?;Eine gute Fee;Ein Drache;Ein Zauberer;Ein Pirat;0;Kinder - Maerchen;In vielen Versionen hilft eine gute Fee.;2
+Welche Figur hat eine Nase, die beim Luegen laenger wird?;Peter Pan;Pinocchio;Bambi;Aladin;1;Kinder - Maerchen;Pinocchios Nase waechst beim Luegen.;1
+"Wer sagt oft ""Knusper knusper knaeuschen""?";Der Wolf;Die Hexe;Der Riese;Der Koenig;1;Kinder - Maerchen;Diese Zeile stammt aus Hansel und Gretel.;3
+Welche Farbe hat die Sonne in Kinderzeichnungen oft?;Blau;Gruen;Gelb;Lila;2;Kinder - Natur;Kinder malen die Sonne haeufig gelb.;1
+Was braucht eine Pflanze zum Wachsen?;Steine;Sonnenlicht;Plastik;Sandpapier;1;Kinder - Natur;Pflanzen brauchen unter anderem Licht zum Wachsen.;1
+Was faellt im Winter in vielen Regionen als Niederschlag?;Laub;Schnee;Staub;Sand;1;Kinder - Natur;Im Winter kann Schnee fallen.;1
+Welcher Tag kommt direkt nach Montag?;Sonntag;Freitag;Dienstag;Samstag;2;Kinder - Natur;Auf Montag folgt Dienstag.;1
+Womit schreibt man auf einer Schultafel?;Kreide;Loeffel;Pinsel;Gabel;0;Kinder - Natur;Auf klassischen Tafeln schreibt man mit Kreide.;1
+Wie viele Beine hat ein normaler Stuhl?;2;3;4;5;2;Kinder - Natur;Ein normaler Stuhl hat meist vier Beine.;1
+Was zeigt eine Uhr an?;Gewicht;Zeit;Geschmack;Temperatur;1;Kinder - Natur;Eine Uhr zeigt die Zeit an.;1
+Welches Obst ist innen oft rot und hat kleine Kerne aussen?;Banane;Erdbeere;Birne;Pflaume;1;Kinder - Natur;Die Erdbeere ist innen rot und traegt kleine Samen aussen.;1
+Woraus faellt Regen meist vom Himmel?;Aus Wolken;Aus Bergen;Aus Seen;Aus Hoehlen;0;Kinder - Natur;Regen faellt aus Wolken.;1
+Welche Jahreszeit kommt nach dem Fruehling?;Herbst;Winter;Sommer;Kein Monat;2;Kinder - Natur;Nach dem Fruehling folgt der Sommer.;1
+Welcher Fluss fliesst durch Wien, Bratislava und Budapest?;Rhein;Donau;Elbe;Po;1;Geografie;Die Donau verbindet diese Hauptstaedte.;3
+Welches Land hat die Form eines Stiefels?;Spanien;Italien;Norwegen;Griechenland;1;Geografie;Italien wird oft mit einem Stiefel verglichen.;2
+Welche Wueste liegt in Nordafrika?;Gobi;Sahara;Atacama;Kalahari;1;Geografie;Die Sahara liegt in Nordafrika.;2
+Wie heisst der hoechste Berg der Erde ueber dem Meeresspiegel?;K2;Mont Blanc;Mount Everest;Kilimandscharo;2;Geografie;Der Mount Everest ist der hoechste Berg ueber dem Meeresspiegel.;3
+Welche Hauptstadt gehoert zu Kanada?;Toronto;Vancouver;Montreal;Ottawa;3;Geografie;Ottawa ist die Hauptstadt Kanadas.;3
+Welches Land grenzt direkt an Deutschland?;Portugal;Polen;Irland;Island;1;Geografie;Polen grenzt direkt an Deutschland.;2
+Auf welchem Kontinent liegt Argentinien?;Afrika;Europa;Suedamerika;Asien;2;Geografie;Argentinien liegt in Suedamerika.;2
+Welcher Ozean liegt zwischen Amerika und Europa?;Indischer Ozean;Arktischer Ozean;Atlantischer Ozean;Suedlicher Ozean;2;Geografie;Zwischen Amerika und Europa liegt der Atlantik.;2
+Welche Hauptstadt hat Australien?;Sydney;Melbourne;Canberra;Perth;2;Geografie;Canberra ist die Hauptstadt Australiens.;4
+Welches Gebirge trennt Europa und Asien nach gaengiger Definition teilweise?;Pyrenaeen;Alpen;Ural;Apennin;2;Geografie;Der Ural gilt oft als Teil der Grenze zwischen Europa und Asien.;4
+Wie viele Saiten hat eine klassische Gitarre normalerweise?;4;5;6;7;2;Musik;Eine klassische Gitarre hat normalerweise sechs Saiten.;2
+Welches Instrument hat schwarze und weisse Tasten?;Trompete;Klavier;Geige;Fluete;1;Musik;Ein Klavier hat schwarze und weisse Tasten.;1
+Wie nennt man eine sehr grosse Gruppe von Musikern in der Klassik?;Duo;Trio;Orchester;Solo;2;Musik;Eine grosse klassische Besetzung nennt man Orchester.;3
+Welches Instrument gehoert zur Familie der Streichinstrumente?;Violine;Saxofon;Schlagzeug;Klarinette;0;Musik;Die Violine wird gestrichen.;2
+Wie viele Tasten hat ein modernes Konzertklavier in der Regel?;66;72;88;96;2;Musik;Ein modernes Konzertklavier hat normalerweise 88 Tasten.;4
+Wer gibt in einem Orchester oft den Einsatz?;Der Dirigent;Der Hausmeister;Der Tonmeister;Der Kartenverkaeufer;0;Musik;Der Dirigent leitet das Orchester.;2
+Welches dieser Zeichen erhoeht einen Ton um einen Halbton?;b;Aufloesungszeichen;Kreuz;Punkt;2;Musik;Das Kreuz erhoeht den Ton um einen Halbton.;4
+Wie nennt man ein Musikstueck fuer zwei Ausfuehrende?;Quartett;Trio;Duo;Ensemble;2;Musik;Zwei Ausfuehrende bilden ein Duo.;2
+Welches Instrument spielt man typischerweise mit Drumsticks?;Cello;Harfe;Schlagzeug;Oboe;2;Musik;Ein Schlagzeug wird oft mit Sticks gespielt.;1
+Wie nennt man die Lautstaerke in der Musik auf Italienisch ganz leise?;Forte;Piano;Vivace;Allegro;1;Musik;Piano bedeutet leise.;4
+Wofuer steht die Abkuerzung CPU?;Central Processing Unit;Computer Power Utility;Core Print Unit;Central Program Upload;0;Technik & Computer;CPU steht fuer Central Processing Unit.;2
+Welches Geraet zeigt Text und Bilder auf einem Computer an?;Monitor;Router;Mikrofon;Scanner;0;Technik & Computer;Der Monitor ist die Anzeigeeinheit.;1
+Welche Taste wird oft benutzt, um eine neue Zeile zu beginnen?;Esc;Enter;Shift;Tab;1;Technik & Computer;Mit Enter beginnt man oft eine neue Zeile oder bestaetigt Eingaben.;1
+Was ist ein Browser?;Ein Programm zum Surfen im Internet;Ein Kabel;Ein Lautsprecher;Ein Drucker;0;Technik & Computer;Ein Browser zeigt Webseiten an.;1
+Welche Einheit misst Datenmengen?;Liter;Byte;Meter;Volt;1;Technik & Computer;Byte ist eine Grundeinheit fuer digitale Daten.;2
+Was macht eine Tastatur?;Sie speichert Strom;Sie gibt Tinte aus;Sie ermoeglicht Texteingaben;Sie misst Temperatur;2;Technik & Computer;Mit einer Tastatur gibt man Zeichen ein.;1
+Welches Symbol wird oft fuer drahtloses Internet verwendet?;Bluetooth-Runenzeichen;WLAN-Faecher;Play-Symbol;Akku-Symbol;1;Technik & Computer;Das typische WLAN-Symbol zeigt mehrere Funkboegen.;2
+Wozu dient ein USB-Stick hauptsaechlich?;Zum Kuehlen des PCs;Zum Speichern und Transportieren von Daten;Zum Drucken von Fotos;Zum Empfangen von Radiowellen;1;Technik & Computer;USB-Sticks werden vor allem fuer Daten genutzt.;2
+Was ist ein Passwort?;Ein geheimer Zugangscode;Ein Lautsprecherkabel;Ein Bildformat;Ein Mauszeiger;0;Technik & Computer;Passwoerter schuetzen Konten und Zugriffe.;1
+Was macht ein Mikrofon?;Es zeigt Videos;Es nimmt Schall auf;Es kuhlt Prozessoren;Es misst Gewicht;1;Technik & Computer;Mikrofone nehmen Schall auf.;1
+Aus welcher Frucht wird traditionell Guacamole gemacht?;Tomate;Avocado;Mango;Zitrone;1;Essen & Trinken;Guacamole besteht hauptsaechlich aus Avocado.;2
+Welches Getraenk wird typischerweise aus geroesteten Bohnen zubereitet?;Kaffee;Apfelsaft;Tee;Kakao;0;Essen & Trinken;Kaffee wird aus geroesteten Kaffeebohnen hergestellt.;1
+Welche Zutat wird fuer klassischen Pfannkuchenteig haeufig verwendet?;Mehl;Reis;Kohl;Linsen;0;Essen & Trinken;Mehl ist eine typische Grundzutat fuer Pfannkuchen.;1
+Welcher Kaese wird oft auf Pizza verwendet?;Mozzarella;Camembert;Harzer Kaese;Gruyere;0;Essen & Trinken;Mozzarella ist der klassische Pizzakaese.;1
+Welches Gewuerz macht Speisen oft scharf?;Zimt;Paprika edelsuess;Chili;Vanille;2;Essen & Trinken;Chili sorgt oft fuer Schaerfe.;2
+Woraus wird Tofu traditionell hergestellt?;Kartoffeln;Sojabohnen;Hafer;Mandeln;1;Essen & Trinken;Tofu wird klassisch aus Sojabohnen gewonnen.;3
+Welche dieser Speisen ist normalerweise ein Dessert?;Lasagne;Tiramisu;Risotto;Suppe;1;Essen & Trinken;Tiramisu ist ein Dessert.;1
+Was entsteht beim Backen aus Teig im Ofen?;Brot;Eis;Limonade;Joghurt;0;Essen & Trinken;Aus Teig kann im Ofen Brot entstehen.;1
+Welches Obst ist fuer seine gelbe Schale bekannt?;Banane;Kirsche;Kiwi;Pflaume;0;Essen & Trinken;Die Banane hat eine gelbe Schale.;1
+Welche Hauptzutat hat Kartoffelpueree?;Karotten;Kartoffeln;Erbsen;Mais;1;Essen & Trinken;Kartoffelpueree besteht hauptsaechlich aus Kartoffeln.;1
+"Welches Wort ist das Gegenteil von ""kalt""?";dunkel;warm;schnell;hoch;1;Sprache & Woerter;Das Gegenteil von kalt ist warm.;1
+Wie nennt man ein Wort mit gleicher oder aehnlicher Bedeutung?;Gegenteil;Synonym;Zahlwort;Artikel;1;Sprache & Woerter;Ein Synonym hat gleiche oder aehnliche Bedeutung.;3
+Welches dieser Woerter ist ein Verb?;laufen;blau;Haus;schnell;0;Sprache & Woerter;Laufen ist ein Verb.;2
+Welcher Satz endet korrekt mit einem Satzzeichen?;Ich gehe heute schwimmen;Ich gehe heute schwimmen.;ich gehe heute schwimmen;ICH gehe heute schwimmen;1;Sprache & Woerter;Ein Aussagesatz endet korrekt mit einem Punkt.;2
+"Wie heisst die Mehrzahl von ""Kind""?";Kinds;Kinder;Kinderen;Kinden;1;Sprache & Woerter;Die korrekte Mehrzahl ist Kinder.;2
+Welches Wort ist ein Nomen?;springen;Baum;gruener;laut;1;Sprache & Woerter;Baum ist ein Nomen.;2
+"Mit welchem Buchstaben beginnt das Wort ""Zug""?";S;T;Z;G;2;Sprache & Woerter;Zug beginnt mit dem Buchstaben Z.;1
+Welches Wort ist richtig geschrieben?;Farrad;Fahrrad;Farad;Fahrat;1;Sprache & Woerter;Fahrrad ist die richtige Schreibweise.;2
+"Was ist das Gegenteil von ""gross""?";stark;klein;weit;schnell;1;Sprache & Woerter;Das Gegenteil von gross ist klein.;1
+Wie nennt man die Person oder Sache, um die es im Satz geht?;Verb;Subjekt;Komma;Zeile;1;Sprache & Woerter;Das Subjekt ist oft der Satzgegenstand.;4
+Welches Teilchen vermittelt in der Standardtheorie die elektromagnetische Wechselwirkung?;Gluon;Photon;Graviton;W-Boson;1;Schwere Fragen - Wissenschaft;Die elektromagnetische Wechselwirkung wird durch Photonen vermittelt.;5
+Wie lautet die chemische Formel von Schwefelsaeure?;HNO3;HCl;H2SO4;NaOH;2;Schwere Fragen - Wissenschaft;Schwefelsaeure hat die Formel H2SO4.;5
+Welcher Prozess beschreibt die Umwandlung von RNA in Protein an den Ribosomen?;Replikation;Transkription;Translation;Mutation;2;Schwere Fragen - Wissenschaft;Die Proteinsynthese am Ribosom heisst Translation.;5
+Welche SI-Einheit hat die elektrische Spannung?;Ampere;Ohm;Volt;Watt;2;Schwere Fragen - Wissenschaft;Die Spannung wird in Volt gemessen.;4
+Welcher Planet besitzt das auffaelligste Ringsystem in unserem Sonnensystem?;Mars;Saturn;Merkur;Venus;1;Schwere Fragen - Wissenschaft;Saturn ist fuer sein stark ausgepraegtes Ringsystem bekannt.;4
+Was ist die Quadratwurzel von 144?;10;11;12;14;2;Schwere Fragen - Wissenschaft;12 mal 12 ergibt 144.;3
+Welches Organell wird oft als Kraftwerk der Zelle bezeichnet?;Golgi-Apparat;Ribosom;Mitochondrium;Lysosom;2;Schwere Fragen - Wissenschaft;Mitochondrien erzeugen einen Grossteil der zellulaeren Energie.;5
+Welches Element hat die Ordnungszahl 26?;Kupfer;Eisen;Kobalt;Nickel;1;Schwere Fragen - Wissenschaft;Die Ordnungszahl 26 gehoert zu Eisen.;5
+Wie nennt man die scheinbare Ablenkung bewegter Koerper durch die Erdrotation?;Doppler-Effekt;Coriolis-Effekt;Hall-Effekt;Lotuseffekt;1;Schwere Fragen - Wissenschaft;Die Ablenkung durch Erdrotation heisst Coriolis-Effekt.;5
+Welche mathematische Konstante ist naeherungsweise 3,14159?;e;phi;pi;tau gleich 1;2;Schwere Fragen - Wissenschaft;3,14159 ist die Kreiszahl pi.;4
+In welchem Jahr fiel die Berliner Mauer?;1987;1988;1989;1990;2;Schwere Fragen - Geschichte;Die Berliner Mauer fiel im Jahr 1989.;4
+Welche Schlacht von 1815 beendete Napoleons Herrschaft endgueltig?;Austerlitz;Leipzig;Waterloo;Verdun;2;Schwere Fragen - Geschichte;Die Niederlage bei Waterloo 1815 beendete Napoleons Herrschaft.;5
+Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?;Willy Brandt;Konrad Adenauer;Helmut Schmidt;Ludwig Erhard;1;Schwere Fragen - Geschichte;Konrad Adenauer war der erste Bundeskanzler der Bundesrepublik.;4
+Wie hiess das Schiff, mit dem die Pilgervaeter 1620 nach Nordamerika segelten?;Santa Maria;Endeavour;Mayflower;Victory;2;Schwere Fragen - Geschichte;Die Pilgervaeter reisten 1620 mit der Mayflower.;5
+Welches Reich wurde 476 n. Chr. mit dem Ende des Westroemischen Reiches verbunden?;Byzantinisches Reich;Heiliges Roemisches Reich;Roemisches Reich im Westen;Perserreich;2;Schwere Fragen - Geschichte;476 markiert traditionell das Ende des Westroemischen Reiches.;5
+Welcher Vertrag gilt als formales Ende des Ersten Weltkriegs zwischen Deutschland und den Alliierten?;Vertrag von Maastricht;Vertrag von Versailles;Potsdamer Abkommen;Schengen-Abkommen;1;Schwere Fragen - Geschichte;Der Versailler Vertrag beendete den Kriegszustand formal.;5
+Wer fuehrte viele Eroberungszuege von Makedonien bis nach Indien?;Caesar;Alexander der Grosse;Hannibal;Perikles;1;Schwere Fragen - Geschichte;Alexander der Grosse eroberte ein riesiges Reich.;4
+Welche Stadt wurde 1453 von den Osmanen erobert?;Athen;Konstantinopel;Rom;Alexandria;1;Schwere Fragen - Geschichte;1453 fiel Konstantinopel an die Osmanen.;5
+Welche Bewegung leitete Martin Luther mit seinen 95 Thesen wesentlich mit ein?;Renaissance;Reformation;Aufklaerung;Industrialisierung;1;Schwere Fragen - Geschichte;Luthers Thesen waren ein Ausloeser der Reformation.;4
+Wer war die laengst regierende Monarchin des Vereinigten Koenigreichs bis 2022?;Koenigin Victoria;Koenigin Elisabeth II.;Koenigin Anne;Maria I.;1;Schwere Fragen - Geschichte;Bis 2022 hielt Elisabeth II. diesen Rekord.;5
+"Wer schrieb den Roman ""Faust"" in seiner beruehmten deutschen Fassung?";Friedrich Schiller;Johann Wolfgang von Goethe;Thomas Mann;Heinrich Heine;1;Schwere Fragen - Literatur;Goethe schrieb die beruehmte deutsche Fassung von Faust.;5
+"Wie heisst der Autor von ""1984""?";Aldous Huxley;George Orwell;Ray Bradbury;Ernest Hemingway;1;Schwere Fragen - Literatur;1984 stammt von George Orwell.;4
+Wer schuf die Figur Sherlock Holmes?;Agatha Christie;Arthur Conan Doyle;Edgar Allan Poe;Jules Verne;1;Schwere Fragen - Literatur;Sherlock Holmes wurde von Arthur Conan Doyle erfunden.;4
+In welchem Werk kaempfen die Familien Montague und Capulet gegeneinander?;Hamlet;Macbeth;Romeo und Julia;Othello;2;Schwere Fragen - Literatur;Die Familien stammen aus Romeo und Julia.;4
+"Wer schrieb ""Die Verwandlung""?";Franz Kafka;Bertolt Brecht;Hermann Hesse;Stefan Zweig;0;Schwere Fragen - Literatur;Die Verwandlung ist eine Erzaehlung von Franz Kafka.;5
+"Wie heisst der erste Band von Tolkiens Hauptwerk ""Der Herr der Ringe"" auf Deutsch?";Die zwei Tuerme;Die Rueckkehr des Koenigs;Die Gefaehrten;Das Silmarillion;2;Schwere Fragen - Literatur;Der erste Band heisst Die Gefaehrten.;5
+"Wer schrieb ""Der alte Mann und das Meer""?";John Steinbeck;Ernest Hemingway;Jack London;Mark Twain;1;Schwere Fragen - Literatur;Die Novelle stammt von Ernest Hemingway.;4
+"Welche Autorin schrieb ""Stolz und Vorurteil""?";Emily Bronte;Jane Austen;Virginia Woolf;Louisa May Alcott;1;Schwere Fragen - Literatur;Stolz und Vorurteil ist von Jane Austen.;4
+Wie heisst Don Quijotes treuer Begleiter?;Sancho Pansa;Sancho Panza;Pedro Almodovar;Gonzalo Pizarro;1;Schwere Fragen - Literatur;Der Begleiter heisst Sancho Panza.;5
+"Wer schrieb das Epos ""Odyssee""?";Sophokles;Platon;Homer;Vergil;2;Schwere Fragen - Literatur;Die Odyssee wird Homer zugeschrieben.;5
+Welche Stadt ist Sitz der meisten Organe der Europaeischen Union?;Strassburg;Bruessel;Luxemburg;Den Haag;1;Schwere Fragen - Geografie & Politik;Bruessel ist der Hauptsitz vieler EU-Institutionen.;5
+Welcher Staat hat die groesste Flaeche der Erde?;China;Kanada;Russland;USA;2;Schwere Fragen - Geografie & Politik;Russland ist flaechenmaessig der groesste Staat.;4
+Welcher Kanal verbindet Mittelmeer und Rotes Meer?;Panamakanal;Suezkanal;Nord-Ostsee-Kanal;Kielkanal;1;Schwere Fragen - Geografie & Politik;Der Suezkanal verbindet Mittelmeer und Rotes Meer.;4
+In welchem Gebirge liegt der K2?;Anden;Karakorum;Alpen;Himalaya;1;Schwere Fragen - Geografie & Politik;Der K2 liegt im Karakorum.;5
+Welcher Staat hat die meisten Einwohner in Afrika?;Aegypten;Aethiopien;Nigeria;Suedafrika;2;Schwere Fragen - Geografie & Politik;Nigeria ist das bevoelkerungsreichste Land Afrikas.;5
+Welche Sprache hat weltweit die meisten Muttersprachler?;Englisch;Spanisch;Mandarin-Chinesisch;Hindi;2;Schwere Fragen - Geografie & Politik;Mandarin-Chinesisch hat die meisten Muttersprachler.;5
+Wie heisst der laengste Fluss der Welt nach haeufiger Schulbuchnennung?;Nil;Amazonas;Jangtse;Mississippi;0;Schwere Fragen - Geografie & Politik;In vielen Schulkontexten wird der Nil als laengster Fluss genannt.;5
+Welches Land besitzt die meisten Zeitzonen, wenn Ueberseegebiete mitgezaehlt werden?;Russland;Frankreich;USA;Australien;1;Schwere Fragen - Geografie & Politik;Mit Ueberseegebieten hat Frankreich die meisten Zeitzonen.;5
+Welche Stadt liegt sowohl in Europa als auch in Asien?;Athen;Istanbul;Kairo;Madrid;1;Schwere Fragen - Geografie & Politik;Istanbul liegt auf zwei Kontinenten.;4
+Welche Organisation vergibt die blau behelmten Friedenstruppen?;NATO;UNO;EU;OSZE;1;Schwere Fragen - Geografie & Politik;Blauhelme sind Friedenstruppen der Vereinten Nationen.;4

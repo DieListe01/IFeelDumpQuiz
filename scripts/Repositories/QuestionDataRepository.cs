@@ -29,6 +29,7 @@ SELECT
     q.answer_d,
     q.correct_answer_index,
     COALESCE(q.explanation, ''),
+    q.difficulty,
     qm.id,
     COALESCE(qm.media_type, ''),
     COALESCE(qm.timing, ''),
@@ -58,24 +59,25 @@ ORDER BY c.sort_order, c.name, q.id, qm.sort_order, qm.id;";
                     Text = reader.GetString(2),
                     Answers = new List<string> { reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6) },
                     CorrectIndex = reader.GetInt32(7),
-                    Explanation = reader.GetString(8)
+                    Explanation = reader.GetString(8),
+                    Difficulty = Math.Clamp(reader.GetInt32(9), 1, 5)
                 };
                 byId[id] = question;
                 questions.Add(question);
             }
 
-            if (!reader.IsDBNull(9))
+            if (!reader.IsDBNull(10))
             {
                 question.Media.Add(new QuestionMediaData
                 {
-                    Id = reader.GetInt32(9),
+                    Id = reader.GetInt32(10),
                     QuestionId = id,
-                    MediaType = reader.GetString(10),
-                    Timing = reader.GetString(11),
-                    StoredPath = reader.GetString(12),
-                    OriginalFileName = reader.GetString(13),
-                    MimeType = reader.GetString(14),
-                    BinaryData = reader.IsDBNull(15) ? Array.Empty<byte>() : (byte[])reader[15]
+                    MediaType = reader.GetString(11),
+                    Timing = reader.GetString(12),
+                    StoredPath = reader.GetString(13),
+                    OriginalFileName = reader.GetString(14),
+                    MimeType = reader.GetString(15),
+                    BinaryData = reader.IsDBNull(16) ? Array.Empty<byte>() : (byte[])reader[16]
                 });
             }
         }
@@ -109,10 +111,10 @@ ORDER BY c.sort_order, c.name, q.id, qm.sort_order, qm.id;";
                 command.CommandText = @"
 INSERT INTO questions (
     category_id, question_text, answer_a, answer_b, answer_c, answer_d,
-    correct_answer_index, explanation, is_active, created_at, updated_at)
+    correct_answer_index, explanation, difficulty, is_active, created_at, updated_at)
 VALUES (
     $category_id, $question_text, $answer_a, $answer_b, $answer_c, $answer_d,
-    $correct_answer_index, $explanation, 1, $created_at, $updated_at);
+    $correct_answer_index, $explanation, $difficulty, 1, $created_at, $updated_at);
 SELECT last_insert_rowid();";
                 command.Parameters.AddWithValue("$category_id", categoryIds[question.Category]);
                 command.Parameters.AddWithValue("$question_text", question.Text);
@@ -122,6 +124,7 @@ SELECT last_insert_rowid();";
                 command.Parameters.AddWithValue("$answer_d", question.Answers.ElementAtOrDefault(3) ?? string.Empty);
                 command.Parameters.AddWithValue("$correct_answer_index", question.CorrectIndex);
                 command.Parameters.AddWithValue("$explanation", question.Explanation);
+                command.Parameters.AddWithValue("$difficulty", Math.Clamp(question.Difficulty, 1, 5));
                 command.Parameters.AddWithValue("$created_at", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
                 command.Parameters.AddWithValue("$updated_at", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
                 var questionId = (long)(command.ExecuteScalar() ?? 0L);

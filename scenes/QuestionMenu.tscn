@@ -296,6 +296,13 @@ text = "Richtige Antwort"
 [node name="CorrectSelect" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
 layout_mode = 2
 
+[node name="LblDifficulty" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+text = "Schwierigkeit"
+
+[node name="DifficultySelect" type="OptionButton" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid"]
+layout_mode = 2
+
 [node name="LblQuestionEdit" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
 layout_mode = 2
 text = "Frage"

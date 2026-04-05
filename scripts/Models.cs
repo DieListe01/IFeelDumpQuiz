@@ -11,6 +11,7 @@ public class QuestionData
     public List<string> Answers { get; set; } = new();
     public int CorrectIndex { get; set; }
     public string Explanation { get; set; } = string.Empty;
+    public int Difficulty { get; set; } = 3;
     public List<QuestionMediaData> Media { get; set; } = new();
 }
 

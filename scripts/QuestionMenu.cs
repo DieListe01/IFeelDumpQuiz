@@ -36,6 +36,7 @@ public partial class QuestionMenu : Control
     private Label _popupStatus = null!;
     private TabContainer _popupTabs = null!;
     private LineEdit _txtCategory = null!;
+    private OptionButton _difficultySelect = null!;
     private OptionButton _correctSelect = null!;
     private TextEdit _txtQuestion = null!;
     private LineEdit _txtAnswerA = null!;
@@ -79,6 +80,7 @@ public partial class QuestionMenu : Control
         _popupStatus = GetNode<Label>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/PopupStatus");
         _popupTabs = GetNode<TabContainer>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs");
         _txtCategory = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid/TxtCategory");
+        _difficultySelect = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid/DifficultySelect");
         _correctSelect = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/MetaGrid/CorrectSelect");
         _txtQuestion = GetNode<TextEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/TxtQuestion");
         _txtAnswerA = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid/TxtAnswerA");
@@ -126,6 +128,14 @@ public partial class QuestionMenu : Control
         _correctSelect.AddItem("B", 1);
         _correctSelect.AddItem("C", 2);
         _correctSelect.AddItem("D", 3);
+
+        _difficultySelect.Clear();
+        _difficultySelect.AddItem("1 - leicht", 1);
+        _difficultySelect.AddItem("2", 2);
+        _difficultySelect.AddItem("3", 3);
+        _difficultySelect.AddItem("4", 4);
+        _difficultySelect.AddItem("5 - schwer", 5);
+        _difficultySelect.Select(2);
 
         ConfigureMediaSelectors(_mediaType1, _mediaTiming1);
         ConfigureMediaSelectors(_mediaType2, _mediaTiming2);
@@ -310,6 +320,14 @@ public partial class QuestionMenu : Control
         title.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
         textVBox.AddChild(title);
 
+        var difficulty = new RichTextLabel();
+        difficulty.BbcodeEnabled = true;
+        difficulty.FitContent = true;
+        difficulty.ScrollActive = false;
+        difficulty.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        difficulty.Text = BuildDifficultyStars(question.Difficulty);
+        textVBox.AddChild(difficulty);
+
         var meta = new Label();
         meta.Text = BuildQuestionMeta(question);
         meta.Modulate = new Color(0.77f, 0.82f, 0.95f, 0.9f);
@@ -365,12 +383,19 @@ public partial class QuestionMenu : Control
         return string.Join(" • ", parts.Where(part => !string.IsNullOrWhiteSpace(part)));
     }
 
+    private static string BuildDifficultyStars(int difficulty)
+    {
+        var normalizedDifficulty = Math.Clamp(difficulty, 1, 5);
+        return $"[color=#F7B84B]{new string('★', normalizedDifficulty)}[/color][color=#4D577C]{new string('☆', 5 - normalizedDifficulty)}[/color]";
+    }
+
     private void OpenNewQuestion()
     {
         _editingQuestion = new QuestionData
         {
             Id = GetNextQuestionId(),
             Category = _selectedCategory == "Alle" ? string.Empty : _selectedCategory,
+            Difficulty = 3,
             Answers = new List<string> { string.Empty, string.Empty, string.Empty, string.Empty },
             Media = new List<QuestionMediaData>()
         };
@@ -403,6 +428,7 @@ public partial class QuestionMenu : Control
     private void PopulateEditor(QuestionData question)
     {
         _txtCategory.Text = question.Category;
+        _difficultySelect.Select(Math.Clamp(question.Difficulty, 1, 5) - 1);
         _correctSelect.Select(Math.Clamp(question.CorrectIndex, 0, 3));
         _txtQuestion.Text = question.Text;
         _txtAnswerA.Text = question.Answers.ElementAtOrDefault(0) ?? string.Empty;
@@ -608,6 +634,7 @@ public partial class QuestionMenu : Control
     private void CollectEditorValues(QuestionData question)
     {
         question.Category = _txtCategory.Text.Trim();
+        question.Difficulty = _difficultySelect.GetSelectedId();
         question.Text = _txtQuestion.Text.Trim();
         question.Answers = new List<string>
         {
@@ -931,6 +958,7 @@ public partial class QuestionMenu : Control
             Answers = new List<string>(source.Answers),
             CorrectIndex = source.CorrectIndex,
             Explanation = source.Explanation,
+            Difficulty = source.Difficulty,
             Media = source.Media.Select(CloneMedia).ToList()
         };
     }

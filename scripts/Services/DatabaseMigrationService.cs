@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS questions (
     answer_d TEXT NOT NULL,
     correct_answer_index INTEGER NOT NULL,
     explanation TEXT,
+    difficulty INTEGER NOT NULL DEFAULT 3,
     is_active INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
@@ -60,6 +61,7 @@ CREATE INDEX IF NOT EXISTS idx_questions_is_active ON questions(is_active);
 CREATE INDEX IF NOT EXISTS idx_question_media_question_id ON question_media(question_id);";
         command.ExecuteNonQuery();
 
+        EnsureColumnExists(connection, "questions", "difficulty", "INTEGER NOT NULL DEFAULT 3");
         EnsureColumnExists(connection, "question_media", "mime_type", "TEXT NOT NULL DEFAULT ''");
         EnsureColumnExists(connection, "question_media", "media_blob", "BLOB");
         MigrateStoredMediaToDatabase(connection);

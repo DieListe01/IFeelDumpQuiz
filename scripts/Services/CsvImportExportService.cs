@@ -13,7 +13,7 @@ public static class CsvImportExportService
 {
     private const string ResourceQuestionsPath = "res://data/questions.csv";
     private const string UserQuestionsPath = "user://data/questions.csv";
-    private const string CsvHeader = "question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation";
+    private const string CsvHeader = "question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation;difficulty";
 
     public static bool TryImportQuestions(string sourcePath, out int importedCount, out string message)
     {
@@ -139,6 +139,7 @@ public static class CsvImportExportService
             Answers = question.Answers.ToList(),
             CorrectIndex = question.CorrectIndex,
             Explanation = question.Explanation,
+            Difficulty = question.Difficulty,
             Media = question.Media.Select(media => new QuestionMediaData
             {
                 Id = media.Id,
@@ -231,7 +232,9 @@ public static class CsvImportExportService
         var actualHeader = rows[0].Trim().Trim('\uFEFF');
         var headerColumns = ParseCsvLine(actualHeader);
         var normalizedHeader = string.Join(";", headerColumns).Trim();
-        if (headerColumns.Count < 8 || !string.Equals(normalizedHeader, CsvHeader, StringComparison.OrdinalIgnoreCase))
+        var supportsDifficulty = headerColumns.Count >= 9 && string.Equals(normalizedHeader, CsvHeader, StringComparison.OrdinalIgnoreCase);
+        var supportsLegacyHeader = headerColumns.Count == 8 && string.Equals(normalizedHeader, "question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation", StringComparison.OrdinalIgnoreCase);
+        if (!supportsDifficulty && !supportsLegacyHeader)
         {
             throw new FormatException($"Die CSV-Kopfzeile ist ungueltig. Erwartet wird: {CsvHeader}. Gefunden wurde: {normalizedHeader}");
         }
@@ -245,7 +248,7 @@ public static class CsvImportExportService
                 throw new FormatException($"CSV-Zeile {lineIndex + 1} hat zu wenige Spalten.");
             }
 
-            ValidateQuestionRow(columns, lineIndex + 1);
+            ValidateQuestionRow(columns, lineIndex + 1, supportsDifficulty);
             questions.Add(new QuestionData
             {
                 Id = questions.Count + 1,
@@ -253,14 +256,15 @@ public static class CsvImportExportService
                 Answers = new List<string> { columns[1], columns[2], columns[3], columns[4] },
                 CorrectIndex = int.Parse(columns[5], CultureInfo.InvariantCulture),
                 Category = columns[6],
-                Explanation = columns[7]
+                Explanation = columns[7],
+                Difficulty = supportsDifficulty ? int.Parse(columns[8], CultureInfo.InvariantCulture) : 3
             });
         }
 
         return questions;
     }
 
-    private static void ValidateQuestionRow(IReadOnlyList<string> columns, int lineNumber)
+    private static void ValidateQuestionRow(IReadOnlyList<string> columns, int lineNumber, bool hasDifficulty)
     {
         if (string.IsNullOrWhiteSpace(columns[0]))
         {
@@ -283,6 +287,11 @@ public static class CsvImportExportService
         if (string.IsNullOrWhiteSpace(columns[6]))
         {
             throw new FormatException($"CSV-Zeile {lineNumber} hat keine Kategorie.");
+        }
+
+        if (hasDifficulty && (!int.TryParse(columns[8], NumberStyles.Integer, CultureInfo.InvariantCulture, out var difficulty) || difficulty < 1 || difficulty > 5))
+        {
+            throw new FormatException($"CSV-Zeile {lineNumber} hat einen ungueltigen difficulty-Wert. Erlaubt sind 1 bis 5.");
         }
     }
 
@@ -342,7 +351,8 @@ public static class CsvImportExportService
               .Append(EscapeCsv(answers[3])).Append(';')
               .Append(q.CorrectIndex.ToString(CultureInfo.InvariantCulture)).Append(';')
               .Append(EscapeCsv(q.Category)).Append(';')
-              .Append(EscapeCsv(q.Explanation))
+              .Append(EscapeCsv(q.Explanation)).Append(';')
+              .Append(Math.Clamp(q.Difficulty, 1, 5).ToString(CultureInfo.InvariantCulture))
               .AppendLine();
         }
 
