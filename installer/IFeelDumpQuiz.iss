@@ -12,6 +12,7 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 VersionInfoVersion={#MyAppVersion}
 DefaultDirName={localappdata}\Programs\IFeelDump Quiz
+UsePreviousAppDir=no
 DefaultGroupName=IFeelDump Quiz
 UninstallDisplayIcon={app}\{#MyAppExeName}
 AppPublisherURL=https://github.com/DieListe01/IFeelDumpQuiz
