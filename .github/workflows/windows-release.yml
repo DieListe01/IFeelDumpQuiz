@@ -201,14 +201,7 @@ jobs:
 
           $stdoutLog = Join-Path $pwd 'dist\godot-export.stdout.log'
           $stderrLog = Join-Path $pwd 'dist\godot-export.stderr.log'
-          $arguments = @(
-            '--headless',
-            '--path', '.',
-            '--verbose',
-            '--export-release', "$env:EXPORT_PRESET_NAME",
-            'dist/windows/IFeelDumpQuiz.exe',
-            '--quit'
-          )
+          $arguments = "--headless --path . --verbose --export-release `"$env:EXPORT_PRESET_NAME`" `"dist/windows/IFeelDumpQuiz.exe`" --quit"
 
           $process = Start-Process -FilePath $godotExe.FullName -ArgumentList $arguments -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog
 
