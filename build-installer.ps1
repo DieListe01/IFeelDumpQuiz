@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$issPath = Join-Path $PSScriptRoot 'IFeelDumpQuiz.iss'
+$issPath = Join-Path $PSScriptRoot 'installer\IFeelDumpQuiz.iss'
 $versionFile = Join-Path $PSScriptRoot 'VERSION'
 $buildFile = Join-Path $PSScriptRoot 'BUILD'
 
