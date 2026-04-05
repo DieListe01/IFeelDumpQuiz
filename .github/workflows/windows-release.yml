@@ -199,20 +199,14 @@ jobs:
             throw 'Godot Editor EXE nicht gefunden.'
           }
 
-          & $godotExe.FullName --headless --path . --build-solutions --export-release "$env:EXPORT_PRESET_NAME" "dist/windows/IFeelDumpQuiz.exe"
+          & $godotExe.FullName --headless --path . --build-solutions --verbose --export-release "$env:EXPORT_PRESET_NAME" "dist/windows/IFeelDumpQuiz.exe"
 
-          $exePath = Join-Path $pwd 'dist\windows\IFeelDumpQuiz.exe'
-          $pckPath = Join-Path $pwd 'dist\windows\IFeelDumpQuiz.pck'
-          if (-not (Test-Path $exePath) -or -not (Test-Path $pckPath)) {
-            Write-Host 'Standardexport hat keine vollstaendigen Windows-Dateien erzeugt. Versuche Windows-Fallback.'
-
-            $templateExe = Join-Path $env:APPDATA "Godot\export_templates\$env:GODOT_TEMPLATES_DIR\windows_release_x86_64.exe"
-            if (-not (Test-Path $templateExe)) {
-              throw "Windows Release Template nicht gefunden: $templateExe"
-            }
-
-            Copy-Item $templateExe $exePath -Force
-            & $godotExe.FullName --headless --path . --export-pack "$env:EXPORT_PRESET_NAME" $pckPath
+          Write-Host 'Inhalt von dist/windows direkt nach Godot-Export:'
+          if (Test-Path 'dist\windows') {
+            Get-ChildItem 'dist\windows' -Force | Select-Object Name, Length
+          }
+          else {
+            Write-Host 'dist/windows existiert nicht.'
           }
 
       - name: Export pruefen und .NET Dateien kopieren
