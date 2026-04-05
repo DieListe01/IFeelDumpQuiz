@@ -116,7 +116,7 @@ public partial class QuestionMenu : Control
 
     private static string EnsureExportDirectory()
     {
-        var exportDirectory = ProjectSettings.GlobalizePath($"user://data/{ExportFolderName}");
+        var exportDirectory = Path.Combine(AppMetadata.GetDataDirectory(), ExportFolderName);
         Directory.CreateDirectory(exportDirectory);
         return exportDirectory;
     }

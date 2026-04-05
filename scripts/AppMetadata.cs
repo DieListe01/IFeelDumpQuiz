@@ -7,6 +7,7 @@ public static class AppMetadata
 {
     public static readonly string Version = LoadVersion();
     public static readonly string BaseDirectory = AppContext.BaseDirectory;
+    public static readonly string InstallDataDirectory = Path.Combine(BaseDirectory, "data");
     public const string GitHubOwner = "DieListe01";
     public const string GitHubRepo = "IFeelDumpQuiz";
     public const string ReleaseApiUrl = "https://api.github.com/repos/DieListe01/IFeelDumpQuiz/releases/latest";
@@ -34,6 +35,19 @@ public static class AppMetadata
                 return false;
             }
         }
+    }
+
+    public static string GetDataDirectory()
+    {
+        if (IsPackagedBuild)
+        {
+            Directory.CreateDirectory(InstallDataDirectory);
+            return InstallDataDirectory;
+        }
+
+        var userDataDirectory = Godot.ProjectSettings.GlobalizePath("user://data");
+        Directory.CreateDirectory(userDataDirectory);
+        return userDataDirectory;
     }
 
     private static string LoadVersion()
