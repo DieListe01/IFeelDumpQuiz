@@ -20,7 +20,7 @@ AppUpdatesURL=https://github.com/DieListe01/IFeelDumpQuiz/releases
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-OutputDir=dist\installer
+OutputDir=..\dist\installer
 OutputBaseFilename=IFeelDump-Setup-{#MyAppVersion}
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=lowest
@@ -30,10 +30,10 @@ RestartApplications=no
 SetupLogging=yes
 DisableProgramGroupPage=yes
 AppVerName={#MyAppName} {#MyAppVersion}
-LicenseFile=docs\LICENSE_INSTALLER.txt
+LicenseFile=..\docs\LICENSE_INSTALLER.txt
 
 [Files]
-Source: "dist\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Tasks]
 Name: "desktopicon"; Description: "Desktop-Verknuepfung erstellen"; GroupDescription: "Zusaetzliche Symbole:"
