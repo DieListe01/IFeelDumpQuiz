@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 public partial class QuestionMenu : Control
 {
@@ -47,15 +48,29 @@ public partial class QuestionMenu : Control
     private OptionButton _mediaType1 = null!;
     private OptionButton _mediaTiming1 = null!;
     private LineEdit _mediaPath1 = null!;
+    private LineEdit _mediaUrl1 = null!;
     private Label _mediaInfo1 = null!;
+    private PanelContainer _dropZone1 = null!;
+    private TextureRect _mediaPreview1 = null!;
+    private Button _btnPlayMedia1 = null!;
     private OptionButton _mediaType2 = null!;
     private OptionButton _mediaTiming2 = null!;
     private LineEdit _mediaPath2 = null!;
+    private LineEdit _mediaUrl2 = null!;
     private Label _mediaInfo2 = null!;
+    private PanelContainer _dropZone2 = null!;
+    private TextureRect _mediaPreview2 = null!;
+    private Button _btnPlayMedia2 = null!;
+    private RichTextLabel _previewMeta = null!;
+    private Label _previewQuestion = null!;
+    private RichTextLabel _previewAnswers = null!;
+    private TextureRect _previewImage = null!;
+    private Label _previewMediaInfo = null!;
     private FileDialog _importDialog = null!;
     private FileDialog _saveDialog = null!;
     private FileDialog _mediaDialog = null!;
     private ConfirmationDialog _importModeDialog = null!;
+    private AudioStreamPlayer _previewAudioPlayer = null!;
 
     private SaveDialogAction _pendingSaveAction;
     private MediaTargetSlot _pendingMediaSlot;
@@ -88,18 +103,32 @@ public partial class QuestionMenu : Control
         _txtAnswerC = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid/TxtAnswerC");
         _txtAnswerD = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid/TxtAnswerD");
         _txtExplanation = GetNode<TextEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Erklaerung/ScrollErklaerung/ErklaerungMargin/ErklaerungVBox/TxtExplanation");
+        _previewMeta = GetNode<RichTextLabel>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox/PreviewMeta");
+        _previewQuestion = GetNode<Label>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox/PreviewQuestion");
+        _previewAnswers = GetNode<RichTextLabel>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox/PreviewAnswers");
+        _previewImage = GetNode<TextureRect>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox/PreviewImage");
+        _previewMediaInfo = GetNode<Label>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox/PreviewMediaInfo");
         _mediaType1 = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid/MediaType1");
         _mediaTiming1 = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/Media1Grid/MediaTiming1");
         _mediaPath1 = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaPath1");
+        _mediaUrl1 = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaUrlRow1/MediaUrl1");
         _mediaInfo1 = GetNode<Label>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaInfo1");
+        _dropZone1 = GetNode<PanelContainer>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/DropZone1");
+        _mediaPreview1 = GetNode<TextureRect>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaPreview1");
+        _btnPlayMedia1 = GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/BtnPlayMedia1");
         _mediaType2 = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid/MediaType2");
         _mediaTiming2 = GetNode<OptionButton>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/Media2Grid/MediaTiming2");
         _mediaPath2 = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaPath2");
+        _mediaUrl2 = GetNode<LineEdit>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaUrlRow2/MediaUrl2");
         _mediaInfo2 = GetNode<Label>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaInfo2");
+        _dropZone2 = GetNode<PanelContainer>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/DropZone2");
+        _mediaPreview2 = GetNode<TextureRect>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaPreview2");
+        _btnPlayMedia2 = GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/BtnPlayMedia2");
         _importDialog = GetNode<FileDialog>("ImportDialog");
         _saveDialog = GetNode<FileDialog>("SaveDialog");
         _mediaDialog = GetNode<FileDialog>("MediaDialog");
         _importModeDialog = CreateImportModeDialog();
+        _previewAudioPlayer = GetNode<AudioStreamPlayer>("EditorOverlay/PreviewAudioPlayer");
 
         ConfigureSelectors();
         ConfigureFileDialogs();
@@ -170,20 +199,35 @@ public partial class QuestionMenu : Control
         _categoryList.ItemSelected += OnCategorySelected;
 
         GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupHeader/BtnClosePopup").Pressed += CloseEditor;
-        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/BtnSave").Pressed += SaveCurrentQuestion;
-        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/BtnDuplicate").Pressed += DuplicateCurrentQuestion;
-        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/BtnDelete").Pressed += DeleteCurrentQuestion;
-        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/BtnReset").Pressed += ResetCurrentQuestion;
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons/BtnSave").Pressed += SaveCurrentQuestion;
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons/BtnDuplicate").Pressed += DuplicateCurrentQuestion;
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons/BtnDelete").Pressed += DeleteCurrentQuestion;
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons/BtnReset").Pressed += ResetCurrentQuestion;
 
         GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaButtons1/BtnChooseMedia1").Pressed += () => OpenMediaDialog(MediaTargetSlot.Slot1);
         GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaButtons1/BtnClearMedia1").Pressed += () => ClearMedia(MediaTargetSlot.Slot1);
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaUrlRow1/BtnLoadUrl1").Pressed += () => _ = LoadMediaFromUrlAsync(MediaTargetSlot.Slot1);
+        _btnPlayMedia1.Pressed += () => PlayMediaPreview(MediaTargetSlot.Slot1);
         GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaButtons2/BtnChooseMedia2").Pressed += () => OpenMediaDialog(MediaTargetSlot.Slot2);
         GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaButtons2/BtnClearMedia2").Pressed += () => ClearMedia(MediaTargetSlot.Slot2);
+        GetNode<Button>("EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaUrlRow2/BtnLoadUrl2").Pressed += () => _ = LoadMediaFromUrlAsync(MediaTargetSlot.Slot2);
+        _btnPlayMedia2.Pressed += () => PlayMediaPreview(MediaTargetSlot.Slot2);
 
         _importDialog.FileSelected += OnImportFileSelected;
         _saveDialog.FileSelected += OnSaveFileSelected;
         _mediaDialog.FileSelected += OnMediaFileSelected;
         GetWindow().FilesDropped += OnFilesDropped;
+
+        _txtCategory.TextChanged += _ => UpdatePreview();
+        _txtQuestion.TextChanged += () => UpdatePreview();
+        _txtAnswerA.TextChanged += _ => UpdatePreview();
+        _txtAnswerB.TextChanged += _ => UpdatePreview();
+        _txtAnswerC.TextChanged += _ => UpdatePreview();
+        _txtAnswerD.TextChanged += _ => UpdatePreview();
+        _correctSelect.ItemSelected += _ => UpdatePreview();
+        _difficultySelect.ItemSelected += _ => UpdatePreview();
+        _mediaType1.ItemSelected += _ => UpdatePreview();
+        _mediaType2.ItemSelected += _ => UpdatePreview();
     }
 
     private void ReloadQuestions()
@@ -438,6 +482,117 @@ public partial class QuestionMenu : Control
         _txtExplanation.Text = question.Explanation;
         PopulateMediaSlot(MediaTargetSlot.Slot1, question.Media.ElementAtOrDefault(0));
         PopulateMediaSlot(MediaTargetSlot.Slot2, question.Media.ElementAtOrDefault(1));
+        _mediaUrl1.Text = string.Empty;
+        _mediaUrl2.Text = string.Empty;
+        UpdatePreview();
+    }
+
+    private void UpdatePreview()
+    {
+        _previewMeta.Text = $"[color=#F7B84B]{BuildDifficultyStars(_difficultySelect.GetSelectedId())}[/color]  [color=#C4CEE8]{(_txtCategory.Text?.Trim() ?? "Ohne Kategorie")}[/color]";
+        _previewQuestion.Text = string.IsNullOrWhiteSpace(_txtQuestion.Text) ? "Fragevorschau" : _txtQuestion.Text.Trim();
+        _previewAnswers.Text = string.Join("\n", new[]
+        {
+            BuildPreviewAnswer('A', _txtAnswerA.Text),
+            BuildPreviewAnswer('B', _txtAnswerB.Text),
+            BuildPreviewAnswer('C', _txtAnswerC.Text),
+            BuildPreviewAnswer('D', _txtAnswerD.Text)
+        });
+
+        var previewMedia = GetSlotMedia(MediaTargetSlot.Slot1) ?? GetSlotMedia(MediaTargetSlot.Slot2);
+        if (previewMedia != null && string.Equals(previewMedia.MediaType, "image", StringComparison.OrdinalIgnoreCase) && previewMedia.BinaryData.Length > 0)
+        {
+            var image = new Image();
+            var error = image.LoadPngFromBuffer(previewMedia.BinaryData);
+            if (error != Error.Ok)
+            {
+                error = image.LoadJpgFromBuffer(previewMedia.BinaryData);
+            }
+            if (error != Error.Ok)
+            {
+                error = image.LoadWebpFromBuffer(previewMedia.BinaryData);
+            }
+
+            if (error == Error.Ok)
+            {
+                _previewImage.Texture = ImageTexture.CreateFromImage(image);
+                _previewImage.Visible = true;
+                _previewMediaInfo.Text = $"Bildvorschau: {previewMedia.OriginalFileName}";
+                return;
+            }
+        }
+
+        _previewImage.Texture = null;
+        _previewImage.Visible = false;
+        _previewMediaInfo.Text = previewMedia == null
+            ? "Kein Medium hinterlegt."
+            : $"Medium hinterlegt: {previewMedia.OriginalFileName} ({previewMedia.MediaType})";
+    }
+
+    private void UpdateMediaSlotPreview(MediaTargetSlot slot)
+    {
+        var media = GetSlotMedia(slot);
+        var preview = slot == MediaTargetSlot.Slot1 ? _mediaPreview1 : _mediaPreview2;
+        var playButton = slot == MediaTargetSlot.Slot1 ? _btnPlayMedia1 : _btnPlayMedia2;
+        var dropZone = slot == MediaTargetSlot.Slot1 ? _dropZone1 : _dropZone2;
+
+        dropZone.Modulate = media == null ? Colors.White : new Color(1f, 0.95f, 0.8f, 1f);
+        preview.Texture = null;
+        preview.Visible = false;
+        playButton.Visible = false;
+
+        if (media == null || media.BinaryData.Length == 0)
+        {
+            return;
+        }
+
+        if (string.Equals(media.MediaType, "image", StringComparison.OrdinalIgnoreCase))
+        {
+            var image = new Image();
+            var error = image.LoadPngFromBuffer(media.BinaryData);
+            if (error != Error.Ok)
+            {
+                error = image.LoadJpgFromBuffer(media.BinaryData);
+            }
+            if (error != Error.Ok)
+            {
+                error = image.LoadWebpFromBuffer(media.BinaryData);
+            }
+
+            if (error == Error.Ok)
+            {
+                preview.Texture = ImageTexture.CreateFromImage(image);
+                preview.Visible = true;
+            }
+            return;
+        }
+
+        if (string.Equals(media.MediaType, "audio", StringComparison.OrdinalIgnoreCase))
+        {
+            playButton.Visible = true;
+        }
+    }
+
+    private void PlayMediaPreview(MediaTargetSlot slot)
+    {
+        var media = GetSlotMedia(slot);
+        if (media == null || !string.Equals(media.MediaType, "audio", StringComparison.OrdinalIgnoreCase) || media.BinaryData.Length == 0)
+        {
+            return;
+        }
+
+        var stream = new AudioStreamMP3 { Data = media.BinaryData };
+        _previewAudioPlayer.Stream = stream;
+        _previewAudioPlayer.Play();
+    }
+
+    private string BuildPreviewAnswer(char letter, string text)
+    {
+        var answerText = string.IsNullOrWhiteSpace(text) ? "..." : text.Trim();
+        var isCorrect = _correctSelect.GetItemText(_correctSelect.Selected) == letter.ToString();
+        return isCorrect
+            ? $"[color=#F7B84B][b]{letter}) {answerText}[/b][/color]"
+            : $"[color=#DDE3F5]{letter}) {answerText}[/color]";
     }
 
     private void PopulateMediaSlot(MediaTargetSlot slot, QuestionMediaData? media)
@@ -467,6 +622,7 @@ public partial class QuestionMenu : Control
         });
         path.Text = media.OriginalFileName;
         info.Text = $"In Datenbank gespeichert: {media.OriginalFileName}";
+        UpdateMediaSlotPreview(slot);
     }
 
     private void SaveCurrentQuestion()
@@ -813,7 +969,10 @@ public partial class QuestionMenu : Control
         GetMediaTypeControl(slot).Select(0);
         GetMediaTimingControl(slot).Select(0);
         GetMediaPathControl(slot).Text = string.Empty;
+        GetMediaUrlControl(slot).Text = string.Empty;
         GetMediaInfoControl(slot).Text = "Noch kein Medium hinterlegt.";
+        UpdateMediaSlotPreview(slot);
+        UpdatePreview();
     }
 
     private void ApplyImportedMedia(MediaTargetSlot slot, string sourcePath)
@@ -824,6 +983,34 @@ public partial class QuestionMenu : Control
         GetMediaTypeControl(slot).Select(mediaType == "audio" ? 2 : 1);
         GetMediaPathControl(slot).Text = media.OriginalFileName;
         GetMediaInfoControl(slot).Text = $"In Datenbank gespeichert: {media.OriginalFileName}";
+        UpdateMediaSlotPreview(slot);
+        UpdatePreview();
+    }
+
+    private async Task LoadMediaFromUrlAsync(MediaTargetSlot slot)
+    {
+        var url = GetMediaUrlControl(slot).Text.Trim();
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _popupStatus.Text = "Bitte eine gueltige Medien-URL eingeben.";
+            return;
+        }
+
+        try
+        {
+            var mediaType = GetSelectedOrInferredMediaType(slot, url);
+            var media = await MediaStorageService.DownloadQuestionMediaAsync(url, mediaType);
+            SetSlotMedia(slot, media);
+            GetMediaTypeControl(slot).Select(mediaType == "audio" ? 2 : 1);
+            GetMediaPathControl(slot).Text = media.OriginalFileName;
+            GetMediaInfoControl(slot).Text = $"Von URL geladen und in Datenbank gespeichert: {media.OriginalFileName}";
+            _popupStatus.Text = "Medium wurde von der URL heruntergeladen.";
+            UpdatePreview();
+        }
+        catch (Exception ex)
+        {
+            _popupStatus.Text = $"URL-Import fehlgeschlagen: {ex.Message}";
+        }
     }
 
     private void OnFilesDropped(string[] files)
@@ -855,13 +1042,13 @@ public partial class QuestionMenu : Control
 
     private MediaTargetSlot ResolveDropTargetSlot(string sourcePath)
     {
-        var focusOwner = GetViewport().GuiGetFocusOwner();
-        if (focusOwner == _mediaPath1)
+        var mousePosition = GetGlobalMousePosition();
+        if (_dropZone1.GetGlobalRect().HasPoint(mousePosition) || _mediaPath1.GetGlobalRect().HasPoint(mousePosition))
         {
             return MediaTargetSlot.Slot1;
         }
 
-        if (focusOwner == _mediaPath2)
+        if (_dropZone2.GetGlobalRect().HasPoint(mousePosition) || _mediaPath2.GetGlobalRect().HasPoint(mousePosition))
         {
             return MediaTargetSlot.Slot2;
         }
@@ -890,6 +1077,22 @@ public partial class QuestionMenu : Control
     {
         var extension = Path.GetExtension(sourcePath).ToLowerInvariant();
         return extension is ".mp3" or ".wav" or ".ogg";
+    }
+
+    private string GetSelectedOrInferredMediaType(MediaTargetSlot slot, string source)
+    {
+        var selected = GetMediaTypeControl(slot).Selected;
+        if (selected == 2)
+        {
+            return "audio";
+        }
+
+        if (selected == 1)
+        {
+            return "image";
+        }
+
+        return IsAudioFile(source) ? "audio" : "image";
     }
 
     private QuestionMediaData? GetSlotMedia(MediaTargetSlot slot)
@@ -926,6 +1129,11 @@ public partial class QuestionMenu : Control
     private Label GetMediaInfoControl(MediaTargetSlot slot)
     {
         return slot == MediaTargetSlot.Slot1 ? _mediaInfo1 : _mediaInfo2;
+    }
+
+    private LineEdit GetMediaUrlControl(MediaTargetSlot slot)
+    {
+        return slot == MediaTargetSlot.Slot1 ? _mediaUrl1 : _mediaUrl2;
     }
 
     private int GetNextQuestionId()

@@ -212,15 +212,15 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PopupPanel" type="PanelContainer" parent="EditorOverlay/PopupCenter"]
-custom_minimum_size = Vector2(980, 640)
+custom_minimum_size = Vector2(1040, 680)
 layout_mode = 2
 
 [node name="PopupMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="PopupVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin"]
 layout_mode = 2
@@ -308,7 +308,7 @@ layout_mode = 2
 text = "Frage"
 
 [node name="TxtQuestion" type="TextEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 
 [node name="AnswersGrid" type="GridContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
@@ -322,28 +322,83 @@ layout_mode = 2
 text = "Antwort A"
 
 [node name="TxtAnswerA" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="LblAnswerB" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
 layout_mode = 2
 text = "Antwort B"
 
 [node name="TxtAnswerB" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="LblAnswerC" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
 layout_mode = 2
 text = "Antwort C"
 
 [node name="TxtAnswerC" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="LblAnswerD" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
 layout_mode = 2
 text = "Antwort D"
 
 [node name="TxtAnswerD" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/AnswersGrid"]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PreviewPanel" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox"]
+layout_mode = 2
+
+[node name="PreviewMargin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="PreviewVBox" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LblPreviewTitle" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+layout_mode = 2
+text = "Vorschau"
+
+[node name="PreviewMeta" type="RichTextLabel" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+layout_mode = 2
+fit_content = true
+scroll_active = false
+bbcode_enabled = true
+
+[node name="PreviewQuestion" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Fragevorschau"
+
+[node name="PreviewAnswers" type="RichTextLabel" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+layout_mode = 2
+fit_content = true
+scroll_active = false
+bbcode_enabled = true
+
+[node name="PreviewImage" type="TextureRect" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+custom_minimum_size = Vector2(0, 140)
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PreviewMediaInfo" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Allgemein/ScrollAllgemein/AllgemeinMargin/AllgemeinVBox/PreviewPanel/PreviewMargin/PreviewVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Kein Medium hinterlegt."
 
 [node name="Erklaerung" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs"]
 visible = false
@@ -451,6 +506,39 @@ layout_mode = 2
 editable = false
 placeholder_text = "Keine Datei ausgewaehlt"
 
+[node name="DropZone1" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="DropZone1Margin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/DropZone1"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="DropHint1" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/DropZone1/DropZone1Margin"]
+layout_mode = 2
+autowrap_mode = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Bild oder Audio hier auf Medium 1 ziehen"
+
+[node name="MediaUrlRow1" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MediaUrl1" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaUrlRow1"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "https://..."
+
+[node name="BtnLoadUrl1" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox/MediaUrlRow1"]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+text = "Von URL laden"
+
 [node name="MediaButtons1" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -467,6 +555,19 @@ text = "Entfernen"
 layout_mode = 2
 autowrap_mode = 3
 text = "Noch kein Medium hinterlegt."
+
+[node name="MediaPreview1" type="TextureRect" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+custom_minimum_size = Vector2(0, 180)
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BtnPlayMedia1" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot1/MediaSlot1Margin/MediaSlot1VBox"]
+visible = false
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+text = "Audio abspielen"
 
 [node name="MediaSlot2" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox"]
 layout_mode = 2
@@ -511,6 +612,39 @@ layout_mode = 2
 editable = false
 placeholder_text = "Keine Datei ausgewaehlt"
 
+[node name="DropZone2" type="PanelContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="DropZone2Margin" type="MarginContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/DropZone2"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="DropHint2" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/DropZone2/DropZone2Margin"]
+layout_mode = 2
+autowrap_mode = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Bild oder Audio hier auf Medium 2 ziehen"
+
+[node name="MediaUrlRow2" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MediaUrl2" type="LineEdit" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaUrlRow2"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "https://..."
+
+[node name="BtnLoadUrl2" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox/MediaUrlRow2"]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+text = "Von URL laden"
+
 [node name="MediaButtons2" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -528,38 +662,58 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Noch kein Medium hinterlegt."
 
-[node name="PopupFooter" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox"]
+[node name="MediaPreview2" type="TextureRect" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+custom_minimum_size = Vector2(0, 180)
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BtnPlayMedia2" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupTabs/Medien/ScrollMedien/MedienMargin/MedienVBox/MediaSlot2/MediaSlot2Margin/MediaSlot2VBox"]
+visible = false
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+text = "Audio abspielen"
+
+[node name="PopupFooter" type="VBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="BtnSave" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+[node name="FooterButtons" type="HBoxContainer" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnSave" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Speichern"
 
-[node name="BtnDuplicate" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+[node name="BtnDuplicate" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Duplizieren"
 
-[node name="BtnDelete" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+[node name="BtnDelete" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Loeschen"
 
-[node name="BtnReset" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+[node name="BtnReset" type="Button" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons"]
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Verwerfen"
 
-[node name="FooterSpacer" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
+[node name="FooterSpacer" type="Control" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter/FooterButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PopupStatus" type="Label" parent="EditorOverlay/PopupCenter/PopupPanel/PopupMargin/PopupVBox/PopupFooter"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = ""
 autowrap_mode = 3
+
+[node name="PreviewAudioPlayer" type="AudioStreamPlayer" parent="EditorOverlay"]
 
 [node name="ImportDialog" type="FileDialog" parent="."]
 access = 2
