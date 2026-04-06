@@ -12,6 +12,7 @@ namespace IFeelDumpQuiz.Services;
 public static class CsvImportExportService
 {
     private const string ResourceQuestionsPath = "res://data/questions.csv";
+    private const string ResourceSeedQuestionsPath = "res://data/questions_seed.txt";
     private const string UserQuestionsPath = "user://data/questions.csv";
     private const string CsvHeader = "question;answer_a;answer_b;answer_c;answer_d;correct;category;explanation;difficulty";
 
@@ -100,6 +101,11 @@ public static class CsvImportExportService
         if (TryLoadQuestionsFromGodotPath(ResourceQuestionsPath, out var resourceQuestions, out _) && resourceQuestions.Count > 0)
         {
             return new QuestionDataRepository().ReplaceQuestions(resourceQuestions, out message);
+        }
+
+        if (TryLoadQuestionsFromGodotPath(ResourceSeedQuestionsPath, out var seedQuestions, out _) && seedQuestions.Count > 0)
+        {
+            return new QuestionDataRepository().ReplaceQuestions(seedQuestions, out message);
         }
 
         message = "Kein Legacy-CSV fuer den Erstimport gefunden.";

@@ -5,9 +5,9 @@ namespace IFeelDumpQuiz;
 
 public static class AppMetadata
 {
-    public static readonly string Version = LoadVersion();
     public static readonly string BaseDirectory = ResolveBaseDirectory();
     public static readonly string InstallDataDirectory = Path.Combine(BaseDirectory, "data");
+    public static readonly string Version = LoadVersion();
     public const string GitHubOwner = "DieListe01";
     public const string GitHubRepo = "IFeelDumpQuiz";
     public const string ReleaseApiUrl = "https://api.github.com/repos/DieListe01/IFeelDumpQuiz/releases/latest";
