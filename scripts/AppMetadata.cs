@@ -6,7 +6,7 @@ namespace IFeelDumpQuiz;
 public static class AppMetadata
 {
     public static readonly string Version = LoadVersion();
-    public static readonly string BaseDirectory = AppContext.BaseDirectory;
+    public static readonly string BaseDirectory = ResolveBaseDirectory();
     public static readonly string InstallDataDirectory = Path.Combine(BaseDirectory, "data");
     public const string GitHubOwner = "DieListe01";
     public const string GitHubRepo = "IFeelDumpQuiz";
@@ -54,7 +54,7 @@ public static class AppMetadata
     {
         try
         {
-            var versionPath = Path.Combine(AppContext.BaseDirectory, "VERSION");
+            var versionPath = Path.Combine(BaseDirectory, "VERSION");
             if (File.Exists(versionPath))
             {
                 var value = File.ReadAllText(versionPath).Trim();
@@ -69,5 +69,23 @@ public static class AppMetadata
         }
 
         return "0.1.0";
+    }
+
+    private static string ResolveBaseDirectory()
+    {
+        var currentDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (currentDirectory != null)
+        {
+            var exePath = Path.Combine(currentDirectory.FullName, WindowsExecutableName);
+            var versionPath = Path.Combine(currentDirectory.FullName, "VERSION");
+            if (File.Exists(exePath) && File.Exists(versionPath))
+            {
+                return currentDirectory.FullName;
+            }
+
+            currentDirectory = currentDirectory.Parent;
+        }
+
+        return AppContext.BaseDirectory;
     }
 }
