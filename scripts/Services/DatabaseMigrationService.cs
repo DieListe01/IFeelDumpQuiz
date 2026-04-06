@@ -66,6 +66,9 @@ CREATE INDEX IF NOT EXISTS idx_question_media_question_id ON question_media(ques
         EnsureColumnExists(connection, "question_media", "media_blob", "BLOB");
         MigrateStoredMediaToDatabase(connection);
 
+        // Mark initialization before any seed import, so repository calls don't recurse.
+        _initialized = true;
+
         using var countCommand = connection.CreateCommand();
         countCommand.CommandText = "SELECT COUNT(*) FROM questions;";
         var count = (long)(countCommand.ExecuteScalar() ?? 0L);
@@ -81,8 +84,6 @@ CREATE INDEX IF NOT EXISTS idx_question_media_question_id ON question_media(ques
                 GD.Print(message);
             }
         }
-
-        _initialized = true;
     }
 
     private static void MigrateStoredMediaToDatabase(SqliteConnection connection)
