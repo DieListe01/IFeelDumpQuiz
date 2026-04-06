@@ -51,6 +51,7 @@ public partial class GameScene : Control
     private QuestionData? _question;
     private DateTime _turnStartedAtUtc;
     private DateTime _simultaneousStartedAtUtc;
+    private DateTime _selectedSimultaneousStartedAtUtc;
 
     private bool IsSimultaneousMode => GameSession.Config.AnswerMode == GameModes.Simultaneous;
 
@@ -71,6 +72,7 @@ public partial class GameScene : Control
         _turnOrderLabel = GetNode<Label>("RootMargin/MainVBox/InfoPanel/InfoVBox/TurnOrderLabel");
         _resultLabel = GetNode<Label>("RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ResultLabel");
         _scoreboard = GetNode<RichTextLabel>("RootMargin/MainVBox/BottomRow/ScorePanel/ScoreVBox/Scoreboard");
+        _scoreboard.BbcodeEnabled = true;
         _btnResolve = GetNode<Button>("RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow/BtnResolve");
         _btnNext = GetNode<Button>("RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow/BtnNext");
         _questionTimer = GetNode<Godot.Timer>("QuestionTimer");
@@ -144,7 +146,7 @@ public partial class GameScene : Control
                 var answered = _answersByPlayer.ContainsKey(name);
                 var isSelected = i == _selectedSimultaneousPlayerIndex;
                 _playerButtons[i].Text = answered
-                    ? $"{name} ok"
+                    ? $"{name} hat geantwortet"
                     : isSelected && secondsLeft.HasValue ? $"{name} · {secondsLeft.Value}s" : name;
             }
             return;
@@ -348,12 +350,10 @@ public partial class GameScene : Control
     private void StartSimultaneousRound()
     {
         _phaseLabel.Text = "Simultan";
-        _subInfoLabel.Text = "Alle antworten gleichzeitig, Moderator erfasst.";
+        _subInfoLabel.Text = "Jeder Spieler erhaelt seine volle Zeit, sobald der Moderator ihn auswaehlt.";
         _playerButtonsRow.Visible = true;
         _simultaneousStartedAtUtc = DateTime.UtcNow;
         _questionTimer.Stop();
-        _questionTimer.WaitTime = GameSession.Config.TimePerQuestionSeconds;
-        _questionTimer.Start();
         SetAnswerButtonsEnabled(true);
         _currentPlayerLabel.Text = "Moderator";
         _answerHintLabel.Text = "Spieler auswaehlen und Antwort eintragen.";
@@ -369,6 +369,10 @@ public partial class GameScene : Control
         }
 
         _selectedSimultaneousPlayerIndex = index;
+        _selectedSimultaneousStartedAtUtc = DateTime.UtcNow;
+        _questionTimer.Stop();
+        _questionTimer.WaitTime = GameSession.Config.TimePerQuestionSeconds;
+        _questionTimer.Start();
         UpdatePlayerButtonStates();
         _currentPlayerLabel.Text = GameSession.Players[index].Name;
         _answerHintLabel.Text = "Antwortkachel klicken oder 1-4 druecken.";
@@ -397,7 +401,7 @@ public partial class GameScene : Control
             var button = _playerButtons[i];
             var answered = _answersByPlayer.ContainsKey(name);
             button.Disabled = answered;
-            button.Text = answered ? $"{name} ok" : name;
+            button.Text = answered ? $"{name} hat geantwortet" : name;
             button.Modulate = answered
                 ? new Color(0.65f, 0.9f, 0.7f, 1f)
                 : i == _selectedSimultaneousPlayerIndex ? new Color(1f, 0.86f, 0.62f, 1f) : Colors.White;
@@ -466,8 +470,9 @@ public partial class GameScene : Control
         }
 
         _answersByPlayer[player.Name] = answerIndex;
-        _answerDurationsByPlayer[player.Name] = (long)Math.Max(0, (DateTime.UtcNow - _simultaneousStartedAtUtc).TotalMilliseconds);
+        _answerDurationsByPlayer[player.Name] = (long)Math.Max(0, (DateTime.UtcNow - _selectedSimultaneousStartedAtUtc).TotalMilliseconds);
         _shuffleLabel.Text = $"Antwort fuer {player.Name} gespeichert";
+        _questionTimer.Stop();
         UpdatePlayerButtonStates();
 
         if (_answersByPlayer.Count >= GameSession.Players.Count)
@@ -492,14 +497,23 @@ public partial class GameScene : Control
 
         if (IsSimultaneousMode)
         {
-            foreach (var player in GameSession.Players.Where(player => !_answersByPlayer.ContainsKey(player.Name)))
+            if (_selectedSimultaneousPlayerIndex >= 0 && _selectedSimultaneousPlayerIndex < GameSession.Players.Count)
             {
+                var player = GameSession.Players[_selectedSimultaneousPlayerIndex];
                 _answersByPlayer[player.Name] = -1;
                 _answerDurationsByPlayer[player.Name] = GameSession.Config.TimePerQuestionSeconds * 1000L;
             }
+
             UpdatePlayerButtonStates();
             PlayCountdownTone(320f, 0.18f, 0.24f);
-            MoveToModeratorPhase("Zeit abgelaufen.");
+            if (_answersByPlayer.Count >= GameSession.Players.Count)
+            {
+                MoveToModeratorPhase("Zeit abgelaufen.");
+            }
+            else
+            {
+                SelectNextUnansweredPlayer();
+            }
         }
         else
         {
@@ -637,7 +651,7 @@ public partial class GameScene : Control
         foreach (var player in GameSession.Players.OrderByDescending(player => player.Score).ThenBy(player => player.Name))
         {
             var avg = GameSession.GetAverageAnswerTimeSeconds(player);
-            _scoreboard.AppendText($"{player.Name}: {player.Score} Punkte | Richtig: {player.CorrectAnswers} | Falsch: {player.WrongAnswers} | Ø Zeit: {avg:0.0}s\n");
+            _scoreboard.AppendText($"{player.Name}: {player.Score} Punkte | [color=#72E79B]Richtig: {player.CorrectAnswers}[/color] | [color=#F27A7A]Falsch: {player.WrongAnswers}[/color] | Ø Zeit: {avg:0.0}s\n");
         }
     }
 
