@@ -186,14 +186,20 @@ public static class CsvImportExportService
 
         try
         {
-            var absolutePath = ProjectSettings.GlobalizePath(godotPath);
-            if (!File.Exists(absolutePath))
+            if (!Godot.FileAccess.FileExists(godotPath))
             {
                 errorMessage = $"Fragedatei nicht gefunden: {godotPath}";
                 return false;
             }
 
-            questions = ParseCsv(File.ReadAllText(absolutePath, Encoding.UTF8));
+            using var file = Godot.FileAccess.Open(godotPath, Godot.FileAccess.ModeFlags.Read);
+            if (file == null)
+            {
+                errorMessage = $"Fragedatei konnte nicht geoeffnet werden: {godotPath}";
+                return false;
+            }
+
+            questions = ParseCsv(file.GetAsText());
             return true;
         }
         catch (Exception ex)
