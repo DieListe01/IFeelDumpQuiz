@@ -40,6 +40,7 @@ public partial class GameScene : Control
 
     private readonly Dictionary<string, int> _answersByPlayer = new();
     private readonly Dictionary<string, long> _answerDurationsByPlayer = new();
+    private readonly HashSet<string> _timedOutPlayers = new();
     private List<int> _turnOrder = new();
     private int _turnIndex;
     private int _shuffleStep;
@@ -120,7 +121,6 @@ public partial class GameScene : Control
                 <= 6 => new Color(1f, 0.82f, 0.42f, 1f),
                 _ => Colors.White
             };
-            UpdateLiveTimerDisplays(secondsLeft);
             TryPlayCountdownBeep(secondsLeft);
         }
         else if (_isShuffleRunning)
@@ -132,30 +132,6 @@ public partial class GameScene : Control
         {
             _lastBeepSecond = -1;
             _timerLabel.Modulate = Colors.White;
-            UpdateLiveTimerDisplays(null);
-        }
-    }
-
-    private void UpdateLiveTimerDisplays(int? secondsLeft)
-    {
-        if (IsSimultaneousMode)
-        {
-            for (var i = 0; i < _playerButtons.Count; i++)
-            {
-                var name = GameSession.Players[i].Name;
-                var answered = _answersByPlayer.ContainsKey(name);
-                var isSelected = i == _selectedSimultaneousPlayerIndex;
-                _playerButtons[i].Text = answered
-                    ? $"{name} hat geantwortet"
-                    : isSelected && secondsLeft.HasValue ? $"{name} · {secondsLeft.Value}s" : name;
-            }
-            return;
-        }
-
-        if (_turnIndex < _turnOrder.Count && secondsLeft.HasValue)
-        {
-            var player = GameSession.Players[_turnOrder[_turnIndex]].Name;
-            _currentPlayerLabel.Text = $"{player} · {secondsLeft.Value}s";
         }
     }
 
@@ -227,6 +203,7 @@ public partial class GameScene : Control
 
         _answersByPlayer.Clear();
         _answerDurationsByPlayer.Clear();
+        _timedOutPlayers.Clear();
         _isResolved = false;
         _isShuffleRunning = false;
         _turnIndex = 0;
@@ -401,7 +378,7 @@ public partial class GameScene : Control
             var button = _playerButtons[i];
             var answered = _answersByPlayer.ContainsKey(name);
             button.Disabled = answered;
-            button.Text = answered ? $"{name} hat geantwortet" : name;
+            button.Text = answered ? (_timedOutPlayers.Contains(name) ? $"{name} Zeit abgelaufen" : $"{name} hat geantwortet") : name;
             button.Modulate = answered
                 ? new Color(0.65f, 0.9f, 0.7f, 1f)
                 : i == _selectedSimultaneousPlayerIndex ? new Color(1f, 0.86f, 0.62f, 1f) : Colors.White;
@@ -502,10 +479,9 @@ public partial class GameScene : Control
                 var player = GameSession.Players[_selectedSimultaneousPlayerIndex];
                 _answersByPlayer[player.Name] = -1;
                 _answerDurationsByPlayer[player.Name] = GameSession.Config.TimePerQuestionSeconds * 1000L;
+                _timedOutPlayers.Add(player.Name);
             }
-
             UpdatePlayerButtonStates();
-            PlayCountdownTone(320f, 0.18f, 0.24f);
             if (_answersByPlayer.Count >= GameSession.Players.Count)
             {
                 MoveToModeratorPhase("Zeit abgelaufen.");
@@ -522,18 +498,17 @@ public partial class GameScene : Control
                 var player = GameSession.Players[_turnOrder[_turnIndex]];
                 _answersByPlayer[player.Name] = -1;
                 _answerDurationsByPlayer[player.Name] = GameSession.Config.TimePerQuestionSeconds * 1000L;
+                _timedOutPlayers.Add(player.Name);
                 _shuffleLabel.Text = $"Zeit fuer {player.Name} abgelaufen";
                 _turnIndex++;
             }
 
             if (_turnIndex >= _turnOrder.Count)
             {
-                PlayCountdownTone(320f, 0.18f, 0.24f);
                 MoveToModeratorPhase("Zeit abgelaufen.");
             }
             else
             {
-                PlayCountdownTone(320f, 0.18f, 0.24f);
                 StartCurrentPlayerTurn();
             }
         }
@@ -638,8 +613,7 @@ public partial class GameScene : Control
         {
             var player = GameSession.Players[_turnOrder[i]].Name;
             var marker = i < _turnIndex ? "[x]" : i == _turnIndex && !_isResolved && !_isShuffleRunning ? "[>]" : "[ ]";
-            var suffix = i == _turnIndex && !_isResolved && !_isShuffleRunning && !_questionTimer.IsStopped() ? $" {Mathf.CeilToInt((float)_questionTimer.TimeLeft)}s" : string.Empty;
-            ordered.Add($"{marker} {player}{suffix}");
+            ordered.Add($"{marker} {player}");
         }
 
         _turnOrderLabel.Text = $"Reihenfolge: {string.Join("  |  ", ordered)}";
@@ -733,7 +707,7 @@ public partial class GameScene : Control
 
     private void TryPlayCountdownBeep(int secondsLeft)
     {
-        if (secondsLeft <= 0 || secondsLeft > 10)
+        if (secondsLeft <= 0 || secondsLeft > 5)
         {
             return;
         }
@@ -744,13 +718,7 @@ public partial class GameScene : Control
         }
 
         _lastBeepSecond = secondsLeft;
-        if (secondsLeft <= 5)
-        {
-            PlayCountdownTone(980f, 0.07f, 0.24f);
-            return;
-        }
-
-        PlayCountdownTone(740f, 0.08f, 0.18f);
+        PlayCountdownTone(secondsLeft == 1 ? 980f : 740f);
     }
 
     private void ConfigureCountdownAudio()
@@ -766,7 +734,7 @@ public partial class GameScene : Control
         _countdownPlayback = _countdownPlayer.GetStreamPlayback() as AudioStreamGeneratorPlayback;
     }
 
-    private void PlayCountdownTone(float frequency, float durationSeconds = 0.08f, float volume = 0.18f)
+    private void PlayCountdownTone(float frequency)
     {
         if (_countdownPlayback == null)
         {
@@ -774,12 +742,12 @@ public partial class GameScene : Control
         }
 
         var sampleRate = 44100f;
-        var sampleCount = (int)(sampleRate * durationSeconds);
+        var sampleCount = (int)(sampleRate * 0.08f);
         for (var i = 0; i < sampleCount; i++)
         {
             var t = i / sampleRate;
             var envelope = 1f - (i / (float)sampleCount);
-            var sample = Mathf.Sin(2f * Mathf.Pi * frequency * t) * volume * envelope;
+            var sample = Mathf.Sin(2f * Mathf.Pi * frequency * t) * 0.18f * envelope;
             _countdownPlayback.PushFrame(new Vector2(sample, sample));
         }
     }

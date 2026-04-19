@@ -446,7 +446,7 @@ theme_override_constants/separation = 16
 
 [node name="ModeratorPanel" type="PanelContainer" parent="RootMargin/MainVBox/BottomRow"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_side_panel")
 
@@ -471,26 +471,23 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="BtnResolve" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
-custom_minimum_size = Vector2(120, 44)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-size_flags_horizontal = 3
 text = "Aufloesen"
 
 [node name="BtnNext" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
-custom_minimum_size = Vector2(120, 44)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-size_flags_horizontal = 3
 text = "Naechste Frage"
 
 [node name="BtnAbort" type="Button" parent="RootMargin/MainVBox/BottomRow/ModeratorPanel/ModeratorVBox/ModeratorRow"]
-custom_minimum_size = Vector2(120, 44)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-size_flags_horizontal = 3
 text = "Abbrechen"
 
 [node name="ScorePanel" type="PanelContainer" parent="RootMargin/MainVBox/BottomRow"]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_side_panel")
 
